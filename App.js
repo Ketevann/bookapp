@@ -14,9 +14,10 @@ export default class App extends React.Component {
     const store = createStore(reducers, {}, applyMiddleware(apiMiddleware));
     return(
        <Provider store={store}>
-        {/*<Home/>*/}
-         <Login />
+        <Home/>
+         {/*<Login />*/}
       </Provider>
+ 
     )
   }
 }
