@@ -7,14 +7,23 @@ import {
 } from 'react-native';
 import axios  from 'axios';
 import { connect } from 'react-redux';
-import { getBookListDataRedux } from '../redux/actions/actions'
+import { getBookListDataRedux, loadDefaultBookListData} from '../redux/actions/actions';
+import  defaultList  from './data/defaultList';
 
 
 class Home extends Component {
 
   componentDidMount(){
       console.log('mounted');
-      this.props.getBookListDataRedux("the stranger");
+      
+      if (defaultList){
+        //console.log(defaultList, "default");
+        this.props.loadDefaultBookListData(defaultList.Similar.Results);
+      }else{
+        console.log("defaultList not loaded");
+      }
+
+      //this.props.getBookListDataRedux("the stranger");
       /*
       let bookTitles=[];
       const baseUrl='https://www.googleapis.com/books/v1/volumes?q=',
@@ -44,16 +53,15 @@ class Home extends Component {
         console.log(error);
     });
   */
-  }
+}
+
 
   render() {
-    const {bookListData} = this.props;
+    const { defaultBookList} = this.props;
     return (
       <View style={styles.container}>
         <Text style={styles.header}>
-          {/*Testing 1 2 3!*/}
-          {/*{'\n'}*/}
-          {bookListData}
+          { defaultBookList ? defaultBookList:'Loading Defaults'}
         </Text>
       </View>
     );
@@ -74,4 +82,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default connect(({ bookListData }) => ({ bookListData: bookListData }), { getBookListDataRedux })(Home)
+export default connect(({ bookListData, defaultBookList }) => ({ bookListData: bookListData, defaultBookList: defaultBookList }), { getBookListDataRedux, loadDefaultBookListData })(Home)
