@@ -20,10 +20,10 @@ export default class App extends React.Component {
       createLogger({collapsed: true})));
     return(
        <Provider store={store}>
-        {/*<Home/>*/}
-
           <Router />
+
       </Provider>
+ 
     )
   }
 }
