@@ -33,7 +33,7 @@ class Home extends Component {
       axios.get('https://tastedive.com/api/similar?q=the+epic+of+gilgamesh&k=291171-booksapp-5DFKTYU4&limit=5')
       .then((response)=> {
           console.log(response.data.Similar.Results);
-          response.data.Similar.Results.map((object) => object.Type === 'book' ?  bookTitles.push(axios.get(baseUrl+object.Name+key2)):null);    
+          response.data.Similar.Results.map((object) => object.Type === 'book' ?  bookTitles.push(axios.get(baseUrl+object.Name+key2)):null);
           return bookTitles;
 
       }).then((response)=>{
@@ -82,4 +82,5 @@ const styles = StyleSheet.create({
   },
 });
 
-export default connect(({ bookListData, defaultBookList }) => ({ bookListData: bookListData, defaultBookList: defaultBookList }), { getBookListDataRedux, loadDefaultBookListData })(Home)
+export default connect(({ bookListData }) => ({ bookListData: bookListData }), { getBookListDataRedux })(Home)
+

@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import { View, Text } from 'react-native'
+import {Scene, Router, Actions, Stack} from 'react-native-router-flux';
+
 import { Header, Card, CardSection, Button, Input, Spinner } from './'
 import firebase from 'firebase'
 class LoginForm extends Component {
@@ -37,6 +39,17 @@ class LoginForm extends Component {
     return (<Button onPress={this.OnButtonPress.bind(this)}> Login </Button>)
   }
 
+  forgotPassword(){
+    var auth = firebase.auth();
+var emailAddress = "user@example.com";
+
+auth.sendPasswordResetEmail(emailAddress).then(function() {
+  // Email sent.
+}).catch(function(error) {
+  // An error happened.
+});
+  }
+
   render() {
     return (
       <View>
@@ -67,6 +80,12 @@ class LoginForm extends Component {
             {this.renderButton()}
 
           </CardSection>
+          <CardSection>
+          <Button onPress={()=> Actions.forgotpassowrd()}>
+           Forgot password
+            </Button>
+          </CardSection>
+
         </Card>
       </View>
 
