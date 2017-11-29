@@ -84,7 +84,12 @@ class App extends Component {
 
 
 
- 
+  handleAddBooks=(object)=>{
+      firebase.database().ref("users").orderByChild("FirebaseUserID").equalTo(firebase.auth().currentUser.uid).on("child_added", (snapshot)=>{
+          firebase.database().ref().child('users').child(snapshot.key).push(object);
+      })
+  }
+
   handleAddUser=()=>{
     const date = new Date();
     console.log(this.state.users,"users");
@@ -109,6 +114,7 @@ renderContent(){
               returnKeyType={'search'}
             />       
             <Button onPress={()=>this.handleAddUser()} > Add User </Button>
+            <Button onPress={()=>this.handleAddBooks({ booksLiked:["books1", "book2s","books3"]} )}> Add Books </Button>
             
             <Button onPress={() => firebase.auth().signOut()}>Log Out</Button>
           </View>
