@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
 import {
-  Button,
   StyleSheet,
   Text,
   View
 } from 'react-native';
+import { Button} from './common';
+import { Actions } from 'react-native-router-flux';
+import firebase from 'firebase';
+
 import axios  from 'axios';
 import { connect } from 'react-redux';
 import { getBookListDataRedux, loadDefaultBookListData} from '../redux/actions/actions';
@@ -12,16 +15,12 @@ import  defaultList  from './data/defaultList';
 
 
 class Home extends Component {
+  state = { loggedIn: null }
 
-  componentDidMount(){
-      console.log('mounted');
-      
-      if (defaultList){
-        //console.log(defaultList, "default");
-        this.props.loadDefaultBookListData(defaultList.Similar.Results);
-      }else{
-        console.log("defaultList not loaded");
-      }
+  componentWillMount(){
+    firebase.auth().onAuthStateChanged((user) => user ? this.setState({ loggedIn: true }) : this.setState({ loggedIn: false }) );
+    defaultList ? this.props.loadDefaultBookListData(defaultList.Similar.Results) : console.log("defaultList not loaded");
+    console.log('mounted');
 
       //this.props.getBookListDataRedux("the stranger");
       /*
@@ -57,16 +56,18 @@ class Home extends Component {
 
 
   render() {
-    const { defaultBookList} = this.props;
+    const { defaultBookList} = this.props, 
+          { loggedIn } = this.state, 
+          { navigate } = this.props.navigation;
     return (
       <View style={styles.container}>
         <Text style={styles.header}>
           { defaultBookList ? defaultBookList:'Loading Defaults'}
         </Text>
+          { loggedIn ? <Button onPress={() =>firebase.auth().signOut()}>Log Out</Button>: <Button onPress= {() => navigate('login') }> Sign in </Button>}
       </View>
     );
   }
-
 }
 
 const styles = StyleSheet.create({
@@ -82,5 +83,5 @@ const styles = StyleSheet.create({
   },
 });
 
-export default connect(({ bookListData }) => ({ bookListData: bookListData }), { getBookListDataRedux })(Home)
+export default connect(({ defaultBookList }) => ({ defaultBookList: defaultBookList }), { loadDefaultBookListData })(Home)
 
