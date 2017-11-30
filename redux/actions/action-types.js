@@ -7,3 +7,5 @@ export const PASSWORD_CHANGED = 'PASSWORD_CHANGED'
 export const LOGIN_USER = 'LOGIN_USER'
 export const LOGIN_USER_FAIL = 'LOGIN_USER_FAIL'
 export const LOGIN_USER_SUCESS = 'LOGIN_USER_SUCESS'
+export const FORGOT = 'FORGOT'
+

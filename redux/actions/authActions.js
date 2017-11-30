@@ -1,6 +1,6 @@
 import { EMAIL_CHANGED, PASSWORD_CHANGED,
   LOGIN_USER_SUCESS, LOGIN_USER_FAIL,
-LOGIN_USER, NOTLOGGEDIN,LOGGEDIN} from './action-types'
+LOGIN_USER, NOTLOGGEDIN,LOGGEDIN, FORGOT} from './action-types'
 
 import firebase from 'firebase';
 import {Actions} from 'react-native-router-flux';
@@ -33,6 +33,19 @@ export const loginUser = ( email, password ) => {
       }
   }
 
+ export const forgotPassword = () =>
+ dispatch =>{
+   dispatch({type: FORGOT})
+    var auth = firebase.auth();
+    var emailAddress = "katie.tsin@gmail.com";
+    auth.sendPasswordResetEmail(emailAddress).then(function () {
+      // Email sent.
+      console.log('sent')
+    }).catch(function (error) {
+      // An error happened.
+      console.log(error)
+    });
+  }
 
 
 const loginUserFail = (dispatch, user) => {
