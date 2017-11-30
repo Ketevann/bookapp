@@ -2,58 +2,51 @@ import React, { Component } from 'react'
 import { View, Text } from 'react-native'
 import { Header, Card, CardSection, Button, Input, Spinner } from './common'
 import firebase from 'firebase'
-
-
+import {connect} from 'react-redux'
+import {forgotPassword, emailDispatch} from '../redux/actions/authActions'
 class ForgotPassword extends Component {
-  state = { email: '', password: '', error: '', loading: false }
 
 
-//   forgotPassword(){
-//  var auth = firebase.auth();
-// var emailAddress = "user@example.com";
+  //   forgotPassword(){
+  //  var auth = firebase.auth();
+  // var emailAddress = "user@example.com";
 
-// auth.sendPasswordResetEmail(emailAddress).then(function() {
-//   // Email sent.
-// }).catch(function(error) {
-//   // An error happened.
-// });
-//   }
+  // auth.sendPasswordResetEmail(emailAddress).then(function() {
+  //   // Email sent.
+  // }).catch(function(error) {
+  //   // An error happened.
+  // });
+  //   }
 
-  forgotPassword(){
-    var auth = firebase.auth();
-var emailAddress = "katie.tsin@gmail.com";
+onForgotPassword(email) {
+  this.props.forgotPassword(email)
+}
 
-auth.sendPasswordResetEmail(emailAddress).then(function() {
-  // Email sent.
-  console.log('sent')
-}).catch(function(error) {
-  // An error happened.
-  console.log(error)
-});
+ onEmailChange(text) {
+   console.log('hh',this.props.auth, text)
+  this.props.emailDispatch(text)
   }
+
 
   render() {
     return (
       <View>
-
         <Card>
           <CardSection>
             <Input
               placeholder="user@gmail.com"
               label="Email"
-              value={this.state.email}
-              onChangeText={email => this.setState({ email })}
+              value={this.props.auth.email}
+              onChangeText={this.onEmailChange.bind(this)}
             />
           </CardSection>
 
           <CardSection>
-            <Button onPress={this.forgotPassword.bind(this)}>Submit</Button>
+            <Button onPress={this.onForgotPassword.bind(this)}>Submit</Button>
           </CardSection>
-
           <CardSection>
-            <Text>{this.state.error}</Text>
+            <Text>{this.props.auth.error}</Text>
           </CardSection>
-
         </Card>
       </View>
 
@@ -82,4 +75,4 @@ styles = {
   }
 }
 
-export  default ForgotPassword;
+export default connect(({ auth }) => ({auth}), {forgotPassword, emailDispatch})(ForgotPassword);
