@@ -1,39 +1,57 @@
 import React, { Component } from 'react'
 import { View, Text } from 'react-native'
 import {Scene, Router, Actions, Stack} from 'react-native-router-flux';
+import {loginUser, emailDispatch, passwordDispatch} from '../../redux/actions/authActions'
+import { connect } from 'react-redux'
 
 import { Header, Card, CardSection, Button, Input, Spinner } from './'
 import firebase from 'firebase'
+
+
 class LoginForm extends Component {
-  state = { email: '', password: '', error: '', loading: false }
 
   OnButtonPress() {
-    const { email, password } = this.state
-    this.setState({ error: '', loading: true })
-    firebase.auth().signInWithEmailAndPassword(email, password)
-      .then(this.onLoginSuccess.bind(this))
-      .catch(() => {
-        firebase.auth().createUserWithEmailAndPassword(email, password)
-          .then(
-            this.onLoginSuccess.bind(this))
-          .catch(
-            this.onLoginFail.bind(this))
 
-      });
+
+    const { email, password } = this.props.auth
+    console.log(email, password, 'EMAIL PASS')
+    this.props.loginUser(email, password)
+   // this.setState({ error: '', loading: true })
+
+    // firebase.auth().signInWithEmailAndPassword(email, password)
+    //   .then(this.onLoginSuccess.bind(this))
+    //   .catch(() => {
+    //     firebase.auth().createUserWithEmailAndPassword(email, password)
+    //       .then(
+    //         this.onLoginSuccess.bind(this))
+    //       .catch(
+    //         this.onLoginFail.bind(this))
+
+    //   });
   }
 
-  onLoginFail() {
-    this.setState({ error: 'Authentication Failed', loading: false })
+  // onLoginFail() {
+  //   this.setState({ error: 'Authentication Failed', loading: false })
 
+  // }
+
+  // onLoginSuccess() {
+  //   this.setState({ email: '', password: '', error: '', loading: false })
+
+  // }
+  onPasswordChange(text) {
+    console.log('text')
+  this.props.passwordDispatch(text)
+}
+
+ onEmailChange(text) {
+   console.log('hh',this.props.auth, text)
+  this.props.emailDispatch(text)
   }
 
-  onLoginSuccess() {
-    this.setState({ email: '', password: '', error: '', loading: false })
-
-  }
   renderButton() {
     console.log('button')
-    if (this.state.loading === true) {
+    if (this.props.auth.loading === true) {
       return (<Spinner size="small" />)
     }
     return (<Button onPress={this.OnButtonPress.bind(this)}> Login </Button>)
@@ -51,6 +69,7 @@ auth.sendPasswordResetEmail(emailAddress).then(function() {
   }
 
   render() {
+    {console.log('props in loginform', this.props)}
     return (
       <View>
 
@@ -59,8 +78,8 @@ auth.sendPasswordResetEmail(emailAddress).then(function() {
             <Input
               placeholder="user@gmail.com"
               label="Email"
-              value={this.state.email}
-              onChangeText={email => this.setState({ email })}
+              onChangeText={this.onEmailChange.bind(this)}
+              value={this.props.auth.email}
             />
           </CardSection>
           <CardSection>
@@ -68,12 +87,12 @@ auth.sendPasswordResetEmail(emailAddress).then(function() {
               secureTextEntry
               placeholder="123"
               label="Password"
-              value={this.state.password}
-              onChangeText={password => this.setState({ password })}
+              onChangeText={this.onPasswordChange.bind(this)}
+              value={this.props.auth.password}
             />
           </CardSection>
           <CardSection>
-            <Text>{this.state.error}</Text>
+            <Text>{this.props.auth.error}</Text>
           </CardSection>
           <CardSection>
 
@@ -114,4 +133,9 @@ styles = {
   }
 }
 
-export { LoginForm };
+export default connect(
+  ({ auth }) => ({ auth }),
+  {loginUser, emailDispatch, passwordDispatch},
+)(LoginForm)
+
+
