@@ -3,9 +3,26 @@ import { View, Text } from 'react-native'
 import {Scene, Router, Actions, Stack} from 'react-native-router-flux';
 
 import { Header, Card, CardSection, Button, Input, Spinner } from './'
-import firebase from 'firebase'
+import firebase from 'firebase';
 class LoginForm extends Component {
-  state = { email: '', password: '', error: '', loading: false }
+  state = { email: '', password: '', error: '', loading: false,
+    users:[],
+    userName:'',
+ }
+
+
+  // componentWillMount() {
+  //   // firebase.initializeApp({
+  //   //   apiKey: 'AIzaSyAQLrnXMUPqPkfS6IiYI2pqJ-ix0L5ifwI',
+  //   //   authDomain: 'test23-8732c.firebaseapp.com',
+  //   //   databaseURL: 'https://test23-8732c.firebaseio.com',
+  //   //   projectId: 'test23-8732c',
+  //   //   storageBucket: 'test23-8732c.appspot.com',
+  //   //   messagingSenderId: '196992616531'
+  //   // });
+  //   this.rootRef = firebase.database().ref();
+  //   this.usersRef = this.rootRef.child('users');
+  // }
 
   OnButtonPress() {
     const { email, password } = this.state
@@ -22,13 +39,28 @@ class LoginForm extends Component {
       });
   }
 
+  handleAddUser=()=>{
+    alert("success!");
+    console.log("success!");
+    const date = new Date();
+    console.log(this.state.users,"users");
+    this.usersRef.push().set({
+      timeStamp: date.toTimeString(),
+      userName: this.state.email,
+      FirebaseUserID:firebase.auth().currentUser.uid,
+    })
+    this.setState({userName: ''})
+  }
+
+
   onLoginFail() {
     this.setState({ error: 'Authentication Failed', loading: false })
-
   }
 
   onLoginSuccess() {
     this.setState({ email: '', password: '', error: '', loading: false })
+    this.handleAddUser();
+    //will be moved to when a new user is created :)
 
   }
   renderButton() {
