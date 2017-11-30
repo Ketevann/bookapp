@@ -4,6 +4,6 @@ import reducers from './reducers';
 
 
 export default combineReducers({
-  auth: auth
-  //reducers: reducers
+  auth: auth,
+  reducers: reducers
 });
