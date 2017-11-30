@@ -1,5 +1,6 @@
 const initialState = {
-    bookListData:null
+    bookListData:null,
+    defaultBookList:null
 }
 
 export default initialState

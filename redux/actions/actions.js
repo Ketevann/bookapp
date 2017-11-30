@@ -8,3 +8,13 @@ export const getBookListDataRedux = (title) => {
   };
 };
 
+
+
+export const loadDefaultBookListData = (bookList) => {
+  console.log("loadDefaultBookListData",bookList);
+  return {
+    type: 'LOAD_DEFAULT_BOOKLIST_DATA',
+    defaultBookList:bookList
+  };
+};
+

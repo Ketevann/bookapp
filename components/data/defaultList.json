@@ -1,0 +1,59 @@
+{
+    "Similar":{
+    "Info":[{
+            "Name":"Defualt Home List",
+            "Type":"book"
+        }],
+        "Results":[{
+                "Name":"To Kill a Mockingbird",
+                "Type":"book"
+            },
+            {
+                "Name":"Pride and Prejudice",
+                "Type":"music"
+            },
+            {
+                "Name":"The Diary of a Young Girl",
+                "Type":"book"
+            },
+            {
+                "Name":"Harry Potter and the Sorcerer's Stone",
+                "Type":"book"
+            },
+            {
+                "Name":"The Hobbit",
+                "Type":"book"
+            },
+            {
+                "Name":"Charlotte's Web",
+                 "Type":"book"
+
+            },
+            {
+                "Name":"The Great Gatsby",
+                 "Type":"book"
+
+            },
+             {
+                "Name":" Animal Farm",
+                 "Type":"book"
+
+            },
+             {
+                "Name":"Jane Eyre",
+                 "Type":"book"
+
+            },
+             {
+                "Name":"Little Women",
+                 "Type":"book"
+
+            }]
+    }
+}
+
+
+/*
+Source: https://www.goodreads.com/list/show/69635.100_Books_to_Read_in_a_Lifetime_Readers_Picks
+100 Books to Read in a Lifetime: Readers' Picks (1-10)
+*/
