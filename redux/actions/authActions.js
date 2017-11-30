@@ -6,25 +6,15 @@ import firebase from 'firebase';
 import {Actions} from 'react-native-router-flux';
 
 
-export const emailChanged = (text) => {
-  return {
-    type: EMAIL_CHANGED,
-    payload: text
-  }
-}
+
+
+console.log(EMAIL_CHANGED, PASSWORD_CHANGED, ' CHANGEDDD!!!')
 
 
 
-export const passwordChanged = (text) => {
-  return {
-    type: PASSWORD_CHANGED,
-    payload: text
-  }
-}
-
-
-export const loginUser = ({ email, password }) => {
+export const loginUser = ( email, password ) => {
   console.log('in logins', email, password)
+
 
   return (dispatch) => {
     console.log('in dispatch')
@@ -61,6 +51,40 @@ const loginUserSuccess = (dispatch, user) => {
 };
 
 
+
+export const emailChanged = (text) => {
+  return {
+    type: EMAIL_CHANGED,
+    payload: text
+  }
+}
+
+
+
+export const passwordChanged = (text) => {
+  return {
+    type: PASSWORD_CHANGED,
+    payload: text
+  }
+}
+
+
+
+
+export const emailDispatch = (text) =>{
+ console.log('in email', text)
+ return dispatch =>
+  dispatch(emailChanged(text))
+  }
+
+
+export const passwordDispatch = (text) =>{
+   console.log('in email', text)
+ return dispatch =>
+  dispatch(passwordChanged(text))
+
+   }
+
 const loginTrue = () => {
   console.log('in trye')
   return {type: LOGGEDIN}}
@@ -71,7 +95,6 @@ const loginFalse = () => {type: NOTLOGGEDIN}
 
 export const loginDispatch = () =>
   dispatch =>
-
     dispatch({type: LOGGEDIN})
 
    export const loginDispatchFalse = () =>
