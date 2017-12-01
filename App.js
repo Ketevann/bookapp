@@ -12,6 +12,9 @@ import {createLogger} from 'redux-logger'
 import store from './store'
 
 import Home from './components/Home';
+const store = createStore(reducers, {}, applyMiddleware(
+      apiMiddleware,ReduxThunk,
+      createLogger({collapsed: true})));
 
 export default class App extends React.Component {
    componentWillMount() {
@@ -24,6 +27,8 @@ export default class App extends React.Component {
       messagingSenderId: '196992616531'
     });
    }
+
+   
   render(){
     return(
        <Provider store={store}>

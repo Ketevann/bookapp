@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import {
-  Image,
   StyleSheet,
   Text,
   View
@@ -15,6 +14,7 @@ import { getBookListDataRedux, loadDefaultBookListData} from '../redux/actions/a
 import { loginDispatch, loginDispatchFalse } from '../redux/actions/authActions'
 
 class Home extends Component {
+  state = { loggedIn: null }
 
   componentWillMount(){
       console.log('mounted');
@@ -49,6 +49,7 @@ class Home extends Component {
         <Text style={styles.header}>
           {/*{userUID ? <Text>{userUID} </Text>:null} to be used for saving books*/}
         </Text>
+          { loggedIn ? <Button onPress={() =>firebase.auth().signOut()}>Log Out</Button>: <Button onPress= {() => navigate('login') }> Sign in </Button>}
       </View>
     );
   }
