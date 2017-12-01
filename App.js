@@ -6,18 +6,18 @@ import Router from './Router'
 
 import {Provider} from 'react-redux';
 import {createStore, applyMiddleware } from 'redux';
-import reducers  from './redux/reducers/reducers';
+import reducers  from './redux/reducers';
 import { apiMiddleware } from './redux/middleware';
 import ReduxThunk from 'redux-thunk'
 import {createLogger} from 'redux-logger'
-
+import store from './store'
 
 import Home from './components/Home';
 
 export default class App extends React.Component {
   render(){
-    const store = createStore(reducers, {}, applyMiddleware(ReduxThunk,
-      createLogger({collapsed: true})));
+    // const store = createStore(reducers, {}, applyMiddleware(ReduxThunk,
+    //   createLogger({collapsed: true})));
     return(
        <Provider store={store}>
         {/*<Home/>*/}
