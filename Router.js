@@ -10,8 +10,8 @@ import ForgotPassword from './components/ForgotPassword'
 const RouterComponent = () => (
   <Router>
     <Stack key="root">
-      <Scene key="login" component={Login} title="Login" initial />
-      <Scene key="home" component={Home} />
+      <Scene key="login" component={Login} title="Login" />
+      <Scene key="home" component={Home} initial />
       <Scene key="forgotpassowrd" component={ForgotPassword} />
     </Stack>
   </Router>

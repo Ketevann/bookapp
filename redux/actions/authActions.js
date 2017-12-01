@@ -25,9 +25,22 @@ export const loginUser = ( email, password ) => {
         loginUserSuccess(dispatch, user))
       .catch((error) => {
         console.log('erro', error)
+        
         firebase.auth().createUserWithEmailAndPassword(email, password)
-          .then(user =>
-            loginUserSuccess(dispatch, user))
+          .then(user =>{
+             loginUserSuccess(dispatch, user)
+              //saving a new useer profile
+              rootRef = firebase.database().ref();
+              usersRef = rootRef.child('users');
+              console.log("success!");
+              const date = new Date();
+              console.log(user.uid,"userUID==========++++++");
+              usersRef.push().set({
+                timeStamp: date.toTimeString(),
+                userName: email,
+                FirebaseUserID:user.uid,
+              })
+            })
             .catch(() => loginUserFail(dispatch))
       })
       }
@@ -106,9 +119,12 @@ const loginTrue = () => {
 const loginFalse = () => {type: NOTLOGGEDIN}
 
 
-export const loginDispatch = () =>
+export const loginDispatch = (userUID) =>
   dispatch =>
-    dispatch({type: LOGGEDIN})
+    dispatch({type: LOGGEDIN,
+              payload: userUID
+        })
+        
 
    export const loginDispatchFalse = () =>
      dispatch =>

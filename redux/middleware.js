@@ -61,7 +61,10 @@ export const apiMiddleware = store => next => action => {
                         args.map((args)=>{
                             console.log(args.data.items[0].volumeInfo.title, "sth");
                             //console.log(args.data.items[0].volumeInfo);
-                            data.push(args.data.items[0].volumeInfo.title+'\n');
+                            // data.push(args.data.items[0].volumeInfo.title+'\n');
+                            //  data.push(args.data.items[0].volumeInfo.imageLinks.thumbnail+'\n');
+                            data.push(args.data.items[0].volumeInfo);
+                            
                         })
 
                         return next({

@@ -1,9 +1,9 @@
 import {combineReducers} from 'redux';
 import auth from './auth'
-import reducers from './reducers';
+import defaultBookListReducer from './defaultBookListReducer';
 
 
 export default combineReducers({
   auth: auth,
-  reducers: reducers
+  defaultBookList: defaultBookListReducer
 });
