@@ -45,7 +45,6 @@ class Home extends Component {
     return (
       <View style={styles.container}>
           { defaultBookList ? defaultBookList.map((book, index)=><Book key={index}  book={book}/>) : <Text>Loading Defaults</Text>}
-          { loggedIn ? <Button onPress={() =>firebase.auth().signOut()}>Sign Out</Button> : <Button onPress= {() => navigate('login') }> Sign in </Button>}
         <Text style={styles.header}>
           {/*{userUID ? <Text>{userUID} </Text>:null} to be used for saving books*/}
         </Text>
