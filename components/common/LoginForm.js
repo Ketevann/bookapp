@@ -11,8 +11,6 @@ import firebase from 'firebase'
 class LoginForm extends Component {
 
   OnButtonPress() {
-
-
     const { email, password } = this.props.auth
     console.log(email, password, 'EMAIL PASS')
     this.props.loginUser(email, password)
@@ -39,6 +37,8 @@ class LoginForm extends Component {
   //   this.setState({ email: '', password: '', error: '', loading: false })
 
   // }
+
+
   onPasswordChange(text) {
     console.log('text')
   this.props.passwordDispatch(text)

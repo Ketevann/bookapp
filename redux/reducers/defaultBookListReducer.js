@@ -1,7 +1,8 @@
 
 import * as types from '../actions/action-types';
+import initialState from '../initialState'
 
- const reducers = (state = initialState, action) => {
+export default (state = initialState, action) => {
 
     switch (action.type) {
 
@@ -15,12 +16,9 @@ import * as types from '../actions/action-types';
             return Object.assign({}, state, {
                 defaultBookList: action.data,  
             })
-
-        
             
         default:
             return state
     }
 }
 
-export default reducers
