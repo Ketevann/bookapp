@@ -11,6 +11,14 @@ import * as types from '../actions/action-types';
                 bookListData: action.data,
             })
 
+        case types.DEFAULT_BOOKLIST_DATA_RECIEVED:
+            console.log("DEFAULT_BOOKLIST_DATA_RECIEVED");
+            return Object.assign({}, state, {
+                defaultBookList: action.data,  
+            })
+
+        
+            
         default:
             return state
     }
