@@ -5,7 +5,8 @@ import PickerGenres from './PickerGenres'
 import { Header, Card, CardSection, Button, Input, Spinner } from './'
 import firebase from 'firebase'
 
-import { updatedTitle, updatedAuthor, updatedGenre } from '../../redux/actions/preferencesActions'
+import { updatedTitle, updatedAuthor, updatedGenre, updatedPreferencesFireBase } from '../../redux/actions/preferencesActions'
+import { loginDispatch, loginDispatchFalse } from '../../redux/actions/authActions'
 
 
 const genres = [
@@ -51,6 +52,18 @@ class PreferencesForm extends Component {
     //   genre: '',
     // };
   }
+
+  componentWillMount(){
+      console.log('mounted');
+      firebase.auth().onAuthStateChanged((user) => {
+      console.log((this.props, ' in authfirebase', user))
+      if (user) {
+        this.props.loginDispatch(user.uid)
+      }
+      else this.props.loginDispatchFalse()
+    })
+}
+
   onTitleChange(title) {
    console.log('title', title);
    this.props.updatedTitle(title);
@@ -66,8 +79,22 @@ class PreferencesForm extends Component {
    this.props.updatedGenre(genre);
   }
 
+  handleSubmit=(userUID)=>{
+    alert("submit",userUID );
+    const {title,author, genre}= this.props.preferences;
+    let preferences={};
+        preferences.title=title;
+        preferences.author=author;
+        preferences.genre=genre;
+        this.props.updatedPreferencesFireBase(preferences, userUID);
+
+  }
+
+  
+
   render() {
     {console.log('props in preferencesform', this.props)}
+    const { loggedIn , userUID } = this.props.auth;
     return (
       <View style={styles.container}>
         <Card>
@@ -95,8 +122,7 @@ class PreferencesForm extends Component {
             onValueChange={this.onGenreChange.bind(this)}
             value={this.props.preferences.genre}
           /> 
-          <Button onPress={() =>
-            this.props.updatedTitle("the stranger")} >
+          <Button onPress={()=> this.handleSubmit(userUID)} >
            Submit
           </Button>
           </CardSection>
@@ -115,6 +141,12 @@ styles = {
 }
 
 export default connect(
-    ({ preferences }) => ({ preferences: preferences }),
-    { updatedTitle, updatedAuthor, updatedGenre },
+    ({ preferences, auth }) => ({ preferences: preferences , auth: auth}),
+    { updatedTitle, 
+      updatedAuthor, 
+      updatedGenre,
+      updatedPreferencesFireBase,
+      loginDispatch, 
+      loginDispatchFalse
+    },
   )(PreferencesForm)
