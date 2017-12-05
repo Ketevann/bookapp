@@ -44,6 +44,7 @@ class Home extends Component {
 
     return (
       <View style={styles.container}>
+          <Button onPress= {() => navigate('preferencesForm') }> Preferences </Button>
           { defaultBookList ? defaultBookList.map((book, index)=><Book key={index}  book={book}/>) : <Text>Loading Defaults</Text>}
         <Text style={styles.header}>
           {/*{userUID ? <Text>{userUID} </Text>:null} to be used for saving books*/}
