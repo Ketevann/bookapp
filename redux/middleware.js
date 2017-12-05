@@ -50,7 +50,7 @@ export const apiMiddleware = store => next => action => {
        
         const baseUrlcopy='https://www.googleapis.com/books/v1/volumes?q=';
             // key1='&key=AIzaSyDhYAmhr3NlkGgbj123FweCy6PnDFHcCbk',
-            key2copy='&key=AIzaSyCs8Tkv_NUbbfArk39pdi1tRUbqEzBlaaw';
+            key2copy='&key=AIzaSyDhYAmhr3NlkGgbj123FweCy6PnDFHcCbk';
 
             //console.log('LOAD_DEFAULT_BOOKLIST_DATA',action.defaultBookList);
             action.defaultBookList.map((object) => object.Type === 'book' ?  defualtBookTitles.push(axios.get(baseUrlcopy+object.Name+key2copy)):null);  
@@ -61,7 +61,10 @@ export const apiMiddleware = store => next => action => {
                         args.map((args)=>{
                             console.log(args.data.items[0].volumeInfo.title, "sth");
                             //console.log(args.data.items[0].volumeInfo);
-                            data.push(args.data.items[0].volumeInfo.title+'\n');
+                            // data.push(args.data.items[0].volumeInfo.title+'\n');
+                            //  data.push(args.data.items[0].volumeInfo.imageLinks.thumbnail+'\n');
+                            data.push(args.data.items[0].volumeInfo);
+                            
                         })
 
                         return next({

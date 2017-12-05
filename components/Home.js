@@ -1,72 +1,58 @@
 import React, { Component } from 'react';
 import {
-  Button,
   StyleSheet,
   Text,
   View
 } from 'react-native';
+import firebase from 'firebase';
 import axios  from 'axios';
+import defaultList  from './data/defaultList';
+import Book from './Book';
+import { Button} from './common';
 import { connect } from 'react-redux';
 import { getBookListDataRedux, loadDefaultBookListData} from '../redux/actions/actions';
-import  defaultList  from './data/defaultList';
-
+import { loginDispatch, loginDispatchFalse } from '../redux/actions/authActions'
 
 class Home extends Component {
+  state = { loggedIn: null }
 
-  componentDidMount(){
+  componentWillMount(){
       console.log('mounted');
       
       if (defaultList){
-        //console.log(defaultList, "default");
+        console.log(defaultList, "default");
         this.props.loadDefaultBookListData(defaultList.Similar.Results);
       }else{
         console.log("defaultList not loaded");
       }
-
-      //this.props.getBookListDataRedux("the stranger");
-      /*
-      let bookTitles=[];
-      const baseUrl='https://www.googleapis.com/books/v1/volumes?q=',
-            key1='&key=AIzaSyDhYAmhr3NlkGgbj123FweCy6PnDFHcCbk',
-            key2='&key=AIzaSyCs8Tkv_NUbbfArk39pdi1tRUbqEzBlaaw';
-
-      axios.get('https://tastedive.com/api/similar?q=the+epic+of+gilgamesh&k=291171-booksapp-5DFKTYU4&limit=5')
-      .then((response)=> {
-          console.log(response.data.Similar.Results);
-          response.data.Similar.Results.map((object) => object.Type === 'book' ?  bookTitles.push(axios.get(baseUrl+object.Name+key2)):null);
-          return bookTitles;
-
-      }).then((response)=>{
-              axios.all(response)
-                  .then(axios.spread((...args) => {
-                      args.map((args)=>{
-                          // console.log(args.data.items[0].volumeInfo.title);
-                          console.log(args.data.items[0].volumeInfo);
-                      })
-                  })).catch((error) => {
-                      console.error(error);
-                  });
-
-          console.log(response);
-
-    }).catch((error)=> {
-        console.log(error);
-    });
-  */
+      
+      firebase.auth().onAuthStateChanged((user) => {
+      console.log((this.props, ' in authfirebase', user))
+      if (user) {
+        this.props.loginDispatch(user.uid)
+      }
+      else this.props.loginDispatchFalse()
+    })
 }
 
 
   render() {
-    const { defaultBookList} = this.props;
+    const { defaultBookList} = this.props.defaultBookList,
+          { navigate } = this.props.navigation,
+          { loggedIn , userUID } = this.props.auth;
+          {console.log(this.props.auth,"defaultBookList=======================================>")}
+
     return (
       <View style={styles.container}>
+          <Button onPress= {() => navigate('preferencesForm') }> Preferences </Button>
+          { defaultBookList ? defaultBookList.map((book, index)=><Book key={index}  book={book}/>) : <Text>Loading Defaults</Text>}
         <Text style={styles.header}>
-          { defaultBookList ? defaultBookList:'Loading Defaults'}
+          {/*{userUID ? <Text>{userUID} </Text>:null} to be used for saving books*/}
         </Text>
+          { loggedIn ? <Button onPress={() =>firebase.auth().signOut()}>Log Out</Button>: <Button onPress= {() => navigate('login') }> Sign in </Button>}
       </View>
     );
   }
-
 }
 
 const styles = StyleSheet.create({
@@ -82,5 +68,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export default connect(({ bookListData }) => ({ bookListData: bookListData }), { getBookListDataRedux })(Home)
+export default connect(
+    ({ defaultBookList, auth }) => ({ defaultBookList: defaultBookList, auth: auth }), 
+    { loadDefaultBookListData, loginDispatch, loginDispatchFalse })(Home)
 

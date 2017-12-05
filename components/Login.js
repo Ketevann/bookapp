@@ -8,23 +8,16 @@ import { connect } from 'react-redux'
 
 class Login extends Component {
 
-  componentWillMount() {
-    firebase.initializeApp({
-      apiKey: 'AIzaSyBxQ6Lpnp0FT8Fvg8g8Ic7_w4PDJwnqmMo',
-      authDomain: 'auth-a98f1.firebaseapp.com',
-      databaseURL: 'https://auth-a98f1.firebaseio.com',
-      projectId: 'auth-a98f1',
-      storageBucket: 'auth-a98f1.appspot.com',
-      messagingSenderId: '314366021514'
-    });
-    firebase.auth().onAuthStateChanged((user) => {
-      console.log((this.props, ' in authfirebase', user))
-      if (user) {
-        this.props.loginDispatch()
-      }
-      else this.props.loginDispatchFalse()
-    })
-  }
+  // componentWillMount() {
+
+  //   firebase.auth().onAuthStateChanged((user) => {
+  //     console.log((this.props, ' in authfirebase', user))
+  //     if (user) {
+  //       this.props.loginDispatch(user.uid)
+  //     }
+  //     else this.props.loginDispatchFalse()
+  //   })
+  // }
 
   renderContent() {
     console.log(this.props.auth.loggedIn, 'logged in')
