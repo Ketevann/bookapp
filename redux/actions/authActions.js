@@ -37,13 +37,15 @@ export const loginUser = (email, password) => {
 
 export const signUpUser = (email, password, confirm) => dispatch => {
   console.log('in signup', email, password, confirm, '****')
-
+console.log('signed checked', password === confirm)
   if (password === confirm) {
+    console.log('confirmed!!!!!')
         firebase.auth().createUserWithEmailAndPassword(email, password)
           .then(user =>{
             console.log('signed uppppp yoo', user)
-            loginUserSuccess(dispatch, user)
-            Actions.home()
+            Actions.preferencesForm()
+           return loginUserSuccess(dispatch, user)
+
             })
      .catch(() => loginUserFail(dispatch))
 }

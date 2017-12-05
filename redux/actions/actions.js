@@ -10,11 +10,12 @@ export const getBookListDataRedux = (title) => {
 
 
 
-export const loadDefaultBookListData = (bookList) => {
+export const loadDefaultBookListData = (bookList) =>
+dispatch => {
   console.log("loadDefaultBookListData",bookList);
-  return {
+return  dispatch( {
     type: 'LOAD_DEFAULT_BOOKLIST_DATA',
     defaultBookList:bookList
-  };
+  });
 };
 

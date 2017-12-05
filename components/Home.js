@@ -15,7 +15,7 @@ class Home extends Component {
 
   componentDidMount(){
       console.log('mounted');
-      
+
       if (defaultList){
         //console.log(defaultList, "default");
         this.props.loadDefaultBookListData(defaultList.Similar.Results);

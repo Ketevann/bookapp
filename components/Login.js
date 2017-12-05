@@ -11,12 +11,12 @@ class Login extends Component {
 
   componentWillMount() {
     firebase.initializeApp({
-      apiKey: 'AIzaSyBxQ6Lpnp0FT8Fvg8g8Ic7_w4PDJwnqmMo',
-      authDomain: 'auth-a98f1.firebaseapp.com',
-      databaseURL: 'https://auth-a98f1.firebaseio.com',
-      projectId: 'auth-a98f1',
-      storageBucket: 'auth-a98f1.appspot.com',
-      messagingSenderId: '314366021514'
+      apiKey: "AIzaSyB-lzOIx1LfgG_epqj0tiCWb7ual2htX28",
+    authDomain: "nativebookapp.firebaseapp.com",
+    databaseURL: "https://nativebookapp.firebaseio.com",
+    projectId: "nativebookapp",
+    storageBucket: "nativebookapp.appspot.com",
+    messagingSenderId: "912103368076"
     });
     firebase.auth().onAuthStateChanged((user) => {
       console.log((this.props, ' in authfirebase', user))

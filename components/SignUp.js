@@ -75,12 +75,12 @@ onForgotPassword(email) {
               placeholder="confirm password"
               label="Password"
               onChangeText={this.onPasswordConfirm.bind(this)}
-              value={this.props.auth.onPasswordConfirm}
+              value={this.props.auth.passwordConfirm}
             />
           </CardSection>
 
           <CardSection>
-            <Button onPress={this.OnButtonPress.bind(this)}>Submit</Button>
+            <Button onPress={this.OnButtonPress.bind(this)}>Next</Button>
           </CardSection>
           <CardSection>
             <Text>{this.props.auth.error}</Text>
