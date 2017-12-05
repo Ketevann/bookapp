@@ -12,6 +12,7 @@ import { Button} from './common';
 import { connect } from 'react-redux';
 import { getBookList, loadDefaultBookList, saveBook} from '../redux/actions/bookActions';
 import { loginDispatch, loginDispatchFalse } from '../redux/actions/authActions'
+import { Actions} from 'react-native-router-flux';
 
 class Home extends Component {
   state = { loggedIn: null }
@@ -49,7 +50,7 @@ class Home extends Component {
           { defaultBookList ? defaultBookList.map((book, index)=><Book key={index}  book={book} saveBook={saveBook}/>) : <Text>Loading Defaults</Text>}
         <Text style={styles.header}>
         </Text>
-          { loggedIn ? <Button onPress={() =>firebase.auth().signOut()}>Log Out</Button>: <Button onPress= {() => navigate('login') }> Sign in </Button>}
+          { loggedIn ? <Button onPress={() =>firebase.auth().signOut()}>Log Out</Button>: <Button onPress= {() => Actions.login() }> Sign in </Button>}
       </View>
     );
   }
