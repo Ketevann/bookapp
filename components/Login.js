@@ -5,6 +5,7 @@ import { Header, Button, Spinner } from './common';
 import LoginForm  from './common/LoginForm'
 import { loginDispatch, loginDispatchFalse } from '../redux/actions/authActions'
 import { connect } from 'react-redux'
+import {Actions} from 'react-native-router-flux';
 
 class Login extends Component {
 
@@ -53,15 +54,16 @@ class Login extends Component {
     render() {
       { console.log('props', this.props, this.state) }
       return (
-        <View>
+        <View style={{flex:1}}>
           <Header headerText="Authentication" />
           {this.renderContent()}
+          <Text>Already a User? </Text>
+          <Text onPress={() => Actions.signup()}>Sign Up</Text>
         </View>
       );
     }
   }
 
-  export default connect(
-    ({ auth }) => ({ auth: auth }),
+  export default connect(({ auth }) => ({ auth: auth }),
     { loginDispatch, loginDispatchFalse },
   )(Login)
