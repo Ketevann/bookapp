@@ -10,7 +10,7 @@ import defaultList  from './data/defaultList';
 import Book from './Book';
 import { Button} from './common';
 import { connect } from 'react-redux';
-import { getBookListDataRedux, loadDefaultBookListData} from '../redux/actions/actions';
+import { getBookList, loadDefaultBookList, saveBook} from '../redux/actions/bookActions';
 import { loginDispatch, loginDispatchFalse } from '../redux/actions/authActions'
 
 class Home extends Component {
@@ -21,7 +21,7 @@ class Home extends Component {
       
       if (defaultList){
         console.log(defaultList, "default");
-        this.props.loadDefaultBookListData(defaultList.Similar.Results);
+        this.props.loadDefaultBookList(defaultList.Similar.Results);
       }else{
         console.log("defaultList not loaded");
       }
@@ -37,17 +37,17 @@ class Home extends Component {
 
 
   render() {
-    const { defaultBookList} = this.props.defaultBookList,
+    const { defaultBookList} = this.props.book,
+          { saveBook } = this.props,
           { navigate } = this.props.navigation,
-          { loggedIn , userUID } = this.props.auth;
+          { loggedIn } = this.props.auth;
           {console.log(this.props.auth,"defaultBookList=======================================>")}
 
     return (
       <View style={styles.container}>
           <Button onPress= {() => navigate('preferencesForm') }> Preferences </Button>
-          { defaultBookList ? defaultBookList.map((book, index)=><Book key={index}  book={book}/>) : <Text>Loading Defaults</Text>}
+          { defaultBookList ? defaultBookList.map((book, index)=><Book key={index}  book={book} saveBook={saveBook}/>) : <Text>Loading Defaults</Text>}
         <Text style={styles.header}>
-          {/*{userUID ? <Text>{userUID} </Text>:null} to be used for saving books*/}
         </Text>
           { loggedIn ? <Button onPress={() =>firebase.auth().signOut()}>Log Out</Button>: <Button onPress= {() => navigate('login') }> Sign in </Button>}
       </View>
@@ -69,6 +69,6 @@ const styles = StyleSheet.create({
 });
 
 export default connect(
-    ({ defaultBookList, auth }) => ({ defaultBookList: defaultBookList, auth: auth }), 
-    { loadDefaultBookListData, loginDispatch, loginDispatchFalse })(Home)
+    ({ book, auth }) => ({ book: book, auth: auth }), 
+    { loadDefaultBookList, loginDispatch, loginDispatchFalse, saveBook })(Home)
 

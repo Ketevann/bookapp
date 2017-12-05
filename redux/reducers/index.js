@@ -1,10 +1,11 @@
 import {combineReducers} from 'redux';
 import auth from './auth'
-import defaultBookListReducer from './defaultBookListReducer';
+import book from './book';
+
 import preferences from './preferences';
 
 export default combineReducers({
   auth: auth,
-  defaultBookList: defaultBookListReducer,
+  book:book,
   preferences: preferences
 });

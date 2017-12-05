@@ -31,7 +31,7 @@ export const apiMiddleware = store => next => action => {
 
                         return next({
                             type: 'GET_BOOKLIST_DATA_RECIEVED',
-                            data:data,  
+                            payload:data,  
                         })
                     })).catch((error) => {
                         console.error(error);
@@ -53,7 +53,7 @@ export const apiMiddleware = store => next => action => {
             key2copy='&key=AIzaSyDhYAmhr3NlkGgbj123FweCy6PnDFHcCbk';
 
             //console.log('LOAD_DEFAULT_BOOKLIST_DATA',action.defaultBookList);
-            action.defaultBookList.map((object) => object.Type === 'book' ?  defualtBookTitles.push(axios.get(baseUrlcopy+object.Name+key2copy)):null);  
+            action.payload.map((object) => object.Type === 'book' ?  defualtBookTitles.push(axios.get(baseUrlcopy+object.Name+key2copy)):null);  
               //console.log(defualtBookTitles);
                 axios.all(defualtBookTitles)
                     .then(axios.spread((...args) => {
@@ -69,7 +69,7 @@ export const apiMiddleware = store => next => action => {
 
                         return next({
                             type: 'DEFAULT_BOOKLIST_DATA_RECIEVED',
-                            data:data,  
+                            payload:data,  
                         })
                     })).catch((error) => {
                         console.error(error);

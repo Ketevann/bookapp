@@ -33,17 +33,6 @@ export const updatedGenre = (genre) => {
   }
 }
 
-// rootRef = firebase.database().ref();
-//               usersRef = rootRef.child('users');
-//               console.log("success!");
-//               const date = new Date();
-//               console.log(user.uid,"userUID==========++++++");
-//               usersRef.push().set({
-//                 timeStamp: date.toTimeString(),
-//                 userName: email,
-//                 FirebaseUserID:user.uid,
-//               })
-
 export const updatedPreferencesFireBase = (preferences, userUID) => {
     console.log('UPDATE ALL PREFERENCES FireBase');
     firebase.database().ref("users").orderByChild("FirebaseUserID").equalTo(userUID).on("child_added", (snapshot)=>{

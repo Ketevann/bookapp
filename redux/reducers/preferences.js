@@ -1,9 +1,10 @@
-const INITIAL_STATE = { title: '', author: '', genre: '', loading: false }
 import {
  UPDATE_TITLE,
  UPDATE_AUTHOR,
  UPDATE_GENRE
 } from '../actions/action-types'
+
+const INITIAL_STATE = { title: '', author: '', genre: '', loading: false }
 
 
 export default (preferences = INITIAL_STATE, action) => {

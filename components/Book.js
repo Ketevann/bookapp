@@ -23,24 +23,17 @@ class Book extends Component {
         })
       }
   
-handleAddBooks=(book)=>{
-   const {userUID } = this.props.auth;
-      //  alert(userUID)
-       firebase.database().ref("users").orderByChild("FirebaseUserID").equalTo(userUID).on("child_added", (snapshot)=>{
-           firebase.database().ref().child('users').child(snapshot.key).push(book);
-        // firebase.auth().currentUser.uid
-       })
-   }
+
 
   render() {
     const { imageLinks, title } = this.props.book;
-    const  { loggedIn , userUID } = this.props.auth;
+    const { loggedIn } = this.props.auth;
     return (
      <TouchableOpacity style={styles.container} >
           {/*<View style={styles.imageContainer}>
             <Image  source={ {uri: imageLinks.thumbnail}} style={styles.image} />
-          </View>*/}
-          { loggedIn ?  <Button onPress={()=>this.handleAddBooks({ booksLiked:[title]} )}> Save Book </Button> : <Text>sign in to save</Text>}
+          </View>*/}            
+          { loggedIn ?  <Button onPress={()=>this.props.saveBook(title)}> Save Book </Button> : <Text>sign in to save</Text>}
           <Text style={styles.title} numberOfLines={1}>{title}</Text>
      </TouchableOpacity>
      

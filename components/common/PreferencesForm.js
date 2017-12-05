@@ -82,15 +82,9 @@ class PreferencesForm extends Component {
   handleSubmit=(userUID)=>{
     alert("submit",userUID );
     const {title,author, genre}= this.props.preferences;
-    let preferences={};
-        preferences.title=title;
-        preferences.author=author;
-        preferences.genre=genre;
-        this.props.updatedPreferencesFireBase(preferences, userUID);
-        }
-
-  
-
+        this.props.updatedPreferencesFireBase({ title:title, author:author, genre:genre}, userUID);
+  }
+ 
   render() {
     {console.log('props in preferencesform', this.props)}
     const { loggedIn , userUID } = this.props.auth;
