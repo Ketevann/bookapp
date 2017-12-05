@@ -2,7 +2,6 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Login from './components/Login'
 import Router from './Router'
-import PreferencesForm from './components/common/PreferencesForm'
 
 import firebase from 'firebase';
 import {Provider} from 'react-redux';

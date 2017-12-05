@@ -12,7 +12,7 @@ import {
    TouchableOpacity
  } from 'react-native';
 
-import {genres} from '../data/genres';
+import {genres} from './data/genres';
 
 export default class PickerGenre extends Component {
   constructor(props) {

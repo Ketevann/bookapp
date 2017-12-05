@@ -3,7 +3,7 @@ import {Scene, Router, Actions, Stack} from 'react-native-router-flux';
 import Login from './components/Login'
 import Home from './components/Home'
 import ForgotPassword from './components/ForgotPassword'
-import PreferencesForm from './components/common/PreferencesForm'
+import PreferencesForm from './components/PreferencesForm'
 
 
 

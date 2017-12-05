@@ -40,13 +40,12 @@ class Home extends Component {
   render() {
     const { defaultBookList} = this.props.book,
           { saveBook } = this.props,
-          { navigate } = this.props.navigation,
           { loggedIn } = this.props.auth;
           {console.log(this.props.auth,"defaultBookList=======================================>")}
 
     return (
       <View style={styles.container}>
-          <Button onPress= {() => navigate('preferencesForm') }> Preferences </Button>
+          <Button onPress= {() => Actions.preferencesForm() }> Preferences </Button>
           { defaultBookList ? defaultBookList.map((book, index)=><Book key={index}  book={book} saveBook={saveBook}/>) : <Text>Loading Defaults</Text>}
         <Text style={styles.header}>
         </Text>

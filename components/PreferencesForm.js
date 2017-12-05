@@ -2,11 +2,11 @@ import React, { Component } from 'react'
 import { View, Text , Picker} from 'react-native'
 import { connect } from 'react-redux'
 import PickerGenres from './PickerGenres'
-import { Header, Card, CardSection, Button, Input, Spinner } from './'
+import { Header, Card, CardSection, Button, Input, Spinner } from './common'
 import firebase from 'firebase'
 
-import { updatedTitle, updatedAuthor, updatedGenre, updatedPreferencesFireBase } from '../../redux/actions/preferencesActions'
-import { loginDispatch, loginDispatchFalse } from '../../redux/actions/authActions'
+import { updatedTitle, updatedAuthor, updatedGenre, updatedPreferencesFireBase } from '../redux/actions/preferencesActions'
+import { loginDispatch, loginDispatchFalse } from '../redux/actions/authActions'
 
 
 
