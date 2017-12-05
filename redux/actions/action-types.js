@@ -11,3 +11,7 @@ export const LOGIN_USER_FAIL = 'LOGIN_USER_FAIL'
 export const LOGIN_USER_SUCESS = 'LOGIN_USER_SUCESS'
 export const FORGOT = 'FORGOT'
 
+export const UPDATE_TITLE = 'UPDATE_TITLE';
+export const UPDATE_AUTHOR = 'UPDATE_AUTHOR';
+export const UPDATE_GENRE = 'UPDATE_GENRE';
+
