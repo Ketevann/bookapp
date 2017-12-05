@@ -87,8 +87,7 @@ class PreferencesForm extends Component {
         preferences.author=author;
         preferences.genre=genre;
         this.props.updatedPreferencesFireBase(preferences, userUID);
-
-  }
+        }
 
   
 
@@ -97,6 +96,7 @@ class PreferencesForm extends Component {
     const { loggedIn , userUID } = this.props.auth;
     return (
       <View style={styles.container}>
+        <Header headerText="Preferences" />
         <Card>
           <CardSection>
              <Input
