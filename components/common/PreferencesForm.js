@@ -9,40 +9,6 @@ import { updatedTitle, updatedAuthor, updatedGenre, updatedPreferencesFireBase }
 import { loginDispatch, loginDispatchFalse } from '../../redux/actions/authActions'
 
 
-const genres = [
-  {
-    label: 'Adventure',
-    value: 'Adventure',
-  },
-  {
-    label: 'Drama',
-    value: 'Drama',
-  },
-  {
-    label: 'Fiction',
-    value: 'Fiction',
-  },
-  {
-    label: 'Biography',
-    value: 'Biography',
-  },
-  {
-    label: 'Science',
-    value: 'Science',
-  },
-  {
-    label: 'Technology',
-    value: 'Technology',
-  },
-  {
-    label: 'History',
-    value: 'History',
-  },
-  {
-    label: 'Fantasy',
-    value: 'Fantasy',
-  },
-];
 
 class PreferencesForm extends Component {
    constructor(props) {
@@ -112,7 +78,6 @@ class PreferencesForm extends Component {
           </CardSection>
           <CardSection>
             <PickerGenres
-            items={genres}
             onValueChange={this.onGenreChange.bind(this)}
             value={this.props.preferences.genre}
           /> 

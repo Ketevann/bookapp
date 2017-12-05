@@ -12,6 +12,8 @@ import {
    TouchableOpacity
  } from 'react-native';
 
+import {genres} from '../data/genres';
+
 export default class PickerGenre extends Component {
   constructor(props) {
     super(props)
@@ -26,10 +28,7 @@ export default class PickerGenre extends Component {
   }
 
  render() {
-   const selectedItem = this.props.items.find(
-        i => i.value === this.props.value
-      );
-   const selectedLabel = selectedItem ? selectedItem.label : '';
+   
    return (
      <View  style={styles.inputContainer}>
        <TouchableOpacity
@@ -40,10 +39,7 @@ export default class PickerGenre extends Component {
               style={styles.input}
               editable={false}
               placeholder="Select genre"
-              onChangeText={searchString => {
-                this.setState({ searchString });
-              }}
-              value={selectedLabel}
+              value={this.props.value}
             />
        </TouchableOpacity>
         <Modal
@@ -64,11 +60,11 @@ export default class PickerGenre extends Component {
                         <Picker
                           selectedValue={this.props.value}
                           onValueChange={this.props.onValueChange}>
-                          {this.props.items.map((i, index) => (
+                          {genres.map((genre, index) => (
                             <Picker.Item
                               key={index}
-                              label={i.label}
-                              value={i.value}
+                              label={genre.label}
+                              value={genre.value}
                             />
                           ))}
                         </Picker>
