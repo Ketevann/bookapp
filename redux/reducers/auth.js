@@ -1,10 +1,11 @@
-const INITIAL_STATE = { email: '', password: '', error: '', loading: false, loggedIn: null }
+const INITIAL_STATE = { email: '', password: '', passwordConfirm: '', error: '', loading: false, loggedIn: null }
 import {
   EMAIL_CHANGED, PASSWORD_CHANGED, LOGIN_USER_SUCESS, LOGIN_USER_FAIL,
   LOGIN_USER,
   LOGGEDIN,
   NOTLOGGEDIN,
-  FORGOT
+  FORGOT,
+  PASSWORD_CONFIRM
 } from '../actions/action-types'
 
 
@@ -17,6 +18,8 @@ export default (auth = INITIAL_STATE, action) => {
     case PASSWORD_CHANGED:
       console.log('passowrd', action)
       return { ...auth, password: action.payload };
+    case PASSWORD_CONFIRM:
+      return { ...auth, passwordConfirm: action.payload };
     case LOGIN_USER_SUCESS:
       return { ...auth, ...INITIAL_STATE, user: action.payload };
     case LOGIN_USER_FAIL:
@@ -24,10 +27,10 @@ export default (auth = INITIAL_STATE, action) => {
     case LOGIN_USER:
       return { ...auth, loading: true, error: '' };
     case LOGGEDIN:
-      return {loggedIn: true };
+      return { loggedIn: true };
     case NOTLOGGEDIN:
       return { ...auth, loggedIn: false };
-      case FORGOT:
+    case FORGOT:
       return { ...auth, email: '', error: '' };
     
     default:
