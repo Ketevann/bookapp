@@ -60,7 +60,7 @@ class Home extends Component {
 
 
 /* Saving books*/ 
-appendList=(newBook)=>{
+appendList(newBook){
   firebase.auth().onAuthStateChanged((user) => {
       if (user) {
           firebase.database().ref(`users/${user.uid}/books`).once('value', snapshot => 
@@ -82,7 +82,7 @@ appendList=(newBook)=>{
       <View style={styles.container}>
           {/*<Button onPress= {() => this.appendList(34) }> check </Button>*/}
           <Button onPress= {() => Actions.preferencesForm() }> Preferences </Button>
-          { defaultBookList ? defaultBookList.map((book, index)=><Book key={index}  book={book} saveBook={this.appendList}/>) : <Text>Loading Defaults</Text>}
+          { defaultBookList ? defaultBookList.map((book, index)=><Book key={index}  book={book} saveBook={this.appendList.bind(this)}/>) : <Text>Loading Defaults</Text>}
         <Text style={styles.header}>
         </Text>
           { loggedIn ? <Button onPress={() =>firebase.auth().signOut()}>Log Out</Button>: <Button onPress= {() => Actions.login() }> Sign in </Button>}
