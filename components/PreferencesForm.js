@@ -20,9 +20,7 @@ class PreferencesForm extends Component {
   }
 
   componentWillMount(){
-      console.log('mounted');
       firebase.auth().onAuthStateChanged((user) => {
-      console.log((this.props, ' in authfirebase', user))
       if (user) {
         this.props.loginDispatch(user.uid)
       }
@@ -47,9 +45,7 @@ class PreferencesForm extends Component {
 
   handleSubmit=()=>{
      firebase.auth().onAuthStateChanged((user) => {
-          console.log((this.props, ' in authfirebase', user))
           if (user) {
-            alert("submit", user.uid);
             const {title,author, genre}= this.props.preferences;
             this.props.updatedPreferencesFireBase({ title:title, author:author, genre:genre}, user.uid);
           }
