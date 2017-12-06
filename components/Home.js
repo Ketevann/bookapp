@@ -19,7 +19,7 @@ class Home extends Component {
 
   componentWillMount(){
       console.log('mounted');
-      
+
       if (defaultList){
         console.log(defaultList, "default");
         this.props.loadDefaultBookList(defaultList.Similar.Results);
@@ -42,21 +42,7 @@ class Home extends Component {
 
 
 
-// componentDidMount(){
-//   firebase.auth().onAuthStateChanged((user) => {
-//          if (user) {
-//            firebase.database().ref("users"+'/'+user.uid+'/').orderByChild('books').on("child_added", (snapshot)=>{
-//             console.log (snapshot.val(), "------------->>>LL>>>>", snapshot.key)
-//           })
-          
-//           var temp=[56,this.state.newBook]
-//           var books={ books:temp}
-//           firebase.database().ref("users"+'/'+user.uid+'/').set(books);
-    
-//          }
-//          else null;
-//         })
-// }
+
 
 
 /* Saving books*/ 
@@ -76,7 +62,7 @@ appendList(newBook){
     const { defaultBookList} = this.props.book,
           { saveBook } = this.props,
           { loggedIn } = this.props.auth;
-          { console.log(this.props.auth,"defaultBookList=======================================>")}
+          { console.log(this.props.auth,"Auth=======================================>")}
 
     return (
       <View style={styles.container}>
