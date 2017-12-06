@@ -1,10 +1,11 @@
-import { EMAIL_CHANGED, PASSWORD_CHANGED,
+import {
+  EMAIL_CHANGED, PASSWORD_CHANGED, PASSWORD_CONFIRM,
   LOGIN_USER_SUCESS, LOGIN_USER_FAIL,
-LOGIN_USER, NOTLOGGEDIN,LOGGEDIN, FORGOT} from './action-types'
+  LOGIN_USER, NOTLOGGEDIN, LOGGEDIN, FORGOT
+} from './action-types'
 
 import firebase from 'firebase';
-import {Actions} from 'react-native-router-flux';
-
+import { Actions } from 'react-native-router-flux';
 
 
 
@@ -12,13 +13,13 @@ console.log(EMAIL_CHANGED, PASSWORD_CHANGED, ' CHANGEDDD!!!')
 
 
 
-export const loginUser = ( email, password ) => {
+export const loginUser = (email, password) => {
   console.log('in logins', email, password)
 
 
   return (dispatch) => {
     console.log('in dispatch')
-    dispatch({type: LOGIN_USER})
+    dispatch({ type: LOGIN_USER })
 
     firebase.auth().signInWithEmailAndPassword(email, password)
       .then(user =>
@@ -27,28 +28,37 @@ export const loginUser = ( email, password ) => {
         console.log('erro', error)
         
         firebase.auth().createUserWithEmailAndPassword(email, password)
-          .then(user =>{
-             loginUserSuccess(dispatch, user)
-              //saving a new useer profile
-              rootRef = firebase.database().ref();
-              usersRef = rootRef.child('users');
-              console.log("success!");
-              const date = new Date();
-              console.log(user.uid,"userUID==========++++++");
-              usersRef.push().set({
-                timeStamp: date.toTimeString(),
-                userName: email,
-                FirebaseUserID:user.uid,
-              })
-            })
-            .catch(() => loginUserFail(dispatch))
+          .then(user =>
+            loginUserSuccess(dispatch, user))
+          .catch(() => loginUserFail(dispatch))
       })
-      }
   }
+}
 
- export const forgotPassword = () =>
- dispatch =>{
-   dispatch({type: FORGOT})
+
+export const signUpUser = (email, password, confirm) => dispatch => {
+  console.log('in signup', email, password, confirm, '****')
+console.log('signed checked', password === confirm)
+  if (password === confirm) {
+    console.log('confirmed!!!!!')
+        firebase.auth().createUserWithEmailAndPassword(email, password)
+          .then(user =>{
+            console.log('signed uppppp yoo', user)
+            Actions.preferencesForm()
+           return loginUserSuccess(dispatch, user)
+
+            })
+     .catch(() => loginUserFail(dispatch))
+}
+else {
+  loginUserFail(dispatch)
+}
+}
+
+
+export const forgotPassword = () =>
+  dispatch => {
+    dispatch({ type: FORGOT })
     var auth = firebase.auth();
     var emailAddress = "katie.tsin@gmail.com";
     auth.sendPasswordResetEmail(emailAddress).then(function () {
@@ -94,38 +104,43 @@ export const passwordChanged = (text) => {
   }
 }
 
+export const passwordConfirmChange = (text) =>
+  ({ type: PASSWORD_CONFIRM, payload: text })
 
 
 
-export const emailDispatch = (text) =>{
- console.log('in email', text)
- return dispatch =>
-  dispatch(emailChanged(text))
-  }
+export const passwordConfirmDispatch = (text) => {
+  console.log('in email', text)
+  return dispatch =>
+    dispatch(passwordConfirmChange(text))
+}
 
 
-export const passwordDispatch = (text) =>{
-   console.log('in email', text)
- return dispatch =>
-  dispatch(passwordChanged(text))
+export const emailDispatch = (text) => {
+  return dispatch =>
+    dispatch(emailChanged(text))
+}
 
-   }
+
+export const passwordDispatch = (text) => {
+  return dispatch =>
+    dispatch(passwordChanged(text))
+
+}
 
 const loginTrue = () => {
   console.log('in trye')
-  return {type: LOGGEDIN}}
+  return { type: LOGGEDIN }
+}
 
 
-const loginFalse = () => {type: NOTLOGGEDIN}
+const loginFalse = () => { type: NOTLOGGEDIN }
 
 
 export const loginDispatch = (userUID) =>
   dispatch =>
-    dispatch({type: LOGGEDIN,
-              payload: userUID
-        })
-        
+    dispatch({ type: LOGGEDIN })
 
-   export const loginDispatchFalse = () =>
-     dispatch =>
-      dispatch({type: NOTLOGGEDIN})
+export const loginDispatchFalse = () =>
+  dispatch =>
+    dispatch({ type: NOTLOGGEDIN })
