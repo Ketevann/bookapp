@@ -7,38 +7,31 @@ import {
 import firebase from 'firebase';
 
 
-console.log('PREFERENCES CHANGED!!!');
-
-export const updatedTitle = (title) => {
-  console.log('UPDATE TITLE',title);
-  return {
+export const updatedTitle = (title, dispatch) => 
+  //console.log('UPDATE TITLE',title);
+  dispatch=>dispatch({
     type: UPDATE_TITLE,
     payload: title
-  }
-}
+  })
 
-export const updatedAuthor = (author) => {
-  console.log('UPDATE AUTHOR',author);
-  return {
+export const updatedAuthor = (author, dispatch) => 
+  //console.log('UPDATE AUTHOR',author);
+  dispatch=> dispatch({
     type: UPDATE_AUTHOR,
     payload: author
-  }
-}
+  })
 
-export const updatedGenre = (genre) => {
-  console.log('UPDATE GENRE',genre);
-  return {
+export const updatedGenre = (genre, dispatch) => 
+  //console.log('UPDATE GENRE',genre);
+  dispatch=>dispatch({
     type: UPDATE_GENRE,
     payload: genre
-  }
-}
+  })
 
-export const updatedPreferencesFireBase = (preferences, userUID) => {
+export const updatedPreferencesFireBase = (preferences, userID, dispatch) => {
     console.log('UPDATE ALL PREFERENCES FireBase');
-    firebase.database().ref("users").orderByChild("FirebaseUserID").equalTo(userUID).on("child_added", (snapshot)=>{
-        firebase.database().ref().child('users').child(snapshot.key).push(preferences);
-    })
-    return {
+    firebase.database().ref(`users/${userID}/preferences`).set(preferences)
+    return (dispatch)=> {
         type: UPDATE_PREFERENCES_FIREBASE
     }
 }
