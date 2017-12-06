@@ -25,27 +25,20 @@ export const loadDefaultBookList = (bookList) => {
 
 
 
-export const saveBook = ( title ) => {
-        return (dispatch)=>{
-            firebase.auth().onAuthStateChanged((user)=> {
-                if (user) {
-                    // alert(user.uid)
-                    //User is signed in.
-                    firebase.database().ref("users").orderByChild("FirebaseUserID").equalTo(user.uid).on("child_added", (snapshot)=>{
-                            firebase.database().ref().child('users').child(snapshot.key).push({ booksLiked: title});
-                    })
-                    return (dispatch)=>{
-                        dispatch({type: BOOK_SAVED_SUCESSFULLY })
-                    }
-                } else {
-                    // No user is signed in.
-                    return (dispatch)=>{
-                        dispatch({type: BOOK_SAVED_SUCESSFULLY })
-                    }
-                }
-            });
-    }
+/* Saving books*/ 
+export const startNewSaveBookList = ( title, userID , dispatch) => 
+    dispatch=>{
+        // alert('start a new list');
+        firebase.database().ref(`users/${userID}/`).set({ books:[title]})
 }
+      
+export const appendSaveBookList = ( title, userID, dispatch ) => 
+    dispatch => firebase.database().ref(`users/${userID}/books`).once('value', (snapshot)=>{
+                // alert(snapshot.val());
+                const savedBook=Object.values(snapshot.val());//get books already in db
+                firebase.database().ref(`users/${userID}/`).set({books:[... savedBook, title ]});//add new book and rest books branch
+                // console.log (savedBook, "------------->>>books")
+            });
 
 
-
+    

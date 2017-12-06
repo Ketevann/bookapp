@@ -23,10 +23,6 @@ class Book extends Component {
         })
       }
   
-  onSaveBook=(title)=>{
-    console.log('save book',title)
-    this.props.saveBook(title)
-  }
 
 
   render() {
@@ -37,9 +33,8 @@ class Book extends Component {
           {/*<View style={styles.imageContainer}>
             <Image  source={ {uri: imageLinks.thumbnail}} style={styles.image} />
           </View>*/}            
-            
-          { loggedIn ?  <Button onPress={()=>this.onSaveBook(title)}> Save Book </Button> : <Text>sign in to save</Text>}
-          <Text style={styles.title} numberOfLines={1}>{title}</Text>
+          { loggedIn ?  <Button onPress={()=>this.props.saveBook(title)}> Save Book </Button> : <Text>sign in to save</Text>}
+          <Text style={styles.title} >{title}</Text>
      </TouchableOpacity>
      
     );
