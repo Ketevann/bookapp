@@ -45,15 +45,21 @@ class PreferencesForm extends Component {
    this.props.updatedGenre(genre);
   }
 
-  handleSubmit=(userUID)=>{
-    alert("submit",userUID );
-    const {title,author, genre}= this.props.preferences;
-        this.props.updatedPreferencesFireBase({ title:title, author:author, genre:genre}, userUID);
+  handleSubmit=()=>{
+     firebase.auth().onAuthStateChanged((user) => {
+          console.log((this.props, ' in authfirebase', user))
+          if (user) {
+            alert("submit", user.uid);
+            const {title,author, genre}= this.props.preferences;
+            this.props.updatedPreferencesFireBase({ title:title, author:author, genre:genre}, user.uid);
+          }
+          else this.props.loginDispatchFalse()
+        })
   }
  
   render() {
     {console.log('props in preferencesform', this.props)}
-    const { loggedIn , userUID } = this.props.auth;
+    const { loggedIn } = this.props.auth;
     return (
       <View style={styles.container}>
         <Header headerText="Preferences" />
@@ -81,7 +87,7 @@ class PreferencesForm extends Component {
             onValueChange={this.onGenreChange.bind(this)}
             value={this.props.preferences.genre}
           /> 
-          <Button onPress={()=> this.handleSubmit(userUID)} >
+          <Button onPress={()=> this.handleSubmit()} >
            Submit
           </Button>
           </CardSection>
