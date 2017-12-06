@@ -12,23 +12,20 @@ import {createLogger} from 'redux-logger'
 import store from './store'
 
 import Home from './components/Home';
-// const store = createStore(reducers, {}, applyMiddleware(
-//       apiMiddleware,ReduxThunk,
-//       createLogger({collapsed: true})));
 
 export default class App extends React.Component {
-   componentWillMount() {
+  componentWillMount() {
     firebase.initializeApp({
-      apiKey: 'AIzaSyAQLrnXMUPqPkfS6IiYI2pqJ-ix0L5ifwI',
-      authDomain: 'test23-8732c.firebaseapp.com',
-      databaseURL: 'https://test23-8732c.firebaseio.com',
-      projectId: 'test23-8732c',
-      storageBucket: 'test23-8732c.appspot.com',
-      messagingSenderId: '196992616531'
+      apiKey: "AIzaSyB-lzOIx1LfgG_epqj0tiCWb7ual2htX28",
+      authDomain: "nativebookapp.firebaseapp.com",
+      databaseURL: "https://nativebookapp.firebaseio.com",
+      projectId: "nativebookapp",
+      storageBucket: "nativebookapp.appspot.com",
+      messagingSenderId: "912103368076"
     });
    }
-
    
+
   render(){
     return(
        <Provider store={store}>
