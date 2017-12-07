@@ -11,8 +11,7 @@ import {
    TextInput,
    TouchableOpacity
  } from 'react-native';
-
-import {genres} from './data/genres';
+import { genres } from './data/genres';
 
 export default class PickerGenre extends Component {
   constructor(props) {
@@ -43,34 +42,33 @@ export default class PickerGenre extends Component {
             />
        </TouchableOpacity>
         <Modal
-              animationType="slide"
-              transparent={true}
-              visible={this.state.modalVisible}>
-                <TouchableWithoutFeedback
-                    onPress={() => this.setState({ modalVisible: false })}>
-                  <View style={styles.modalContainer}>
-                      <View style={styles.buttonContainer}>
+          animationType="slide"
+          transparent={true}
+          visible={this.state.modalVisible}>
+            <TouchableWithoutFeedback onPress={() => this.setState({ modalVisible: false })}>
+                <View style={styles.modalContainer}>
+                    <View style={styles.buttonContainer}>
                         <Text
                           style={{ color: 'blue' }}
                           onPress={() => this.setState({ modalVisible: false })}>
                           Done
                         </Text>
-                      </View>
-                      <View>
-                        <Picker
-                          selectedValue={this.props.value}
-                          onValueChange={this.props.onValueChange}>
-                          {genres.map((genre, index) => (
+                    </View>
+                    <View>
+                    <Picker
+                      selectedValue={this.props.value}
+                      onValueChange={this.props.onValueChange}>
+                      { genres.map((genre, index) => (
                             <Picker.Item
                               key={index}
                               label={genre.label}
                               value={genre.value}
                             />
                           ))}
-                        </Picker>
-                      </View>
+                    </Picker>
                     </View>
-              </TouchableWithoutFeedback>
+                </View>
+            </TouchableWithoutFeedback>
          </Modal>
       </View>
     )
