@@ -1,37 +1,42 @@
-import { 
-    LOAD_DEFAULT_BOOKLIST_DATA, GET_BOOKLIST_DATA_RECIEVED, DEFAULT_BOOKLIST_DATA_RECIEVED, SAVE_BOOK
-} from './action-types'
+import { BOOK_SUGGESTIONS_DATA_RECIEVED } from './action-types'
+import { GOOGLE_API_KEY } from '../../keys'
+import   firebase from 'firebase';
+import   axios from 'axios';
 
-import firebase from 'firebase';
 
-
-export const getBookList = (title, dispatch) =>
-    dispatch => dispatch({
-                    type: GET_BOOKLIST_DATA,
-                    payload:title
+export const getBookSuggestions = (books, dispatch) => 
+     dispatch => {
+        //sends title in 'books' array to google api and collects promises in array  
+        const bookPromises = books.map((book) => axios.get(`https://www.googleapis.com/books/v1/volumes?q=${book.Name}&key=${GOOGLE_API_KEY}`));  
+              axios.all(bookPromises)
+                .then(axios.spread((...args) => {
+                    //collect returned data for each api call in array
+                    const bookList = args.map((book)=>{
+                        console.log(book.data.items[0].volumeInfo.title, "title");
+                        return book.data.items[0].volumeInfo;
+                    })
+                    return dispatch({
+                        type: 'BOOK_SUGGESTIONS_DATA_RECIEVED',
+                        payload: bookList //send booklist to redux
+                    })
+                })).catch((error) => {
+                        console.error(error);
                 });
+     }
 
 
-export const loadDefaultBookList = (bookList, dispatch) => 
-    dispatch => dispatch({
-                    type: LOAD_DEFAULT_BOOKLIST_DATA,
-                    payload:bookList
-                });
-
-/* Saving books*/ 
-export const startNewSaveBookList = ( title, userID , dispatch) => 
+export const createBookShelf= ( title, userID , dispatch) => 
+    //start a new books branch
     dispatch => {
-        // alert('start a new list');
         firebase.database().ref(`users/${userID}/`).set({ books:[title]})
     }
       
-export const appendSaveBookList = ( title, userID, dispatch ) => 
+export const saveBook = ( title, userID, dispatch ) => 
     dispatch => firebase.database().ref(`users/${userID}/books`).once('value', (snapshot)=>{
-                    // alert(snapshot.val());
-                    const savedBook=Object.values(snapshot.val());//get books already in db
-                    firebase.database().ref(`users/${userID}/`).set({books:[... savedBook, title ]});//add new book and rest books branch
-                    // console.log (savedBook, "------------->>>books")
+                    const savedBook=Object.values(snapshot.val());
+                    //db books are returned as an object, iterate object and save values (titles) in array
+                    firebase.database().ref(`users/${userID}/`).set({books:[... savedBook, title ]});
+                    //add new book and reset books branch                  ( old books ^, new book ^ )
                 });
+                
 
-
-    
