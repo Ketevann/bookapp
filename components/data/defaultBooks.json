@@ -1,16 +1,11 @@
 {
-    "Similar":{
-    "Info":[{
-            "Name":"Defualt Home List",
-            "Type":"book"
-        }],
-        "Results":[{
+        "list":[{
                 "Name":"To Kill a Mockingbird",
                 "Type":"book"
             },
             {
                 "Name":"Pride and Prejudice",
-                "Type":"music"
+                "Type":"book"
             },
             {
                 "Name":"The Diary of a Young Girl",
@@ -49,7 +44,6 @@
                  "Type":"book"
 
             }]
-    }
 }
 
 
