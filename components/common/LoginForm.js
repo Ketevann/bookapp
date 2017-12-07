@@ -11,12 +11,21 @@ import firebase from 'firebase'
 class LoginForm extends Component {
 
   OnButtonPress() {
-
-
     const { email, password } = this.props.auth
     console.log(email, password, 'EMAIL PASS')
     this.props.loginUser(email, password)
+   // this.setState({ error: '', loading: true })
 
+    // firebase.auth().signInWithEmailAndPassword(email, password)
+    //   .then(this.onLoginSuccess.bind(this))
+    //   .catch(() => {
+    //     firebase.auth().createUserWithEmailAndPassword(email, password)
+    //       .then(
+    //         this.onLoginSuccess.bind(this))
+    //       .catch(
+    //         this.onLoginFail.bind(this))
+
+    //   });
   }
 
   // onLoginFail() {
@@ -28,6 +37,8 @@ class LoginForm extends Component {
   //   this.setState({ email: '', password: '', error: '', loading: false })
 
   // }
+
+
   onPasswordChange(text) {
     console.log('text')
   this.props.passwordDispatch(text)

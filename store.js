@@ -5,7 +5,8 @@ import ReduxThunk from 'redux-thunk'
 
 
 
+
 export default store = createStore(
-     rootReducer, {}, applyMiddleware(ReduxThunk, createLogger({collapsed: true})));
+     rootReducer, {}, applyMiddleware( ReduxThunk, createLogger({collapsed: true})));
 
 

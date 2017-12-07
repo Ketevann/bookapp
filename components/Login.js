@@ -9,23 +9,14 @@ import {Actions} from 'react-native-router-flux';
 
 class Login extends Component {
 
-  componentWillMount() {
-    firebase.initializeApp({
-      apiKey: "AIzaSyB-lzOIx1LfgG_epqj0tiCWb7ual2htX28",
-    authDomain: "nativebookapp.firebaseapp.com",
-    databaseURL: "https://nativebookapp.firebaseio.com",
-    projectId: "nativebookapp",
-    storageBucket: "nativebookapp.appspot.com",
-    messagingSenderId: "912103368076"
-    });
-    firebase.auth().onAuthStateChanged((user) => {
-      console.log((this.props, ' in authfirebase', user))
-      if (user) {
-        this.props.loginDispatch()
-      }
-      else this.props.loginDispatchFalse()
-    })
-  }
+  // componentWillMount() {
+  //   firebase.auth().onAuthStateChanged((user) => {
+  //     if (user) {
+  //       this.props.loginDispatch()
+  //     }
+  //     else this.props.loginDispatchFalse()
+  //   })
+  // }
 
   renderContent() {
     console.log(this.props.auth.loggedIn, 'logged in')

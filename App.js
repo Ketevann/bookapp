@@ -3,10 +3,9 @@ import { StyleSheet, Text, View } from 'react-native';
 import Login from './components/Login'
 import Router from './Router'
 
-
+import firebase from 'firebase';
 import {Provider} from 'react-redux';
 import {createStore, applyMiddleware } from 'redux';
-import reducers  from './redux/reducers';
 import { apiMiddleware } from './redux/middleware';
 import ReduxThunk from 'redux-thunk'
 import {createLogger} from 'redux-logger'
@@ -15,13 +14,21 @@ import store from './store'
 import Home from './components/Home';
 
 export default class App extends React.Component {
+  componentWillMount() {
+    firebase.initializeApp({
+      apiKey: "AIzaSyB-lzOIx1LfgG_epqj0tiCWb7ual2htX28",
+      authDomain: "nativebookapp.firebaseapp.com",
+      databaseURL: "https://nativebookapp.firebaseio.com",
+      projectId: "nativebookapp",
+      storageBucket: "nativebookapp.appspot.com",
+      messagingSenderId: "912103368076"
+    });
+   }
+   
+
   render(){
-    // const store = createStore(reducers, {}, applyMiddleware(ReduxThunk,
-    //   createLogger({collapsed: true})));
     return(
        <Provider store={store}>
-        {/*<Home/>*/}
-
           <Router />
       </Provider>
     )

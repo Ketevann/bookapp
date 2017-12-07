@@ -1,86 +1,82 @@
 import React, { Component } from 'react';
-import {
-  Button,
-  StyleSheet,
-  Text,
-  View
-} from 'react-native';
-import axios  from 'axios';
+import { StyleSheet, Text, View } from 'react-native';
+import { Header, Card, CardSection, Button, Spinner } from './common'
+import { getBookSuggestions, saveBook, createBookShelf } from '../redux/actions/bookActions';
+import { loginDispatch, loginDispatchFalse } from '../redux/actions/authActions'
+import { Actions} from 'react-native-router-flux';
 import { connect } from 'react-redux';
-import { getBookListDataRedux, loadDefaultBookListData} from '../redux/actions/actions';
-import  defaultList  from './data/defaultList';
-
+import   firebase from 'firebase';
+import   defaultBooks  from './data/defaultBooks';
+import   Book from './Book';
+import   axios  from 'axios';
 
 class Home extends Component {
 
-  componentDidMount(){
-      console.log('mounted');
-
-      if (defaultList){
-        //console.log(defaultList, "default");
-        this.props.loadDefaultBookListData(defaultList.Similar.Results);
+  componentWillMount(){
+      if (defaultBooks){
+        console.log(defaultBooks, "default");
+        this.props.getBookSuggestions(defaultBooks.list);
       }else{
         console.log("defaultList not loaded");
       }
-
-      //this.props.getBookListDataRedux("the stranger");
-      /*
-      let bookTitles=[];
-      const baseUrl='https://www.googleapis.com/books/v1/volumes?q=',
-            key1='&key=AIzaSyDhYAmhr3NlkGgbj123FweCy6PnDFHcCbk',
-            key2='&key=AIzaSyCs8Tkv_NUbbfArk39pdi1tRUbqEzBlaaw';
-
-      axios.get('https://tastedive.com/api/similar?q=the+epic+of+gilgamesh&k=291171-booksapp-5DFKTYU4&limit=5')
-      .then((response)=> {
-          console.log(response.data.Similar.Results);
-          response.data.Similar.Results.map((object) => object.Type === 'book' ?  bookTitles.push(axios.get(baseUrl+object.Name+key2)):null);
-          return bookTitles;
-
-      }).then((response)=>{
-              axios.all(response)
-                  .then(axios.spread((...args) => {
-                      args.map((args)=>{
-                          // console.log(args.data.items[0].volumeInfo.title);
-                          console.log(args.data.items[0].volumeInfo);
-                      })
-                  })).catch((error) => {
-                      console.error(error);
-                  });
-
-          console.log(response);
-
-    }).catch((error)=> {
-        console.log(error);
-    });
-  */
-}
-
-
-  render() {
-    const { defaultBookList} = this.props;
-    return (
-      <View style={styles.container}>
-        <Text style={styles.header}>
-          { defaultBookList ? defaultBookList:'Loading Defaults'}
-        </Text>
-      </View>
-    );
+      
+      firebase.auth().onAuthStateChanged((user) => {
+        console.log((this.props, ' in authfirebase', user));
+        if (user) {
+          this.props.loginDispatch(user.uid)
+        }
+        else this.props.loginDispatchFalse()
+      })
   }
 
+  onSaveBook(book){
+            const userId = this.props.auth.userId;
+            firebase.database().ref(`users/${userId}/books`).once('value', snapshot => 
+                snapshot.val() ? this.props.saveBook(book, userId) : this.props.createBookShelf(book, userId));
+                //checking if a books db branch exists
+  }
+
+  
+  render() {
+    const { bookSuggestions } = this.props.book,
+          { saveBook } = this.props,
+          { loggedIn } = this.props.auth;
+          { console.log( this.props.auth,"Auth=======================================>" )}
+
+    return (
+      <View style={styles.container}>
+        <Card>
+          { bookSuggestions ? bookSuggestions.map((book, index)=><Book key={index}  book={book} onSaveBook={this.onSaveBook.bind(this)}/>) :  <Spinner size='large' />}
+          <CardSection>
+            <Button onPress= {() => Actions.preferencesForm() }> Preferences </Button>
+          </CardSection>
+          <CardSection>
+          { loggedIn ? <Button onPress={() =>firebase.auth().signOut()}>Log Out</Button>: <Button onPress= {() => Actions.login() }> Sign in </Button>}
+          </CardSection>
+        </Card>
+       </View>
+    );
+  }
 }
+
+
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FFF',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   header: {
-    fontSize: 20,
-    marginVertical: 20,
+    fontSize: 12,
+    height:20
   },
 });
 
-export default connect(({ bookListData }) => ({ bookListData: bookListData }), { getBookListDataRedux })(Home)
+export default connect(
+    ({ book, auth }) => ({ book: book, auth: auth }), 
+    { loginDispatch, loginDispatchFalse, 
+      getBookSuggestions,
+      createBookShelf,
+      saveBook
+   })(Home)
 
