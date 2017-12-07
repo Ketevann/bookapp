@@ -137,9 +137,9 @@ const loginTrue = () => {
 const loginFalse = () => { type: NOTLOGGEDIN }
 
 
-export const loginDispatch = (userUID) =>
+export const loginDispatch = (userId) =>
   dispatch =>
-    dispatch({ type: LOGGEDIN })
+    dispatch({ type: LOGGEDIN, payload: userId})
 
 export const loginDispatchFalse = () =>
   dispatch =>
