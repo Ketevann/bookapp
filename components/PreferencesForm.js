@@ -1,32 +1,12 @@
-import React, { Component } from 'react'
-import { View, Text , Picker} from 'react-native'
-import { connect } from 'react-redux'
-import PickerGenres from './PickerGenres'
-import { Header, Card, CardSection, Button, Input, Spinner } from './common'
-import firebase from 'firebase'
-
-import { updatedTitle, updatedAuthor, updatedGenre, updatedPreferencesFireBase } from '../redux/actions/preferencesActions'
-import { loginDispatch, loginDispatchFalse } from '../redux/actions/authActions'
-
-
+import React, { Component } from 'react';
+import { View, Text , Picker} from 'react-native';
+import { Header, Card, CardSection, Button, Input } from './common';
+import { updatedTitle, updatedAuthor, updatedGenre, updatedPreferencesFireBase } from '../redux/actions/preferencesActions';
+import { connect } from 'react-redux';
+import   PickerGenres from './PickerGenres';
+import   firebase from 'firebase';
 
 class PreferencesForm extends Component {
-   constructor(props) {
-    super(props);
-    // this.state = {
-    //   author:'',
-    //   genre: '',
-    // };
-  }
-
-  componentWillMount(){
-      firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        this.props.loginDispatch(user.uid)
-      }
-      else this.props.loginDispatchFalse()
-    })
-}
 
   onTitleChange(title) {
    console.log('title', title);
@@ -44,13 +24,9 @@ class PreferencesForm extends Component {
   }
 
   handleSubmit=()=>{
-     firebase.auth().onAuthStateChanged((user) => {
-          if (user) {
+            const userId= this.props.auth.userId
             const {title,author, genre}= this.props.preferences;
-            this.props.updatedPreferencesFireBase({ title:title, author:author, genre:genre}, user.uid);
-          }
-          else this.props.loginDispatchFalse()
-        })
+            this.props.updatedPreferencesFireBase({ title:title, author:author, genre:genre}, userId);
   }
  
   render() {
@@ -78,14 +54,12 @@ class PreferencesForm extends Component {
               value={this.props.preferences.author}
             />
           </CardSection>
-          <CardSection>
             <PickerGenres
-            onValueChange={this.onGenreChange.bind(this)}
-            value={this.props.preferences.genre}
-          /> 
-          <Button onPress={()=> this.handleSubmit()} >
-           Submit
-          </Button>
+              onValueChange={this.onGenreChange.bind(this)}
+              value={this.props.preferences.genre}
+            /> 
+          <CardSection>
+            <Button onPress={()=> this.handleSubmit()} > Submit </Button>
           </CardSection>
         </Card>
       </View>
@@ -106,8 +80,6 @@ export default connect(
     { updatedTitle, 
       updatedAuthor, 
       updatedGenre,
-      updatedPreferencesFireBase,
-      loginDispatch, 
-      loginDispatchFalse
+      updatedPreferencesFireBase
     },
   )(PreferencesForm)
