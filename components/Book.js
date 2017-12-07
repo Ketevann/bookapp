@@ -1,42 +1,23 @@
-import React, { Component } from 'react';
-import {
-  Image,
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity
-} from 'react-native';
-import { Button} from './common';
-import firebase from 'firebase';
-import { loginDispatch, loginDispatchFalse } from '../redux/actions/authActions'
+import   React, { Component } from 'react';
+import { TouchableOpacity, Image, StyleSheet, Text, View } from 'react-native';
+import { Button } from './common';
 import { connect } from 'react-redux';
+import   firebase from 'firebase';
 
 
 class Book extends Component {
-    componentWillMount(){
-      firebase.auth().onAuthStateChanged((user) => {
-          console.log((this.props, ' in authfirebase', user))
-          if (user) {
-            this.props.loginDispatch(user.uid)
-          }
-          else this.props.loginDispatchFalse()
-        })
-      }
   
-
-
   render() {
-    const { imageLinks, title } = this.props.book;
-    const { loggedIn } = this.props.auth;
+    const { imageLinks, title } = this.props.book,
+          { loggedIn } = this.props.auth;
     return (
      <TouchableOpacity style={styles.container} >
           {/*<View style={styles.imageContainer}>
             <Image  source={ {uri: imageLinks.thumbnail}} style={styles.image} />
-          </View>*/}            
-          { loggedIn ?  <Button onPress={()=>this.props.saveBook(title)}> Save Book </Button> : <Text>sign in to save</Text>}
-          <Text style={styles.title} >{title}</Text>
+          </View>*/} 
+           <Text style={styles.title} >{title}</Text>           
+          { loggedIn ?  <Button onPress={()=>this.props.onSaveBook(title)}> Save </Button> : <Text>sign in to save</Text>}
      </TouchableOpacity>
-     
     );
   }
 }
@@ -46,12 +27,8 @@ class Book extends Component {
 const styles = StyleSheet.create({
   container:{
     backgroundColor: '#f8f8ff',
-    // marginTop:20,
-    // paddingRight:20,
-    // paddingLeft:20,
-    // paddingBottom:20
     height:50,
-    display:'flex'
+    display:'flex',
   },
   image: {
     flex:1,
@@ -61,5 +38,5 @@ const styles = StyleSheet.create({
 });
 
 
-export default connect(({ auth }) => ({ auth: auth }), { loginDispatch, loginDispatchFalse })(Book)
+export default connect(({ auth }) => ({ auth: auth }), null )(Book)
 

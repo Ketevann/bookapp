@@ -1,99 +1,82 @@
 import React, { Component } from 'react';
-import {
-  StyleSheet,
-  Text,
-  View
-} from 'react-native';
-import firebase from 'firebase';
-import axios  from 'axios';
-import defaultList  from './data/defaultList';
-import Book from './Book';
-import { Button} from './common';
-import { connect } from 'react-redux';
-import { getBookList, loadDefaultBookList, appendSaveBookList, startNewSaveBookList} from '../redux/actions/bookActions';
+import { StyleSheet, Text, View } from 'react-native';
+import { Header, Card, CardSection, Button, Spinner } from './common'
+import { getBookSuggestions, saveBook, createBookShelf } from '../redux/actions/bookActions';
 import { loginDispatch, loginDispatchFalse } from '../redux/actions/authActions'
 import { Actions} from 'react-native-router-flux';
+import { connect } from 'react-redux';
+import   firebase from 'firebase';
+import   defaultBooks  from './data/defaultBooks';
+import   Book from './Book';
+import   axios  from 'axios';
 
 class Home extends Component {
-  state = { loggedIn: null, messages:[], newBook:'' }
 
   componentWillMount(){
-      console.log('mounted');
-
-      if (defaultList){
-        console.log(defaultList, "default");
-        this.props.loadDefaultBookList(defaultList.Similar.Results);
+      if (defaultBooks){
+        console.log(defaultBooks, "default");
+        this.props.getBookSuggestions(defaultBooks.list);
       }else{
         console.log("defaultList not loaded");
       }
       
       firebase.auth().onAuthStateChanged((user) => {
-      console.log((this.props, ' in authfirebase', user))
-
-      if (user) {
-        this.props.loginDispatch(user.uid)
-      }
-      else this.props.loginDispatchFalse()
-    })
-}
-
-
-
-
-
-
-
-
-
-/* Saving books*/ 
-appendList(newBook){
-  firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-          firebase.database().ref(`users/${user.uid}/books`).once('value', snapshot => 
-              snapshot.val() ? this.props.appendSaveBookList(newBook, user.uid) : this.props.startNewSaveBookList(newBook, user.uid));
-              //checking if theres a brach or not
-          } else null;
+        console.log((this.props, ' in authfirebase', user));
+        if (user) {
+          this.props.loginDispatch(user.uid)
+        }
+        else this.props.loginDispatchFalse()
       })
-}
+  }
 
-   
+  onSaveBook(book){
+            const userId = this.props.auth.userId;
+            firebase.database().ref(`users/${userId}/books`).once('value', snapshot => 
+                snapshot.val() ? this.props.saveBook(book, userId) : this.props.createBookShelf(book, userId));
+                //checking if a books db branch exists
+  }
 
+  
   render() {
-    const { defaultBookList} = this.props.book,
+    const { bookSuggestions } = this.props.book,
           { saveBook } = this.props,
           { loggedIn } = this.props.auth;
-          { console.log(this.props.auth,"Auth=======================================>")}
+          { console.log( this.props.auth,"Auth=======================================>" )}
 
     return (
       <View style={styles.container}>
-          {/*<Button onPress= {() => this.appendList(34) }> check </Button>*/}
-          <Button onPress= {() => Actions.preferencesForm() }> Preferences </Button>
-          { defaultBookList ? defaultBookList.map((book, index)=><Book key={index}  book={book} saveBook={this.appendList.bind(this)}/>) : <Text>Loading Defaults</Text>}
-        <Text style={styles.header}>
-        </Text>
+        <Card>
+          { bookSuggestions ? bookSuggestions.map((book, index)=><Book key={index}  book={book} onSaveBook={this.onSaveBook.bind(this)}/>) :  <Spinner size='large' />}
+          <CardSection>
+            <Button onPress= {() => Actions.preferencesForm() }> Preferences </Button>
+          </CardSection>
+          <CardSection>
           { loggedIn ? <Button onPress={() =>firebase.auth().signOut()}>Log Out</Button>: <Button onPress= {() => Actions.login() }> Sign in </Button>}
-      </View>
+          </CardSection>
+        </Card>
+       </View>
     );
   }
 }
+
+
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FFF',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   header: {
-    fontSize: 20,
-    marginVertical: 20,
+    fontSize: 12,
+    height:20
   },
 });
 
 export default connect(
     ({ book, auth }) => ({ book: book, auth: auth }), 
-    { loadDefaultBookList, loginDispatch, loginDispatchFalse, 
-      appendSaveBookList,
-      startNewSaveBookList
+    { loginDispatch, loginDispatchFalse, 
+      getBookSuggestions,
+      createBookShelf,
+      saveBook
    })(Home)
 
