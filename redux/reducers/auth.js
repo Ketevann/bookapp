@@ -1,4 +1,4 @@
-const INITIAL_STATE = { email: '', password: '', passwordConfirm: '', error: '', loading: false, loggedIn: null }
+const INITIAL_STATE = { email: '', password: '', passwordConfirm: '', error: '', loading: false, loggedIn: null, userId:''}
 import {
   EMAIL_CHANGED, PASSWORD_CHANGED, LOGIN_USER_SUCESS, LOGIN_USER_FAIL,
   LOGIN_USER,
@@ -27,7 +27,7 @@ export default (auth = INITIAL_STATE, action) => {
     case LOGIN_USER:
       return { ...auth, loading: true, error: '' };
     case LOGGEDIN:
-      return { loggedIn: true };
+      return { loggedIn: true, userId:action.payload };
     case NOTLOGGEDIN:
       return { ...auth, loggedIn: false };
     case FORGOT:
