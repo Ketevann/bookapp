@@ -17,14 +17,14 @@ export default class App extends React.Component {
   componentWillMount() {
     firebase.initializeApp({
       apiKey: "AIzaSyB-lzOIx1LfgG_epqj0tiCWb7ual2htX28",
-      authDomain: "nativebookapp.firebaseapp.com",
-      databaseURL: "https://nativebookapp.firebaseio.com",
-      projectId: "nativebookapp",
-      storageBucket: "nativebookapp.appspot.com",
-      messagingSenderId: "912103368076"
+    authDomain: "nativebookapp.firebaseapp.com",
+    databaseURL: "https://nativebookapp.firebaseio.com",
+    projectId: "nativebookapp",
+    storageBucket: "nativebookapp.appspot.com",
+    messagingSenderId: "912103368076"
     });
    }
-   
+
 
   render(){
     return(
