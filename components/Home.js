@@ -9,6 +9,7 @@ import   firebase from 'firebase';
 import   defaultBooks  from './data/defaultBooks';
 import   Book from './Book';
 import   axios  from 'axios';
+import Search from './Search'
 
 class Home extends Component {
 
@@ -19,7 +20,7 @@ class Home extends Component {
       }else{
         console.log("defaultList not loaded");
       }
-      
+
       firebase.auth().onAuthStateChanged((user) => {
         console.log((this.props, ' in authfirebase', user));
         if (user) {
@@ -31,12 +32,12 @@ class Home extends Component {
 
   onSaveBook(book){
             const userId = this.props.auth.userId;
-            firebase.database().ref(`users/${userId}/books`).once('value', snapshot => 
+            firebase.database().ref(`users/${userId}/books`).once('value', snapshot =>
                 snapshot.val() ? this.props.saveBook(book, userId) : this.props.createBookShelf(book, userId));
                 //checking if a books db branch exists
   }
 
-  
+
   render() {
     const { bookSuggestions } = this.props.book,
           { saveBook } = this.props,
@@ -44,7 +45,9 @@ class Home extends Component {
           { console.log( this.props.auth,"Auth=======================================>" )}
 
     return (
+
       <View style={styles.container}>
+      <Search />
         <Card>
           { bookSuggestions ? bookSuggestions.map((book, index)=><Book key={index}  book={book} onSaveBook={this.onSaveBook.bind(this)}/>) :  <Spinner size='large' />}
           <CardSection>
@@ -73,8 +76,8 @@ const styles = StyleSheet.create({
 });
 
 export default connect(
-    ({ book, auth }) => ({ book: book, auth: auth }), 
-    { loginDispatch, loginDispatchFalse, 
+    ({ book, auth }) => ({ book: book, auth: auth }),
+    { loginDispatch, loginDispatchFalse,
       getBookSuggestions,
       createBookShelf,
       saveBook
