@@ -28,7 +28,7 @@ class PreferencesForm extends Component {
             const {title,author, genre}= this.props.preferences;
             this.props.updatedPreferencesFireBase({ title:title, author:author, genre:genre}, userId);
   }
- 
+
   render() {
     {console.log('props in preferencesform', this.props)}
     const { loggedIn } = this.props.auth;
@@ -38,7 +38,7 @@ class PreferencesForm extends Component {
         <Card>
           <CardSection>
              <Input
-              secureTextEntry
+
               placeholder="title"
               label="title"
               onChangeText={this.onTitleChange.bind(this)}
@@ -47,7 +47,7 @@ class PreferencesForm extends Component {
           </CardSection>
           <CardSection>
             <Input
-              secureTextEntry
+
               placeholder="author"
               label="author"
               onChangeText={this.onAuthorChange.bind(this)}
@@ -57,7 +57,7 @@ class PreferencesForm extends Component {
             <PickerGenres
               onValueChange={this.onGenreChange.bind(this)}
               value={this.props.preferences.genre}
-            /> 
+            />
           <CardSection>
             <Button onPress={()=> this.handleSubmit()} > Submit </Button>
           </CardSection>
@@ -77,8 +77,8 @@ styles = {
 
 export default connect(
     ({ preferences, auth }) => ({ preferences: preferences , auth: auth}),
-    { updatedTitle, 
-      updatedAuthor, 
+    { updatedTitle,
+      updatedAuthor,
       updatedGenre,
       updatedPreferencesFireBase
     },
