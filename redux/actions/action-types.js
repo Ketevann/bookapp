@@ -20,4 +20,6 @@ export const BOOK_SEARCH = 'BOOK_SEARCH'
 export const CHANGE_SEARCH = 'CHANGE_SEARCH'
 
 export const FETCHED_SAVED_PREFERENCES = 'export const'
+export const AUTHOR_BOOL = 'AUTHOR_BOOL'
+export const BOOK_BOOL = 'BOOK_BOOL'
 

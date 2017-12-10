@@ -6,7 +6,9 @@ import { Header, Button, Spinner } from './common';
 import LoginForm  from './common/LoginForm'
 import {
   setSearchValue,
-findSimilarBooks } from '../redux/actions/bookActions'
+findSimilarBooks,
+changeBook,
+changeAuthor} from '../redux/actions/bookActions'
 import { connect } from 'react-redux'
 import {Actions} from 'react-native-router-flux';
 
@@ -32,10 +34,18 @@ onSearchChange(searchbooks){
 console.log(searchbooks,' search')
   this.props.setSearchValue(searchbooks)
 }
+handleBookChange(){
+  this.props.changeBook(this.props.book.placeholder)
+}
+handleAuthor(){
+  this.props.changeAuthor(this.props.book.placeholder)
+}
   render(){
     {console.log('book', this.props)}
     return(
       <View>
+      <Text onPress={() => this.handleBookChange()}>Books</Text>
+      <Text onPress={() => this.handleAuthor()}>Authors</Text>
       <SearchBar
       onPress={()=> this.search.focus()}
        ref={search => this.search = search}
@@ -46,7 +56,7 @@ console.log(searchbooks,' search')
   returnKeyType='search'
   onChangeText={this.onSearchChange.bind(this)}
   value={this.props.book.searchbooks}
-  placeholder='Similar authors/book titles' />
+  placeholder={this.props.book.placeholder}/>
   <Button onPress={() => this.bla()}>cancel</Button>
    <TextInput
         onSubmitEditing={Keyboard.dismiss}
@@ -56,4 +66,8 @@ console.log(searchbooks,' search')
   }
 
 }
-export default connect(({ book }) => ({ book: book }), {setSearchValue, findSimilarBooks})(Search)
+export default connect(({ book }) =>
+({ book: book }), {setSearchValue,
+  findSimilarBooks,
+changeBook,
+changeAuthor})(Search)
