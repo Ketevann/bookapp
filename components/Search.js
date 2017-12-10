@@ -9,7 +9,6 @@ import {
 findSimilarBooks } from '../redux/actions/bookActions'
 import { connect } from 'react-redux'
 import {Actions} from 'react-native-router-flux';
-import DoneButton from 'react-native-keyboard-done-button';
 
 class Search extends Component {
 
@@ -52,11 +51,6 @@ console.log(searchbooks,' search')
    <TextInput
         onSubmitEditing={Keyboard.dismiss}
       />
-      <DoneButton
-          title="Submit!"   //not required, default value = `Done`
-          style={{ backgroundColor: 'red' }}  //not required
-          doneStyle={{ color: 'green' }}  //not required
-        />
   </View>
     )
   }

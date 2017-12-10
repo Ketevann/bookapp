@@ -2,7 +2,8 @@ import {
     UPDATE_TITLE,
     UPDATE_AUTHOR,
     UPDATE_GENRE,
-    UPDATE_PREFERENCES_FIREBASE
+    UPDATE_PREFERENCES_FIREBASE,
+    FETCHED_SAVED_PREFERENCES
 } from './action-types'
 import firebase from 'firebase';
 
@@ -35,3 +36,10 @@ dispatch => {
     firebase.database().ref(`users/${userID}`).child(`preferences`).set({author, title, genre});
     return (dispatch) => dispatch({ type: UPDATE_PREFERENCES_FIREBASE })
 }
+
+export const getPreferences = (userID, dispatch) =>
+    dispatch => firebase.database().ref(`users/${userID}/preferences`).once('value', (snapshot) => {
+        const preferences = Object.values(snapshot.val());
+        console.log(preferences,  "-->in redux");//testing to see if function was activated
+        dispatch({ type: FETCHED_SAVED_PREFERENCES, payload: preferences })
+    });
