@@ -26,9 +26,9 @@ class Home extends Component {
         console.log((this.props, ' in authfirebase', user));
         if (user) {
           this.props.loginDispatch(user.uid)
-        
+
           this.props.getPreferences(this.props.auth.userId)//saving preferences from firebase to redux state
-          console.log(this.props.preferences.preferences, "-->in home.js")//trying to use preferences. this console.log seems to activate before the console log in the redux function 
+          console.log(this.props.preferences.preferences, "-->in home.js")//trying to use preferences. this console.log seems to activate before the console log in the redux function
 
         }
         else this.props.loginDispatchFalse()
@@ -52,7 +52,7 @@ class Home extends Component {
     const { bookSuggestions } = this.props.book,
           { saveBook } = this.props,
           { loggedIn } = this.props.auth;
-          { console.log( this.props.preferences,"preferences=======================================>" )}
+          { console.log( this.props,"preferences=======================================>" )}
 
     return (
 
