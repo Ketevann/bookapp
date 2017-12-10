@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Header, Card, CardSection, Button, Spinner } from './common'
 import { getBookSuggestions, saveBook, createBookShelf } from '../redux/actions/bookActions';
+import { getPreferences, } from '../redux/actions/preferencesActions';
 import { loginDispatch, loginDispatchFalse } from '../redux/actions/authActions'
 import { Actions} from 'react-native-router-flux';
 import { connect } from 'react-redux';
@@ -16,7 +17,7 @@ class Home extends Component {
   componentWillMount(){
       if (defaultBooks){
         console.log(defaultBooks, "default");
-        this.props.getBookSuggestions(defaultBooks.list);
+        //this.props.getBookSuggestions(defaultBooks.list);
       }else{
         console.log("defaultList not loaded");
       }
@@ -25,10 +26,19 @@ class Home extends Component {
         console.log((this.props, ' in authfirebase', user));
         if (user) {
           this.props.loginDispatch(user.uid)
+        
+          this.props.getPreferences(this.props.auth.userId)//saving preferences from firebase to redux state
+          console.log(this.props.preferences.preferences, "-->in home.js")//trying to use preferences. this console.log seems to activate before the console log in the redux function 
+
         }
         else this.props.loginDispatchFalse()
       })
   }
+
+
+
+
+
 
   onSaveBook(book){
             const userId = this.props.auth.userId;
@@ -42,7 +52,7 @@ class Home extends Component {
     const { bookSuggestions } = this.props.book,
           { saveBook } = this.props,
           { loggedIn } = this.props.auth;
-          { console.log( this.props.auth,"Auth=======================================>" )}
+          { console.log( this.props.preferences,"preferences=======================================>" )}
 
     return (
 
@@ -76,8 +86,9 @@ const styles = StyleSheet.create({
 });
 
 export default connect(
-    ({ book, auth }) => ({ book: book, auth: auth }),
+    ({ book, auth, preferences }) => ({ book: book, auth: auth, preferences: preferences  }),
     { loginDispatch, loginDispatchFalse,
+      getPreferences,
       getBookSuggestions,
       createBookShelf,
       saveBook

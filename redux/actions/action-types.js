@@ -19,3 +19,5 @@ export const BOOK_NOT_SAVED = 'BOOK_NOT_SAVED';
 export const BOOK_SEARCH = 'BOOK_SEARCH'
 export const CHANGE_SEARCH = 'CHANGE_SEARCH'
 
+export const FETCHED_SAVED_PREFERENCES = 'export const'
+
