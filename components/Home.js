@@ -26,10 +26,8 @@ class Home extends Component {
         console.log((this.props, ' in authfirebase', user));
         if (user) {
           this.props.loginDispatch(user.uid)
-
           this.props.getPreferences(this.props.auth.userId)//saving preferences from firebase to redux state
-          console.log(this.props.preferences.preferences, "-->in home.js")//trying to use preferences. this console.log seems to activate before the console log in the redux function
-
+          //console.log(this.props.preferences.preferences, "-->in home.js")//trying to use preferences. this console.log seems to activate before the console log in the redux function
         }
         else this.props.loginDispatchFalse()
       })
@@ -47,19 +45,21 @@ class Home extends Component {
                 //checking if a books db branch exists
   }
 
-
   render() {
     const { bookSuggestions } = this.props.book,
           { saveBook } = this.props,
-          { loggedIn } = this.props.auth;
-          { console.log( this.props,"preferences=======================================>" )}
+          { loggedIn } = this.props.auth,
+          { preferences } = this.props.preferences;
+          { console.log( this.props.preferences.preferences,"preferences=======================================>" )}
+
 
     return (
 
       <View style={styles.container}>
       <Search />
         <Card>
-          { bookSuggestions ? bookSuggestions.map((book, index)=><Book key={index}  book={book} onSaveBook={this.onSaveBook.bind(this)}/>) :  <Spinner size='large' />}
+          {/*{ bookSuggestions ? bookSuggestions.map((book, index)=><Book key={index}  book={book} onSaveBook={this.onSaveBook.bind(this)}/>) :  <Spinner size='large' />}*/}
+          { preferences ? preferences.map((book, index)=><Book key={index}  book={book} onSaveBook={this.onSaveBook.bind(this)}/>) :  <Spinner size='large' />}
           <CardSection>
             <Button onPress= {() => Actions.preferencesForm() }> Preferences </Button>
           </CardSection>

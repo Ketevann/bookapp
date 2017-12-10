@@ -1,4 +1,4 @@
-const INITIAL_STATE = { title: '', author: '', genre: '', loading: true , preferences: null }
+const INITIAL_STATE = { title: '', author: '', genre: '', loading: true , preferences: [] }
 import {
  UPDATE_TITLE,
  UPDATE_AUTHOR,
@@ -8,7 +8,6 @@ import {
 
 
 export default (preferences = INITIAL_STATE, action) => {
-  console.log(action, 'PREFERENCES ACTIONNN');
   switch (action.type) {
     case UPDATE_TITLE:
       //alert("UPDATE_TITLE");
@@ -21,7 +20,7 @@ export default (preferences = INITIAL_STATE, action) => {
       return { ...preferences, genre: action.payload };
     case FETCHED_SAVED_PREFERENCES:
       //alert(action.payload);
-      return {...preferences, preferences: action.payload, loading:false}
+      return {...preferences, preferences: [...preferences.preferences , ...action.payload]}
     default:
       return preferences
   }
