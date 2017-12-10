@@ -38,7 +38,7 @@ export const updatedPreferencesFireBase = (preferences, userID, dispatch) =>
       console.log('UPDATE ALL PREFERENCES FireBase', preferences);
       const {author, genre, title} = preferences
       firebase.database().ref(`users/${userID}`).child(`preferences`).set({author, title, genre});
-      return (dispatch) => dispatch({ type: UPDATE_PREFERENCES_FIREBASE })
+      dispatch({ type: UPDATE_PREFERENCES_FIREBASE })
   }
 
             
