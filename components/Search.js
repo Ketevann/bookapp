@@ -26,8 +26,8 @@ bla(){
 
 handleSubmit(){
   console.log(this.props.book.searchbooks)
-  const {searchbooks} = this.props.book
-  this.props.findSimilarBooks(searchbooks)
+  const {searchbooks, placeholder} = this.props.book
+  this.props.findSimilarBooks(searchbooks, placeholder)
 }
 
 onSearchChange(searchbooks){

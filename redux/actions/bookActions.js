@@ -59,51 +59,41 @@ export const setSearchValue = (book, dispatch) =>
     dispatch =>
         dispatch({ type: CHANGE_SEARCH, payload: book })
 
-
-export const findSimilarBooks = (keyword, dispatch) =>
-    dispatch =>{
-        if (keyword === 'books') {
-          return  axios.get(`https://tastedive.com/api/similar?q=${keyword}&k=${TASTE_DIVE_API_KEY}&limit=10&type=books`)
-            .then(res => {
-                const data = res.data.Similar.Results
-                dispatch({ type: BOOK_SEARCH, payload: data })
+//gets books from a google api
+const getBooks = (dispatch, data, author = '') => {
+    const bookPromises = data.map((book) => axios.get(`https://www.googleapis.com/books/v1/volumes?q=${author}${book.Name}&key=${GOOGLE_API_KEY}`));
+    axios.all(bookPromises)
+        .then(axios.spread((...args) => {
+            //collect returned data for each api call in array
+            const bookList = args.map((book) => {
+                console.log(book.data.items[0].volumeInfo.title, "title");
+                return book.data.items[0].volumeInfo;
             })
-         }
-         else {
-              axios.get(`https://tastedive.com/api/similar?q=${'Hesse'}&k=${TASTE_DIVE_API_KEY}&limit=10&type=authors`)
-              .then(res =>{
-                 console.log(res.data.Similar.Results, 'DATA')
-                 const data = res.data.Similar.Results
-                 const allBooks=data.map(elem => axios.get(`https://www.googleapis.com/books/v1/volumes?q=inauthor:${elem.Name}&key=AIzaSyCs8Tkv_NUbbfArk39pdi1tRUbqEzBlaaw`));
-                     axios.all(allBooks)
-                     .then(axios.spread((...args) =>{
-                         console.log(args, 'ARGS')
-                     }))
-                 })
-    //           .then(() =>{
-    //             const bookPromises = books.map((book) => axios.get(`https://www.googleapis.com/books/v1/volumes?q=${book.Name}&key=${GOOGLE_API_KEY}`));
-    //     axios.all(bookPromises)
-    //         .then(axios.spread((...args) => {
-    //             //collect returned data for each api call in array
-    //             const bookList = args.map((book) => {
-    //                 console.log(book.data.items[0].volumeInfo.title, "title");
-    //                 return book.data.items[0].volumeInfo;
-    //             })
-    //             return dispatch({
-    //                 type: 'BOOK_SUGGESTIONS_DATA_RECIEVED',
-    //                 payload: bookList //send booklist to redux
-    //             })
-    //         })).catch((error) => {
-    //             console.error(error);
-    //         });
-    // }
+            dispatch({ type: BOOK_SEARCH, payload: bookList })
+        })).catch((error) => {
+            console.error(error);
+        });
+}
 
 
+export const findSimilarBooks = (keyword, placeholder, dispatch) =>
+    dispatch => {
+        console.log(keyword, 'LEYWORD***', placeholder)
+        if (placeholder === 'books') {
+            return axios.get(`https://tastedive.com/api/similar?q=${keyword}&k=${TASTE_DIVE_API_KEY}&limit=3&type=books`)
+                .then(res => {
+                    const data = res.data.Similar.Results
+                    console.log(data, ' data2222')
+                    getBooks(dispatch, data)
 
-             // })
-
-            //  .then(res =>{
-            //      console.log(res.data,' google' )
-            //  })
-         }
+                })
+        }
+        else {
+            return axios.get(`https://tastedive.com/api/similar?q=${keyword}&k=${TASTE_DIVE_API_KEY}&limit=3&type=authors`)
+                .then(res => {
+                    console.log(res.data.Similar.Results, 'DATA')
+                    const data = res.data.Similar.Results
+                    getBooks(dispatch, data, 'inauthor:')
+                })
+        }
     }
