@@ -48,19 +48,10 @@ class Home extends Component {
   render() {
     const { bookSuggestions } = this.props.book,
           { saveBook } = this.props,
-<<<<<<< HEAD
-          { loggedIn } = this.props.auth;
-          { console.log( this.props,"preferences=======================================>" )}
-=======
           { loggedIn } = this.props.auth,
           { preferences } = this.props.preferences;
-<<<<<<< HEAD
-
-          // { console.log( this.props.preferences.preferences,"preferences=======================================>" )}
->>>>>>> displaying books based on user preferences
-=======
           { console.log( this.props.preferences.preferences,"preferences=======================================>" )}
->>>>>>> added display preferences suggsetions
+
 
     return (
 
