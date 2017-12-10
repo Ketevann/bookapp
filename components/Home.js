@@ -17,7 +17,7 @@ class Home extends Component {
   componentWillMount(){
       if (defaultBooks){
         console.log(defaultBooks, "default");
-        this.props.getBookSuggestions(defaultBooks.list);
+        //this.props.getBookSuggestions(defaultBooks.list);
       }else{
         console.log("defaultList not loaded");
       }
@@ -44,16 +44,6 @@ class Home extends Component {
                 snapshot.val() ? this.props.saveBook(book, userId) : this.props.createBookShelf(book, userId));
                 //checking if a books db branch exists
   }
-  
-  suggestedBooks=()=>{
-   if (  this.props.preferences.preferences){
-      return   this.props.preferences.preferences
-    }
-    else if (this.props.book.bookSuggestions){
-      return  this.props.book.bookSuggestions;
-    }
-    else return null;
-  }
 
   render() {
     const { bookSuggestions } = this.props.book,
@@ -64,18 +54,21 @@ class Home extends Component {
 =======
           { loggedIn } = this.props.auth,
           { preferences } = this.props.preferences;
+<<<<<<< HEAD
 
           // { console.log( this.props.preferences.preferences,"preferences=======================================>" )}
 >>>>>>> displaying books based on user preferences
+=======
+          { console.log( this.props.preferences.preferences,"preferences=======================================>" )}
+>>>>>>> added display preferences suggsetions
 
     return (
 
       <View style={styles.container}>
       <Search />
         <Card>
-          {/*{ console.log(this.props.preferences.preferences,"Felix!")}*/}
-          {/*{ preferences ? preferences.map((book, index)=><Book key={index}  book={book} onSaveBook={this.onSaveBook.bind(this)}/>) :  <Spinner size='large' />}*/}
-          { this.suggestedBooks() ? this.suggestedBooks().map((book, index)=><Book key={index}  book={book} onSaveBook={this.onSaveBook.bind(this)}/>) :  <Spinner size='large' />}
+          {/*{ bookSuggestions ? bookSuggestions.map((book, index)=><Book key={index}  book={book} onSaveBook={this.onSaveBook.bind(this)}/>) :  <Spinner size='large' />}*/}
+          { preferences ? preferences.map((book, index)=><Book key={index}  book={book} onSaveBook={this.onSaveBook.bind(this)}/>) :  <Spinner size='large' />}
           <CardSection>
             <Button onPress= {() => Actions.preferencesForm() }> Preferences </Button>
           </CardSection>
