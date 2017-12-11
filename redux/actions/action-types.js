@@ -23,5 +23,3 @@ export const FETCHED_BOOKS = 'export const'
 export const AUTHOR_BOOL = 'AUTHOR_BOOL'
 export const BOOK_BOOL = 'BOOK_BOOL'
 
-export const HAS_PREFERENCES = 'HAS_PREFERENCES'
-export const BOOKS_LOADED = 'BOOKS_LOADED'
