@@ -22,4 +22,5 @@ export const CHANGE_SEARCH = 'CHANGE_SEARCH'
 export const FETCHED_BOOKS = 'export const'
 export const AUTHOR_BOOL = 'AUTHOR_BOOL'
 export const BOOK_BOOL = 'BOOK_BOOL'
+export const CLEAR_BOOKS = 'ClEAR_BOOKS'
 

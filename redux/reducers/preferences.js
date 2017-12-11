@@ -3,7 +3,8 @@ import {
  UPDATE_TITLE,
  UPDATE_AUTHOR,
  UPDATE_GENRE,
- FETCHED_BOOKS
+ FETCHED_BOOKS,
+ CLEAR_BOOKS,
 } from '../actions/action-types'
 
 
@@ -18,6 +19,8 @@ export default (preferences = INITIAL_STATE, action) => {
     case UPDATE_GENRE:
       //alert("UPDATE_GENRE");
       return { ...preferences, genre: action.payload };
+    case CLEAR_BOOKS:
+      return {...preferences, preferences:[]}
     case FETCHED_BOOKS:
       return {...preferences, preferences: [...preferences.preferences , ...action.payload], books:true }
     default:
