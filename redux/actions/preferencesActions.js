@@ -9,6 +9,7 @@ import firebase from 'firebase';
 import axios from 'axios';
 import { TASTE_DIVE_API_KEY } from '../../keys'
 import { GOOGLE_API_KEY } from '../../keys'
+import   defaultBooks  from '../../components/data/defaultBooks';
 
 
 
@@ -51,6 +52,9 @@ export const getBooksData = (books, dispatch) => {
                     console.error(error);
                 });
     }
+
+
+export const getDefualt = dispatch => dispatch => getBooksData(defaultBooks.list, dispatch)//send defualt books to google api
  
 
 export const findSimilar = (keyword, type, dispatch) => {
