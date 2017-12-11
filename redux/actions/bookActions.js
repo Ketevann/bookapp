@@ -61,6 +61,7 @@ export const setSearchValue = (book, dispatch) =>
 
 //gets books from a google api
 const getBooks = (dispatch, data, author = '') => {
+    console.log('in GET BOOKS', author)
     const bookPromises = data.map((book) => axios.get(`https://www.googleapis.com/books/v1/volumes?q=${author}${book.Name}&key=${GOOGLE_API_KEY}`));
     axios.all(bookPromises)
         .then(axios.spread((...args) => {
@@ -69,7 +70,7 @@ const getBooks = (dispatch, data, author = '') => {
                 console.log(book.data.items[0].volumeInfo.title, "title");
                 return book.data.items[0].volumeInfo;
             })
-            dispatch({ type: BOOK_SEARCH, payload: bookList })
+           return dispatch({ type: BOOK_SEARCH, payload: bookList })
         })).catch((error) => {
             console.error(error);
         });
@@ -80,7 +81,7 @@ export const findSimilarBooks = (keyword, placeholder, dispatch) =>
     dispatch => {
         console.log(keyword, 'LEYWORD***', placeholder)
         if (placeholder === 'books') {
-            return axios.get(`https://tastedive.com/api/similar?q=${keyword}&k=${TASTE_DIVE_API_KEY}&limit=3&type=books`)
+            return axios.get(`https://tastedive.com/api/similar?q=${keyword}&k=${TASTE_DIVE_API_KEY}&limit=2&type=books`)
                 .then(res => {
                     const data = res.data.Similar.Results
                     console.log(data, ' data2222')
@@ -89,7 +90,7 @@ export const findSimilarBooks = (keyword, placeholder, dispatch) =>
                 })
         }
         else {
-            return axios.get(`https://tastedive.com/api/similar?q=${keyword}&k=${TASTE_DIVE_API_KEY}&limit=3&type=authors`)
+            return axios.get(`https://tastedive.com/api/similar?q=${keyword}&k=${TASTE_DIVE_API_KEY}&limit=2&type=authors`)
                 .then(res => {
                     console.log(res.data.Similar.Results, 'DATA')
                     const data = res.data.Similar.Results

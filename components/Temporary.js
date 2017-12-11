@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, ScrollView, Image } from 'react-native';
+import { StyleSheet, Text, View, Image, ScrollView } from 'react-native';
 import { Header, Card, CardSection, Button, Spinner } from './common'
 import { getBookSuggestions, saveBook, createBookShelf } from '../redux/actions/bookActions';
 import { getPreferences, } from '../redux/actions/preferencesActions';
@@ -11,8 +11,9 @@ import   defaultBooks  from './data/defaultBooks';
 import   Book from './Book';
 import   axios  from 'axios';
 import Search from './Search'
+import { width, height, totalSize } from 'react-native-dimension';
 
-class Home extends Component {
+class Temporary extends Component {
 
   componentWillMount(){
       if (defaultBooks){
@@ -50,15 +51,17 @@ class Home extends Component {
           { saveBook } = this.props,
           { loggedIn } = this.props.auth,
           { preferences } = this.props.preferences;
-          { console.log( this.props.preferences.preferences,"preferences=======================================>" )}
+          { console.log( this.props,"preferences=======================================>" )}
 
 
     return (
 
       <ScrollView style={styles.container}>
       <Search />
+      <View>
 
-       {this.props.book && this.props.book.similarbooks ?
+
+      {this.props.book && this.props.book.similarbooks ?
         this.props.book.similarbooks.map(allbooks=>
 
        (<ScrollView>
@@ -75,24 +78,10 @@ class Home extends Component {
         />}
         </ScrollView>)
 
-      ) :
+      ) : null}
 
+      </View>
 
-
-
-
-
-        <Card>
-          {/*{ bookSuggestions ? bookSuggestions.map((book, index)=><Book key={index}  book={book} onSaveBook={this.onSaveBook.bind(this)}/>) :  <Spinner size='large' />}*/}
-          { preferences ? preferences.map((book, index)=><Book key={index}  book={book} onSaveBook={this.onSaveBook.bind(this)}/>) :  <Spinner size='large' />}
-          <CardSection>
-            <Button onPress= {() => Actions.preferencesForm() }> Preferences </Button>
-          </CardSection>
-          <CardSection>
-          { loggedIn ? <Button onPress={() =>firebase.auth().signOut()}>Log Out</Button>: <Button onPress= {() => Actions.login() }> Sign in </Button>}
-          </CardSection>
-        </Card>
-       }
        </ScrollView>
     );
   }
@@ -109,6 +98,11 @@ const styles = StyleSheet.create({
     fontSize: 12,
     height:20
   },
+  canvas:
+    {flex: 1,
+        alignSelf: 'stretch',
+        width: width(50),
+        height: height(70)}
 });
 
 export default connect(
@@ -118,5 +112,5 @@ export default connect(
       getBookSuggestions,
       createBookShelf,
       saveBook
-   })(Home)
+   })(Temporary)
 
