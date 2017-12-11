@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, Image } from 'react-native';
 import { Header, Card, CardSection, Button, Spinner } from './common'
 import { saveBook, createBookShelf } from '../redux/actions/bookActions';
 import { getPreferences, getDefualt } from '../redux/actions/preferencesActions';
@@ -41,7 +41,27 @@ class Home extends Component {
 
     return (
       <View style={styles.container}>
-      <Search />
+         <Search />
+    
+         {(this.props.book && this.props.book.similarbooks) ?
+          this.props.book.similarbooks.map((allbooks, index)=>
+          
+        (<ScrollView key={index}>
+           <Text style={{padding: 10}}>{allbooks.title}</Text>
+           <Text style={{padding: 10}}>{allbooks.description}</Text>
+           {allbooks.imageLinks?
+            <Image
+           style={{width: 150, height: 200}}
+           source={{uri: `${allbooks.imageLinks.thumbnail}`}}
+         />
+         : <Image
+           style={{width: 150, height: 200}}
+           source={{uri: `https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/No_image_3x4.svg/1024px-No_image_3x4.svg.png`}}
+         />}
+         </ScrollView>)
+ 
+       ) :
+  
         <Card>
           { books ? preferences.map((book, index)=><Book key={index}  book={book} onSaveBook={this.onSaveBook.bind(this)}/>) :  <Spinner size='large' />}
           <CardSection>
@@ -50,8 +70,9 @@ class Home extends Component {
           <CardSection>
           { loggedIn ? <Button onPress={() =>firebase.auth().signOut()}>Log Out</Button>: <Button onPress= {() => Actions.login() }> Sign in </Button>}
           </CardSection>
-        </Card>
+        </Card>}
        </View>
+  
     );
   }
 }
