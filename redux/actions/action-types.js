@@ -12,14 +12,16 @@ export const PASSWORD_CONFIRM = 'PASSWORD_CONFIRM'
 export const UPDATE_TITLE = 'UPDATE_TITLE';
 export const UPDATE_AUTHOR = 'UPDATE_AUTHOR';
 export const UPDATE_GENRE = 'UPDATE_GENRE';
-export const UPDATE_PREFERENCES_FIREBASE= 'UPDATE_PREFERENCES_FIREBASE';
+export const UPDATE_PREFERENCES= 'UPDATE_PREFERENCES';
 
 export const BOOK_SAVED = 'BOOK_SAVED';
 export const BOOK_NOT_SAVED = 'BOOK_NOT_SAVED';
 export const BOOK_SEARCH = 'BOOK_SEARCH'
 export const CHANGE_SEARCH = 'CHANGE_SEARCH'
 
-export const FETCHED_SAVED_PREFERENCES = 'export const'
+export const FETCHED_BOOKS = 'export const'
 export const AUTHOR_BOOL = 'AUTHOR_BOOL'
 export const BOOK_BOOL = 'BOOK_BOOL'
 
+export const HAS_PREFERENCES = 'HAS_PREFERENCES'
+export const BOOKS_LOADED = 'BOOKS_LOADED'
