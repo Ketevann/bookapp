@@ -8,7 +8,8 @@ import {
 
 } from 'react-native';
 import { Header, Card, CardSection, Button, Spinner } from './common'
-import { getSavedBooks,removeBooks } from '../redux/actions/bookActions';
+import { getSavedBooks,removeBooks,
+markAsRead } from '../redux/actions/bookActions';
 import { loginDispatch, loginDispatchFalse } from '../redux/actions/authActions'
 
 import { Actions } from 'react-native-router-flux';
@@ -43,6 +44,11 @@ onDelete(title){
   this.props.removeBooks(this.props.auth.userId, title)
 }
 
+onRead(title){
+  console.log('76l4BsVra7MZrR7NzuPv6XRg5BP2', 'Pan', ' ****')
+  this.props.markAsRead(this.props.auth.userId, title)
+}
+
 
 
   render() {
@@ -60,7 +66,9 @@ onDelete(title){
         this.props.book.savedBooks.map(title =>{
 
 
-         return (<View><Text>{title}</Text><Button onPress={() => this.onDelete(title)}>Delete</Button></View>)
+         return (<View><Text>{title}</Text><Button onPress={() => this.onDelete(title)}>Delete</Button>
+         <Button onPress={() => this.onRead(title)}>Read</Button>
+         </View>)
     })
 
   :  null}
@@ -88,6 +96,7 @@ export default connect(
     loginDispatch,
     loginDispatchFalse,
     getSavedBooks,
-    removeBooks
+    removeBooks,
+    markAsRead
   })(SavedBooks)
 

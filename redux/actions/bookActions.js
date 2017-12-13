@@ -101,41 +101,41 @@ export const findSimilarBooks = (keyword, placeholder, dispatch) =>
     }
 
 export const getSavedBooks = (user, dispatch) =>
-    dispatch =>{
+    dispatch => {
         // //const savedBook
-         firebase.database().ref(`users/${user}/books`).once('value', (snapshot) => {
-        const savedBook = Object.values(snapshot.val())
-        console.log(savedBook, 'savedBook')
-        dispatch({type: GET_SAVED_BOOK, payload: savedBook})
+        firebase.database().ref(`users/${user}/books`).once('value', (snapshot) => {
+            const savedBook = Object.values(snapshot.val())
+            console.log(savedBook, 'savedBook')
+            dispatch({ type: GET_SAVED_BOOK, payload: savedBook })
         })
-         // console.log(savedBook, 'savedBook')
+        // console.log(savedBook, 'savedBook')
     }
 
 
 
 export const removeBooks = (uid, saved, dispatch) =>
-    dispatch =>{
+    dispatch => {
 
 
 
-firebase.database().ref(`users/${uid}`).child('books').on('value', function(snapshot) {
-var index;
-for (var i = 0; i <snapshot.val().length; i++){
-    if (snapshot.val()[i] === saved){
-        index = i;
-        firebase.database().ref(`users/${uid}/books/${index}`).remove()
-       savedBooks = snapshot.val().filter(title =>{
-            if (title !== snapshot.val()[i])
-            return title
-        })
-        dispatch({type: GET_SAVED_BOOK, payload: savedBooks})
+        firebase.database().ref(`users/${uid}`).child('books').on('value', function (snapshot) {
+            var index;
+            for (var i = 0; i < snapshot.val().length; i++) {
+                if (snapshot.val()[i] === saved) {
+                    index = i;
+                    firebase.database().ref(`users/${uid}/books/${index}`).remove()
+                    savedBooks = snapshot.val().filter(title => {
+                        if (title !== snapshot.val()[i])
+                            return title
+                    })
+                    dispatch({ type: GET_SAVED_BOOK, payload: savedBooks })
 
-        break;
-    }
-}
+                    break;
+                }
+            }
 
 
-});
+        });
 
 
 
@@ -145,3 +145,22 @@ for (var i = 0; i <snapshot.val().length; i++){
 
 
 
+export const markAsRead = (userID, title, dispatch) =>
+    dispatch => {
+
+
+        firebase.database().ref(`users/${userID}/read`).once('value', (snapshot) => {
+
+            if (snapshot.val()) {
+                var duplicate = false
+                Object.values(snapshot.val()).forEach(bookTitle => {
+                    if (bookTitle === title) duplicate = true
+                })
+                if (!duplicate)
+                { firebase.database().ref(`users/${userID}`).child(`read`).set([...Object.values(snapshot.val()), title]) }
+            }
+            else
+            { firebase.database().ref(`users/${userID}/`).child('read').set([title]) }
+        })
+
+    }
