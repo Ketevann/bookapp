@@ -54,7 +54,7 @@ onRead(title){
   render() {
 
 
-    { console.log(this.props,  this.props.book, this.props.book.savedBooks, "preferences=======================================>") }
+    { console.log(this.props,  this.props.book.savedBooks, "preferences=======================================>") }
 
 
     return (

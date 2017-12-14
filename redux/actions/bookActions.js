@@ -39,14 +39,22 @@ export const createBookShelf = (title, userID, dispatch) =>
     }
 
 export const saveBook = (title, userID, dispatch) =>
-    dispatch => firebase.database().ref(`users/${userID}/books`).once('value', (snapshot) => {
-        const savedBook = Object.values(snapshot.val());
-        //db books are returned as an object, iterate object and save values (titles) in array
-        firebase.database().ref(`users/${userID}/`).child('books').set([...savedBook, title]);
-        //add new book and reset books branch                  ( old books ^, new book ^ )
-    });
+    dispatch => {
 
 
+firebase.database().ref(`users/${userID}/books`).once('value', (snapshot) => {
+        const savedBook = Object.values(snapshot.val());
+        let hasBook=false;
+         for (var i=0; i<savedBook.length; i++){
+            if (savedBook[i].title ===title){
+                //alert(savedBook[i].title);
+                hasBook=true;
+            };
+        }
+       
+        hasBook ? alert('already saved') : firebase.database().ref(`users/${userID}/`).child('books').set([...savedBook, {title:title, read:false}]);
+    });
+}
 
 export const changeBook = (type, dispatch) =>
     dispatch =>
@@ -123,35 +131,6 @@ export const getSavedBooks = (user, dispatch) =>
 
 
 
-export const removeBooks = (uid, saved, dispatch) =>
-    dispatch => {
-
-        console.log('REMOVEEEE', uid, saved)
-
-        firebase.database().ref(`users/${uid}`).child('books').on('value', function (snapshot) {
-            var index, savedBooks;
-            console.log(snapshot.val(), "saved!!!!")
-            if (snapshot.val()) {
-                for (var i = 0; i < snapshot.val().length; i++) {
-                    if (snapshot.val()[i] && snapshot.val()[i].title === saved) {
-                        index = i;
-                        firebase.database().ref(`users/${uid}/books/${index}`).set(null)
-                        savedBooks = snapshot.val().filter(book => {
-                            if (book.title !== snapshot.val()[i].title)
-                                return book
-                        })
-
-                        console.log('saved books in remove', savedBooks)
-                        dispatch({ type: GET_SAVED_BOOK, payload: savedBooks })
-                        break;
-                    }
-                }
-            }
-
-        });
-
-    }
-
 
 
 export const markAsRead = (uid, title, dispatch) =>
@@ -185,3 +164,38 @@ export const markAsRead = (uid, title, dispatch) =>
 
 
     }
+
+
+
+
+
+
+export const removeBooks = (uid, saved, dispatch) =>
+    dispatch => {
+
+        console.log('REMOVEEEE', uid, saved)
+
+        firebase.database().ref(`users/${uid}`).child('books').once('value', function (snapshot) {
+            var index, savedBooks;
+            console.log(snapshot.val(), "saved!!!!")
+            if (snapshot.val()) {
+                for (var i = 0; i < snapshot.val().length; i++) {
+                    if (snapshot.val()[i] && snapshot.val()[i].title === saved) {
+                        index = i;
+                        firebase.database().ref(`users/${uid}/books/${index}`).set(null)
+                        savedBooks = snapshot.val().filter(book => {
+                            if (book.title !== snapshot.val()[i].title)
+                                return book
+                        })
+
+                        console.log('saved books in remove', savedBooks)
+                        dispatch({ type: GET_SAVED_BOOK, payload: savedBooks })
+                        break;
+                    }
+                }
+            }
+
+        });
+
+    }
+
