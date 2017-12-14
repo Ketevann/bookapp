@@ -26,7 +26,7 @@ export const loginUser = (email, password) => {
         loginUserSuccess(dispatch, user))
       .catch((error) => {
         console.log('erro', error)
-        
+
         firebase.auth().createUserWithEmailAndPassword(email, password)
           .then(user =>
             loginUserSuccess(dispatch, user))
@@ -144,3 +144,6 @@ export const loginDispatch = (userId) =>
 export const loginDispatchFalse = () =>
   dispatch =>
     dispatch({ type: NOTLOGGEDIN })
+
+
+

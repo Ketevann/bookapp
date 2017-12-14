@@ -33,11 +33,11 @@ class Home extends Component {
       snapshot.val() ? this.props.saveBook(book, userId) : this.props.createBookShelf(book, userId));
     //checking if a books db branch exists
 
-
+  }
   render() {
-      { saveBook } = this.props,
-      { loggedIn } = this.props.auth,
-      { preferences } = this.props.preferences;
+     const { saveBook } = this.props
+     const { loggedIn } = this.props.auth
+   const   { preferences } = this.props.preferences;
     { console.log(this.props.preferences.preferences, "preferences=======================================>") }
 
 
@@ -65,10 +65,6 @@ class Home extends Component {
               </ScrollView>)
 
             ) :
-
-
-
-
 
 
             <Card>
@@ -111,7 +107,6 @@ export default connect(
   {
     loginDispatch, loginDispatchFalse,
     getPreferences,
-    getBookSuggestions,
     createBookShelf,
     saveBook
   })(Home)
