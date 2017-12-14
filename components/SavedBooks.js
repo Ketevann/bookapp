@@ -63,11 +63,11 @@ onRead(title){
 
       {this.props.book.savedBooks
 ?
-        this.props.book.savedBooks.map(title =>{
+        this.props.book.savedBooks.map(book =>{
 
 
-         return (<View><Text>{title}</Text><Button onPress={() => this.onDelete(title)}>Delete</Button>
-         <Button onPress={() => this.onRead(title)}>Read</Button>
+         return (<View><Text>{book.title}</Text><Button onPress={() => this.onDelete(book.title)}>Delete</Button>
+         <Button onPress={() => this.onRead(book.title)}>Read</Button>
          </View>)
     })
 
