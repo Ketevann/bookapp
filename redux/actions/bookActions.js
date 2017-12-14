@@ -133,30 +133,22 @@ export const removeBooks = (uid, saved, dispatch) =>
             console.log(snapshot.val(), "saved!!!!")
             if (snapshot.val()) {
                 for (var i = 0; i < snapshot.val().length; i++) {
-                    if (snapshot.val()[i].title === saved) {
+                    if (snapshot.val()[i] && snapshot.val()[i].title === saved) {
                         index = i;
-                        firebase.database().ref(`users/${uid}/books/${index}`).remove()
-                        savedBooks = snapshot.val().filter(title => {
-                            if (title !== snapshot.val()[i])
-                                return title
+                        firebase.database().ref(`users/${uid}/books/${index}`).set(null)
+                        savedBooks = snapshot.val().filter(book => {
+                            if (book.title !== snapshot.val()[i].title)
+                                return book
                         })
 
-
-
-
+                        console.log('saved books in remove', savedBooks)
                         dispatch({ type: GET_SAVED_BOOK, payload: savedBooks })
-
-
                         break;
                     }
                 }
             }
 
         });
-
-
-
-        //  })
 
     }
 
@@ -175,7 +167,7 @@ export const markAsRead = (uid, title, dispatch) =>
 
             for (var i = 0; i < snapshot.val().length; i++) {
                 console.log(snapshot.val()[i], ' III')
-                if (snapshot.val()[i].title === title) {
+                if (snapshot.val()[i] && snapshot.val()[i].title === title) {
                     index = i;
                     if (snapshot.val()[i].read === true)
                         firebase.database().ref(`users/${uid}/books/${index}`).set({ title: title, read: false })
