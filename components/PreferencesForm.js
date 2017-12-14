@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text , Picker} from 'react-native';
 import { Header, Card, CardSection, Button, Input } from './common';
-import { updatedTitle, updatedAuthor, updatedGenre, updatedPreferencesFireBase } from '../redux/actions/preferencesActions';
+import { updateTitle, updateAuthor, updateGenre, updatePreferences } from '../redux/actions/preferencesActions';
 import { connect } from 'react-redux';
 import   PickerGenres from './PickerGenres';
 import   firebase from 'firebase';
@@ -10,23 +10,23 @@ class PreferencesForm extends Component {
 
   onTitleChange(title) {
    console.log('title', title);
-   this.props.updatedTitle(title);
+   this.props.updateTitle(title);
   }
 
   onAuthorChange(author) {
    console.log('author', author);
-   this.props.updatedAuthor(author);
+   this.props.updateAuthor(author);
   }
 
   onGenreChange(genre) {
    console.log('genre', genre);
-   this.props.updatedGenre(genre);
+   this.props.updateGenre(genre);
   }
 
   handleSubmit=()=>{
             const userId= this.props.auth.userId
             const {title,author, genre}= this.props.preferences;
-            this.props.updatedPreferencesFireBase({ title:title, author:author, genre:genre}, userId);
+            this.props.updatePreferences({ title:title, author:author, genre:genre}, userId);
   }
 
   render() {
@@ -77,9 +77,9 @@ styles = {
 
 export default connect(
     ({ preferences, auth }) => ({ preferences: preferences , auth: auth}),
-    { updatedTitle,
-      updatedAuthor,
-      updatedGenre,
-      updatedPreferencesFireBase
+    { updateTitle,
+      updateAuthor,
+      updateGenre,
+      updatePreferences
     },
   )(PreferencesForm)
