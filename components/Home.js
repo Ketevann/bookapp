@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, ScrollView, Image, TouchableOpacity } from 'react-native';
 import { Header, Card, CardSection, Button, Spinner } from './common'
-import { getBookSuggestions, saveBook, createBookShelf } from '../redux/actions/bookActions';
-import { getPreferences, } from '../redux/actions/preferencesActions';
+import { saveBook, createBookShelf } from '../redux/actions/bookActions';
+import { getPreferences, getDefualt } from '../redux/actions/preferencesActions';
 import { loginDispatch, loginDispatchFalse } from '../redux/actions/authActions'
 import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
+
 import firebase from 'firebase';
 import defaultBooks from './data/defaultBooks';
 import Book from './Book';
@@ -13,40 +14,27 @@ import axios from 'axios';
 import Search from './Search'
 import Footer from './Footer'
 class Home extends Component {
-
-  componentWillMount() {
-    if (defaultBooks) {
-      console.log(defaultBooks, "default");
-      //this.props.getBookSuggestions(defaultBooks.list);
-    } else {
-      console.log("defaultList not loaded");
-    }
-
-    firebase.auth().onAuthStateChanged((user) => {
-      console.log((this.props, ' in authfirebase', user));
-      if (user) {
-        this.props.loginDispatch(user.uid)
-        this.props.getPreferences(this.props.auth.userId)//saving preferences from firebase to redux state
-        //console.log(this.props.preferences.preferences, "-->in home.js")//trying to use preferences. this console.log seems to activate before the console log in the redux function
+  componentWillMount(){
+      firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+          this.props.loginDispatch(user.uid);
+          this.props.getPreferences(user.uid);//if logged in, then check for saved preferences, loads either preferred books or defualt(if there are no preferences) to state
       }
-      else this.props.loginDispatchFalse()
-    })
+        else {
+          this.props.loginDispatchFalse()
+          this.props.getDefualt() //if not logged in, then loads defualt books to state
+        }
+      })
   }
-
-
-
-
-
 
   onSaveBook(book) {
     const userId = this.props.auth.userId;
     firebase.database().ref(`users/${userId}/books`).once('value', snapshot =>
       snapshot.val() ? this.props.saveBook(book, userId) : this.props.createBookShelf(book, userId));
     //checking if a books db branch exists
-  }
+
 
   render() {
-    const { bookSuggestions } = this.props.book,
       { saveBook } = this.props,
       { loggedIn } = this.props.auth,
       { preferences } = this.props.preferences;
@@ -118,6 +106,7 @@ const styles = StyleSheet.create({
 });
 
 export default connect(
+
   ({ book, auth, preferences }) => ({ book: book, auth: auth, preferences: preferences }),
   {
     loginDispatch, loginDispatchFalse,
