@@ -24,3 +24,5 @@ export const AUTHOR_BOOL = 'AUTHOR_BOOL'
 export const BOOK_BOOL = 'BOOK_BOOL'
 export const GET_SAVED_BOOK = 'GET_SAVED_BOOK'
 export const CLEAR_BOOKS = 'ClEAR_BOOKS'
+
+export const UPDATE_QUERY= 'UPDATE_QUERY'
