@@ -105,9 +105,4 @@ export const deleteFriend = (friendEmail,currentUserID, dispatch) =>
                }
             }
         });
-
     }
-
-
-
-

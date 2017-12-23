@@ -13,7 +13,6 @@ import Friends from './components/Friends'
 
 
 
-
 const RouterComponent = () => (
   <View style={{flex:1}}>
 
