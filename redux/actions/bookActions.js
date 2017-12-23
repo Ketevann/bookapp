@@ -35,7 +35,7 @@ export const getBookSuggestions = (books, dispatch) =>
 export const createBookShelf = (title, userID, dispatch) =>
     //start a new books branch
     dispatch => {
-        firebase.database().ref(`users/${userID}/`).child('books').set([title])
+        firebase.database().ref(`users/${userID}/`).child('books').set([{title:title, read:false}])
     }
 
 export const saveBook = (title, userID, dispatch) =>

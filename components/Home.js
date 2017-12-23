@@ -68,11 +68,10 @@ class Home extends Component {
 
 
             <Card>
-              {/*{ bookSuggestions ? bookSuggestions.map((book, index)=><Book key={index}  book={book} onSaveBook={this.onSaveBook.bind(this)}/>) :  <Spinner size='large' />}*/}
               {preferences ? preferences.map((book, index) => <Book key={index} book={book} onSaveBook={this.onSaveBook.bind(this)} />) : <Spinner size='large' />}
-              <CardSection>
-                <Button onPress={() => Actions.preferencesForm()}> Preferences </Button>
-              </CardSection>
+              {loggedIn ? <CardSection> 
+                            <Button onPress={() => Actions.preferencesForm()}> Preferences </Button>
+                          </CardSection>:null}
               <CardSection>
                 {loggedIn ? <Button onPress={() => firebase.auth().signOut()}>Log Out</Button> : <Button onPress={() => Actions.login()}> Sign in </Button>}
               </CardSection>
@@ -106,6 +105,7 @@ export default connect(
   ({ book, auth, preferences }) => ({ book: book, auth: auth, preferences: preferences }),
   {
     loginDispatch, loginDispatchFalse,
+    getDefualt,
     getPreferences,
     createBookShelf,
     saveBook

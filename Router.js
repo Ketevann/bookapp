@@ -9,8 +9,7 @@ import PreferencesForm from './components/PreferencesForm'
 import Search from './components/Search'
 import SavedBooks from './components/SavedBooks'
 import Footer from './components/Footer'
-
-
+import Friends from './components/Friends'
 
 
 
@@ -27,7 +26,7 @@ const RouterComponent = () => (
       <Scene key="preferencesForm" component={PreferencesForm} />
       <Scene key="signup" component={SignUp} />
       <Scene key="savedbooks" component={SavedBooks} />
-
+      <Scene key="friends" component={Friends} />
     </Stack>
 
   </Router>

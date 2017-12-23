@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
-import { View, Text , Picker} from 'react-native';
+import { View, Text , Picker, ScrollView} from 'react-native';
 import { Header, Card, CardSection, Button, Input } from './common';
 import { updateTitle, updateAuthor, updateGenre, updatePreferences } from '../redux/actions/preferencesActions';
 import { connect } from 'react-redux';
-import   PickerGenres from './PickerGenres';
+import  PickerGenres from './PickerGenres';
+import { Actions } from 'react-native-router-flux';
+
 import   firebase from 'firebase';
 
 class PreferencesForm extends Component {
@@ -29,16 +31,20 @@ class PreferencesForm extends Component {
             this.props.updatePreferences({ title:title, author:author, genre:genre}, userId);
   }
 
+  onEmailChange(email) {
+   console.log('email', email);
+   this.props.updateQuery(email);
+  }
+
   render() {
     {console.log('props in preferencesform', this.props)}
     const { loggedIn } = this.props.auth;
     return (
-      <View style={styles.container}>
+       <ScrollView style={styles.container}>
         <Header headerText="Preferences" />
         <Card>
           <CardSection>
              <Input
-
               placeholder="title"
               label="title"
               onChangeText={this.onTitleChange.bind(this)}
@@ -47,7 +53,6 @@ class PreferencesForm extends Component {
           </CardSection>
           <CardSection>
             <Input
-
               placeholder="author"
               label="author"
               onChangeText={this.onAuthorChange.bind(this)}
@@ -62,7 +67,11 @@ class PreferencesForm extends Component {
             <Button onPress={()=> this.handleSubmit()} > Submit </Button>
           </CardSection>
         </Card>
-      </View>
+        <Header headerText="Friends" />
+          <Card>
+            <Button onPress={() => Actions.friends()} > Find Friends </Button>
+          </Card>
+      </ScrollView>
     )
   }
 }
@@ -70,13 +79,12 @@ class PreferencesForm extends Component {
 styles = {
   container: {
     flex: 1,
-    paddingHorizontal: 10,
-    marginTop: 50,
+    paddingHorizontal: 10
   }
 }
 
 export default connect(
-    ({ preferences, auth }) => ({ preferences: preferences , auth: auth}),
+    ({ preferences, auth }) => ({ preferences: preferences , auth: auth }),
     { updateTitle,
       updateAuthor,
       updateGenre,
