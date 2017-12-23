@@ -4,10 +4,11 @@ import { Header, Card, CardSection, Button, Input } from './common';
 import { updateQuery, searchFriend, saveFriend, deleteFriend, upDateDisplay} from '../redux/actions/friendActions';
 import { connect } from 'react-redux';
 import   firebase from 'firebase';
+import { Actions} from 'react-native-router-flux';
 
 
 class Friends extends Component {
-    componentWillUnmount(){  
+    componentWillUnmount(){
         this.props.upDateDisplay(false); //removes the display component when user leaves the page
         this.props.updateQuery('');//clears the email input bar when user leaves the page
     }
@@ -43,7 +44,16 @@ class Friends extends Component {
         return (this.props.friends.display ? this.renderSearchResults() : null)
     }
 
+    displayUser(){
+      const {friends} = this.props
+      if (friends.found){
+        return (<Text onPress={() => Actions.profile() }>{friends.email}</Text>)
+      }
+      return null
+    }
+
   render() {
+    {console.log(this.props,' jessica')}
     const { loggedIn } = this.props.auth;
     const { friendStatus } = this.props.friends;
     return (
@@ -64,6 +74,11 @@ class Friends extends Component {
           <CardSection>
             { this.renderSearchDisplay() }
           </CardSection>
+
+          <CardSection>
+            { this.displayUser() }
+          </CardSection>
+
            </Card>
       </ScrollView>
     )

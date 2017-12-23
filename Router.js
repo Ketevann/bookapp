@@ -10,6 +10,8 @@ import Search from './components/Search'
 import SavedBooks from './components/SavedBooks'
 import Footer from './components/Footer'
 import Friends from './components/Friends'
+import Profile from './components/Profile'
+
 
 
 
@@ -27,6 +29,7 @@ const RouterComponent = () => (
       <Scene key="signup" component={SignUp} />
       <Scene key="savedbooks" component={SavedBooks} />
       <Scene key="friends" component={Friends} />
+      <Scene key="profile" component={Profile} />
     </Stack>
 
   </Router>

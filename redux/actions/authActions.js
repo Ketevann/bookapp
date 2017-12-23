@@ -6,7 +6,7 @@ import {
 
 import firebase from 'firebase';
 import { Actions } from 'react-native-router-flux';
-
+import {getSavedBooks} from './bookActions'
 
 
 console.log(EMAIL_CHANGED, PASSWORD_CHANGED, ' CHANGEDDD!!!')
@@ -44,7 +44,7 @@ console.log('signed checked', password === confirm)
         firebase.auth().createUserWithEmailAndPassword(email, password)
           .then(user =>{
             console.log('signed uppppp yoo', user)
-            firebase.database().ref(`users/${user.uid}`).set({ email: email })//saving user email to db
+            firebase.database().ref(`users/${user.uid}`).set({ email: email, avatar: false })//saving user email to db
             Actions.preferencesForm()
            return loginUserSuccess(dispatch, user)
 
@@ -148,3 +148,15 @@ export const loginDispatchFalse = () =>
 
 
 
+export const getUser = (email) =>{
+
+     firebase.database().ref(`users`).orderByChild('email').equalTo(email).once('value', (snapshot)=>{
+        var foundUser = snapshot.val();
+        console.log(foundUser)
+        var userID = Object.keys(foundUser)[0];
+        var books = foundUser[userID]['books']
+        getSavedBooks(userID)
+        console.log(userID, 'books', Object.keys(foundUser), books)
+  })
+
+}
