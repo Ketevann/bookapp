@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import { View, Text , Picker, ScrollView} from 'react-native';
 import { Header, Card, CardSection, Button, Input } from './common';
 import { updateTitle, updateAuthor, updateGenre, updatePreferences } from '../redux/actions/preferencesActions';
-import { saveEmail, createFriendsBranch, updateQuery} from '../redux/actions/friendActions';
 import { connect } from 'react-redux';
-import   PickerGenres from './PickerGenres';
+import  PickerGenres from './PickerGenres';
+import { Actions } from 'react-native-router-flux';
+
 import   firebase from 'firebase';
 
 class PreferencesForm extends Component {
@@ -33,11 +34,6 @@ class PreferencesForm extends Component {
   onEmailChange(email) {
    console.log('email', email);
    this.props.updateQuery(email);
-  }
-
-  handleEmailSubmit=() => {
-    const { saveEmail, friends, auth } = this.props;
-    saveEmail(friends.email, auth.userId);
   }
 
   render() {
@@ -71,20 +67,10 @@ class PreferencesForm extends Component {
             <Button onPress={()=> this.handleSubmit()} > Submit </Button>
           </CardSection>
         </Card>
-         <Header headerText="Friends" />
-           <Card>
-           <CardSection>
-              <Input
-              placeholder="email"
-              label="email"
-              onChangeText={this.onEmailChange.bind(this)}
-              value={this.props.friends.email}
-            />
-          </CardSection>
-           <CardSection>
-            <Button onPress={()=> this.handleEmailSubmit()} > Search/Add </Button>
-          </CardSection>
-           </Card>
+        <Header headerText="Friends" />
+          <Card>
+            <Button onPress={() => Actions.friends()} > Find Friends </Button>
+          </Card>
       </ScrollView>
     )
   }
@@ -98,12 +84,10 @@ styles = {
 }
 
 export default connect(
-    ({ preferences, auth, friends }) => ({ preferences: preferences , auth: auth, friends: friends}),
+    ({ preferences, auth }) => ({ preferences: preferences , auth: auth }),
     { updateTitle,
       updateAuthor,
       updateGenre,
-      updatePreferences,
-      updateQuery,
-      saveEmail
+      updatePreferences
     },
   )(PreferencesForm)
