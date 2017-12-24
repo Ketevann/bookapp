@@ -20,23 +20,17 @@ import { width, height, totalSize } from 'react-native-dimension';
 
 class SavedBooks extends Component {
 
-componentWillMount() {
+// componentWillMount() {
 
 
 
-     firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        this.props.loginDispatch(user.uid)
-         const {userId} = this.props.auth
-console.log(user.uid, ' USER ID')
-
-  this.props.getSavedBooks(user.uid)
-      }
-      else this.props.loginDispatchFalse()
-    })
+//   console.log(this.props.user, ' printing suer');
+//   this.props.getSavedBooks(this.props.user)
 
 
-  }
+
+
+//   }
 
 
 onDelete(title){
@@ -61,13 +55,18 @@ onRead(title){
       <ScrollView>
 
 
-      {this.props.book.savedBooks
+      {this.props.renderBooks
 ?
-        this.props.book.savedBooks.map(book =>{
+   this.props.renderBooks.map(book =>{
 
 
-         return (<View><Text>{book.title}</Text><Button onPress={() => this.onDelete(book.title)}>Delete</Button>
+         return (<View><Text>{book.title}</Text>
+        {this.props.auth.userId === this.props.book.user
+ ?
+          <View>
+         <Button onPress={() => this.onDelete(book.title)}>Delete</Button>
          <Button onPress={() => this.onRead(book.title)}>Read</Button>
+         </View> : null}
          </View>)
     })
 
@@ -91,7 +90,7 @@ const styles = StyleSheet.create({
 });
 
 export default connect(
-  ({ book, auth, preferences }) => ({ book: book, auth: auth, preferences: preferences }),
+  ({ book, auth, preferences, friends }) => ({ book: book, auth: auth, preferences: preferences, friends: friends }),
   {
     loginDispatch,
     loginDispatchFalse,
