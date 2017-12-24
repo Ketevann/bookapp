@@ -20,17 +20,17 @@ import { width, height, totalSize } from 'react-native-dimension';
 
 class SavedBooks extends Component {
 
-componentWillMount() {
+// componentWillMount() {
 
 
 
-  console.log(this.props.user, ' printing suer');
-  this.props.getSavedBooks(this.props.user)
+//   console.log(this.props.user, ' printing suer');
+//   this.props.getSavedBooks(this.props.user)
 
 
 
 
-  }
+//   }
 
 
 onDelete(title){
@@ -55,13 +55,14 @@ onRead(title){
       <ScrollView>
 
 
-      {this.props.book.savedBooks
+      {this.props.renderBooks
 ?
-        this.props.book.savedBooks.map(book =>{
+   this.props.renderBooks.map(book =>{
 
 
          return (<View><Text>{book.title}</Text>
-        {this.props.auth.userId === this.props.user ?
+        {this.props.auth.userId === this.props.book.user
+ ?
           <View>
          <Button onPress={() => this.onDelete(book.title)}>Delete</Button>
          <Button onPress={() => this.onRead(book.title)}>Read</Button>

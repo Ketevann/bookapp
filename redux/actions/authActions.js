@@ -148,15 +148,3 @@ export const loginDispatchFalse = () =>
 
 
 
-export const getUser = (email) =>{
-
-     firebase.database().ref(`users`).orderByChild('email').equalTo(email).once('value', (snapshot)=>{
-        var foundUser = snapshot.val();
-        console.log(foundUser)
-        var userID = Object.keys(foundUser)[0];
-        var books = foundUser[userID]['books']
-        getSavedBooks(userID)
-        console.log(userID, 'books', Object.keys(foundUser), books)
-  })
-
-}

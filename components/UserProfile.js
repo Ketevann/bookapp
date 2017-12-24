@@ -20,23 +20,21 @@ import { width, height, totalSize } from 'react-native-dimension';
 import SavedBooks from './SavedBooks'
 class UserProfile extends Component {
 
-// componentWillMount() {
+componentDidMount() {
+
+
+  console.log(this.props.userID,' ****')
+      if (this.props.auth.userId) {
 
 
 
-//      firebase.auth().onAuthStateChanged((user) => {
-//       if (user) {
-//         this.props.loginDispatch(user.uid)
-//          const {userId} = this.props.auth
-// console.log(user.uid, ' USER ID')
-
-//   this.props.getSavedBooks(user.uid)
-//       }
-//       else this.props.loginDispatchFalse()
-//     })
+  this.props.getSavedBooks(this.props.auth.userId)
+      }
+      else return null
 
 
-//   }
+
+  }
 
 
 // onDelete(title){
@@ -58,10 +56,10 @@ renderBooks(){
 // console.log(user.uid, ' USER ID')
 
   //this.props.getSavedBooks(user.uid)
-  if (this.props.auth.userId !== ''){
-  return (<SavedBooks user={this.props.auth.userId}/>)
+  if (this.props.book.savedBooks ){
+  return (<SavedBooks renderBooks={this.props.book.savedBooks} user={this.props.auth.userId}/>)
       }
-      else {this.props.loginDispatchFalse()
+      else {
         return null
     }
    // })
@@ -71,16 +69,13 @@ renderBooks(){
   render() {
 
 
-    { console.log(this.props,  this.props.book.savedBooks, "preferences=======================================>") }
+    { console.log(this.props, "preferences=======================================>") }
 
 
     return (
-      <ScrollView>
-
-
-    <Text>some</Text>
+    <ScrollView>
     {this.renderBooks()}
-      </ScrollView>
+    </ScrollView>
     );
   }
 }

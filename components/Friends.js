@@ -8,6 +8,22 @@ import { Actions} from 'react-native-router-flux';
 
 
 class Friends extends Component {
+
+   // state = { friendId: null }
+
+  // componentDidMount() {
+  //   const { email } = this.props.friends
+
+  //   firebase.database().ref(`users`).orderByChild('email').equalTo(email).once('value', (snapshot) => {
+  //     console.log(snapshot.val(), ' in friends')
+  //     var userID = Object.keys(snapshot.val())[0];  //finds a user
+  //     // var books = foundUser[userID]['books']
+  //     this.setState({ friendId: userID })
+  //   })
+
+
+  // }
+
     componentWillUnmount(){
         this.props.upDateDisplay(false); //removes the display component when user leaves the page
         this.props.updateQuery('');//clears the email input bar when user leaves the page
@@ -44,10 +60,27 @@ class Friends extends Component {
         return (this.props.friends.display ? this.renderSearchResults() : null)
     }
 
+    getUserBooks(){
+    //  this.props.getBooks()
+
+       const { email } = this.props.friends
+
+    firebase.database().ref(`users`).orderByChild('email').equalTo(email).once('value', (snapshot) => {
+      console.log(snapshot.val(), ' in friends')
+      var userID = Object.keys(snapshot.val())[0];  //finds a user
+      // var books = foundUser[userID]['books']
+      //this.setState({ friendId: userID })
+       Actions.profile({user: this.props.book.user})
+    })
+
+
+
+    }
     displayUser(){
       const {friends} = this.props
       if (friends.found){
-        return (<Text onPress={() => Actions.profile() }>{friends.email}</Text>)
+        return (<Text onPress={() =>
+         Actions.profile({user: this.props.book.user})}>{friends.email}</Text>)
       }
       return null
     }
@@ -93,7 +126,7 @@ styles = {
 }
 
 export default connect(
-    ({ auth, friends }) => ({auth: auth, friends: friends}),
+    ({ auth, friends, book }) => ({auth: auth, friends: friends, book: book}),
     {
       updateQuery,
       searchFriend,

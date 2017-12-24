@@ -3,8 +3,10 @@ import {
   UPDATE_QUERY,
   UPDATE_FRIEND_STATUS,
   UPDATE_SEARCH_RESULT,
-  UPDATE_DISPLAY
+  UPDATE_DISPLAY,
+  DOES_NOT_EXIST
 } from '../actions/action-types'
+
 
 export default ( friends = INITIAL_STATE, action) => {
   switch (action.type) {
@@ -13,9 +15,11 @@ export default ( friends = INITIAL_STATE, action) => {
     case UPDATE_FRIEND_STATUS:
       return { ...friends, friendStatus: action.payload };//setting whether friend exists or not in friends branch
     case UPDATE_SEARCH_RESULT:
-      return { ...friends, found: action.payload };//setting if the email query has been registered in the bookApp db 
+      return { ...friends, found: action.payload };//setting if the email query has been registered in the bookApp db
+
+
     case UPDATE_DISPLAY:
-      return { ...friends, display: action.payload }//setting if component should display results or not 
+      return { ...friends, display: action.payload }//setting if component should display results or not
     default:
       return friends
   }
