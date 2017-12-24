@@ -60,22 +60,11 @@ class Friends extends Component {
         return (this.props.friends.display ? this.renderSearchResults() : null)
     }
 
-    getUserBooks(){
-    //  this.props.getBooks()
-
-       const { email } = this.props.friends
-
-    firebase.database().ref(`users`).orderByChild('email').equalTo(email).once('value', (snapshot) => {
-      console.log(snapshot.val(), ' in friends')
-      var userID = Object.keys(snapshot.val())[0];  //finds a user
-      // var books = foundUser[userID]['books']
-      //this.setState({ friendId: userID })
-       Actions.profile({user: this.props.book.user})
-    })
 
 
 
-    }
+
+
     displayUser(){
       const {friends} = this.props
       if (friends.found){
