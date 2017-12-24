@@ -21,10 +21,10 @@ export const isFriend= (bool, dispatch) =>
     payload: bool
   })
 
-export const emailExists= (booksArray, dispatch) =>
+export const emailExists= (bool, dispatch) =>
     dispatch => dispatch({
     type: UPDATE_SEARCH_RESULT,
-    payload: booksArray
+    payload: bool
   })
 
 
