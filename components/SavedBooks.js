@@ -24,16 +24,10 @@ componentWillMount() {
 
 
 
-     firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        this.props.loginDispatch(user.uid)
-         const {userId} = this.props.auth
-console.log(user.uid, ' USER ID')
+  console.log(this.props.user, ' printing suer');
+  this.props.getSavedBooks(this.props.user)
 
-  this.props.getSavedBooks(user.uid)
-      }
-      else this.props.loginDispatchFalse()
-    })
+
 
 
   }
@@ -66,8 +60,12 @@ onRead(title){
         this.props.book.savedBooks.map(book =>{
 
 
-         return (<View><Text>{book.title}</Text><Button onPress={() => this.onDelete(book.title)}>Delete</Button>
+         return (<View><Text>{book.title}</Text>
+        {this.props.auth.userId === this.props.user ?
+          <View>
+         <Button onPress={() => this.onDelete(book.title)}>Delete</Button>
          <Button onPress={() => this.onRead(book.title)}>Read</Button>
+         </View> : null}
          </View>)
     })
 
@@ -91,7 +89,7 @@ const styles = StyleSheet.create({
 });
 
 export default connect(
-  ({ book, auth, preferences }) => ({ book: book, auth: auth, preferences: preferences }),
+  ({ book, auth, preferences, friends }) => ({ book: book, auth: auth, preferences: preferences, friends: friends }),
   {
     loginDispatch,
     loginDispatchFalse,

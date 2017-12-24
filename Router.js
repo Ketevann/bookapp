@@ -7,7 +7,7 @@ import ForgotPassword from './components/ForgotPassword'
 import SignUp from './components/SignUp'
 import PreferencesForm from './components/PreferencesForm'
 import Search from './components/Search'
-import SavedBooks from './components/SavedBooks'
+import UserProfile from './components/UserProfile'
 import Footer from './components/Footer'
 import Friends from './components/Friends'
 import Profile from './components/Profile'
@@ -27,7 +27,7 @@ const RouterComponent = () => (
       <Scene key="forgotpassowrd" component={ForgotPassword} />
       <Scene key="preferencesForm" component={PreferencesForm} />
       <Scene key="signup" component={SignUp} />
-      <Scene key="savedbooks" component={SavedBooks} />
+      <Scene key="userprofile" component={UserProfile} />
       <Scene key="friends" component={Friends} />
       <Scene key="profile" component={Profile} />
     </Stack>

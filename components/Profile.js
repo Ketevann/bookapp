@@ -8,6 +8,9 @@ import {getSavedBooks} from '../redux/actions/bookActions';
 import SavedBooks from './SavedBooks'
 
 class Profile extends Component {
+
+   state= {friendId : null}
+
  componentWillMount(){
    const {email} = this.props.friends
    console.log( ' dearchin books')
@@ -17,15 +20,37 @@ class Profile extends Component {
         console.log(foundUser)
         var userID = Object.keys(foundUser)[0];
         var books = foundUser[userID]['books']
-        this.props.getSavedBooks(userID)
-        console.log(userID, 'books', Object.keys(foundUser), books)
+        this.setState({friendId: userID})
+        //this.props.getSavedBooks(userID)
+        })
+        // return <SavedBooks user={this.state.friendId} />
 
-     })
+
+        // console.log(userID, 'books', Object.keys(foundUser), books)
+
+
 
 
  }
-displayBooks(){
- return <SavedBooks />
+ displayBooks(){
+ const {email} = this.props.friends
+   console.log( ' dearchin books', this.state.friendId)
+
+    //  firebase.database().ref(`users`).orderByChild('email').equalTo(email).once('value', (snapshot)=>{
+    //     var foundUser = snapshot.val();
+    //     console.log(foundUser)
+    //     var userID = Object.keys(foundUser)[0];
+    //     var books = foundUser[userID]['books']
+    //     this.setState({friendId: userID})
+    //     //this.props.getSavedBooks(userID)
+    //     })
+     if (this.state.friendId)
+        {return <SavedBooks user={this.state.friendId} />
+
+
+        console.log(userID, 'books', Object.keys(foundUser), books)}
+        else return null
+
   }
 
   render() {

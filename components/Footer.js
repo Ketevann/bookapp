@@ -40,7 +40,7 @@ class Footer extends Component {
             source={require('../img/user1.png')}
           />
           <TouchableOpacity
-            onPress={() => Actions.savedbooks()}>
+            onPress={() => Actions.userprofile(this.props.auth.userId)}>
             <Image
 
               style={{ width: 27, height: 27, padding: 10, marginTop: 5 }}
