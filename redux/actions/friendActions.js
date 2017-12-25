@@ -78,7 +78,6 @@ export const checkDB = (friendEmail, currentUserID, dispatch) =>{
 
 
 
-
 export const searchFriend = (friendEmail, currentUserID, dispatch) =>
     dispatch =>
         firebase.database().ref(`users`).orderByChild('email').equalTo(friendEmail).once('value', (snapshot)=>{

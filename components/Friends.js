@@ -5,27 +5,20 @@ import { updateQuery,
   searchFriend, saveFriend,
   deleteFriend, upDateDisplay,
 getUserFriends} from '../redux/actions/friendActions';
+import {getSavedBooks, clearBooks} from '../redux/actions/bookActions';
 import { connect } from 'react-redux';
 import   firebase from 'firebase';
 import { Actions} from 'react-native-router-flux';
-
-
+import {Spinner} from './common'
 class Friends extends Component {
 
    // state = { friendId: null }
 
-  // componentDidMount() {
-  //   const { email } = this.props.friends
-
-  //   firebase.database().ref(`users`).orderByChild('email').equalTo(email).once('value', (snapshot) => {
-  //     console.log(snapshot.val(), ' in friends')
-  //     var userID = Object.keys(snapshot.val())[0];  //finds a user
-  //     // var books = foundUser[userID]['books']
-  //     this.setState({ friendId: userID })
-  //   })
+  componentDidMount() {
+    this.props.clearBooks()
 
 
-  // }
+  }
 
     componentWillUnmount(){
         this.props.upDateDisplay(false); //removes the display component when user leaves the page
@@ -81,6 +74,16 @@ class Friends extends Component {
       this.props.getUserFriends(this.props.auth.userId)
     }
 
+    getUserBooks(email){
+     firebase.database().ref(`users`).orderByChild('email').equalTo(email).once('value', (snapshot)=>{
+                 if (snapshot.val())
+                   { var Id = Object.keys(snapshot.val())[0];
+                    this.props.getSavedBooks(Id)
+                    Actions.profile({user: this.props.book.user})
+                    console.log(Id, 'snapshot val')}
+     })
+    }
+
   render() {
     {console.log(this.props,' jessica')}
     const { loggedIn } = this.props.auth;
@@ -115,9 +118,9 @@ class Friends extends Component {
           {this.props.friends && this.props.friends.userFriends?
 
             this.props.friends.userFriends.map(users =>{
-              return (<Text>{users.email}</Text>)
+              return (<Text onPress={() => this.getUserBooks(users.email)}>{users.email}</Text>)
             })
-     : null }
+     :  null }
 
            </Card>
       </ScrollView>
@@ -140,6 +143,9 @@ export default connect(
       saveFriend,
       deleteFriend,
       upDateDisplay,
-      getUserFriends
+      getUserFriends,
+      getSavedBooks,
+      clearBooks
+
     },
   )(Friends)
