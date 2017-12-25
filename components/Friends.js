@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import { View, Text , Picker, ScrollView} from 'react-native';
 import { Header, Card, CardSection, Button, Input } from './common';
-import { updateQuery, searchFriend, saveFriend, deleteFriend, upDateDisplay} from '../redux/actions/friendActions';
+import { updateQuery,
+  searchFriend, saveFriend,
+  deleteFriend, upDateDisplay,
+getUserFriends} from '../redux/actions/friendActions';
 import { connect } from 'react-redux';
 import   firebase from 'firebase';
 import { Actions} from 'react-native-router-flux';
@@ -74,6 +77,10 @@ class Friends extends Component {
       return null
     }
 
+    onSeeFriends(){
+      this.props.getUserFriends(this.props.auth.userId)
+    }
+
   render() {
     {console.log(this.props,' jessica')}
     const { loggedIn } = this.props.auth;
@@ -101,6 +108,17 @@ class Friends extends Component {
             { this.displayUser() }
           </CardSection>
 
+          <CardSection>
+          <Button onPress={() => this.onSeeFriends()}>See All friends</Button>
+
+          </CardSection>
+          {this.props.friends && this.props.friends.userFriends?
+
+            this.props.friends.userFriends.map(users =>{
+              return (<Text>{users.email}</Text>)
+            })
+     : null }
+
            </Card>
       </ScrollView>
     )
@@ -121,6 +139,7 @@ export default connect(
       searchFriend,
       saveFriend,
       deleteFriend,
-      upDateDisplay
+      upDateDisplay,
+      getUserFriends
     },
   )(Friends)
