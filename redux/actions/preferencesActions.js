@@ -36,19 +36,19 @@ export const updateGenre = (genre, dispatch) =>
     payload: genre
   })
 
-export const updatePreferences = (preferences, userID, dispatch) =>
-    dispatch => {
+export const updatePreferences = (preferences, userID) => dispatch=>
+    {  
         console.log('UPDATE ALL PREFERENCES FireBase', preferences);
         const {author, genre, title} = preferences
         firebase.database().ref(`users/${userID}`).child(`preferences`).set({author, title, genre});
-        dispatch({ type: UPDATE_PREFERENCES })
-        Actions.home()
+        dispatch(clearBooks(dispatch));
+            Actions.home()
     }
 
 
 export const getBooksData = (books, dispatch) => {
-    clearBooks(dispatch);
-    // alert('p')
+    //clearBooks(dispatch);
+    //alert('getBooksData')
     const bookPromises = books.map((book) => 
         axios.get(`https://www.googleapis.com/books/v1/volumes?q=${book.Name}&key=${GOOGLE_API_KEY}`));
         axios.all(bookPromises)
@@ -61,9 +61,10 @@ export const getBooksData = (books, dispatch) => {
 
 export const getDefualt = dispatch => dispatch => getBooksData(defaultBooks.list, dispatch);//send default books to google api
 
-export const clearBooks = (dispatch) => dispatch({ type: CLEAR_BOOKS});//clears preferences books array 
+export const clearBooks = dispatch =>dispatch=> { alert('clear'); return dispatch({ type: CLEAR_BOOKS})};//clears preferences books array 
 
 export const findSimilar = (keyword, type, dispatch) => {
+    //alert('findSimilar');
     let mediaType = null;
         type === 'title' ? mediaType='book' : mediaType = 'author';
         axios.get(`https://tastedive.com/api/similar?q=${keyword}&k=${TASTE_DIVE_API_KEY}&limit=2&type=${mediaType}s`)

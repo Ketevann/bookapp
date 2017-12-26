@@ -20,7 +20,7 @@ export default (preferences = INITIAL_STATE, action) => {
       //alert("UPDATE_GENRE");
       return { ...preferences, genre: action.payload };
     case CLEAR_BOOKS:
-      return {...preferences, preferences:[]}
+      return {...preferences, preferences:[], books:false}
     case FETCHED_BOOKS:
       return {...preferences, preferences: [...preferences.preferences , ...action.payload], books:true }
     default:
