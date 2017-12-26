@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text , Picker, ScrollView} from 'react-native';
 import { Header, Card, CardSection, Button, Input } from './common';
-import { updateTitle, updateAuthor, updateGenre, updatePreferences } from '../redux/actions/preferencesActions';
+import { updateTitle, updateAuthor, updateGenre, updatePreferences} from '../redux/actions/preferencesActions';
 import { connect } from 'react-redux';
 import  PickerGenres from './PickerGenres';
 import { Actions } from 'react-native-router-flux';
@@ -25,10 +25,10 @@ class PreferencesForm extends Component {
    this.props.updateGenre(genre);
   }
 
-  handleSubmit=()=>{
+  handleSubmit(){
             const userId= this.props.auth.userId
-            const {title,author, genre}= this.props.preferences;
-            this.props.updatePreferences({ title:title, author:author, genre:genre}, userId);
+            const {title,author}= this.props.preferences;
+            this.props.updatePreferences({ title:title, author:author}, userId);
   }
 
   onEmailChange(email) {
@@ -59,12 +59,8 @@ class PreferencesForm extends Component {
               value={this.props.preferences.author}
             />
           </CardSection>
-            <PickerGenres
-              onValueChange={this.onGenreChange.bind(this)}
-              value={this.props.preferences.genre}
-            />
           <CardSection>
-            <Button onPress={()=> this.handleSubmit()} > Submit </Button>
+            <Button onPress={this.handleSubmit.bind(this)} > update </Button>
           </CardSection>
         </Card>
         <Header headerText="Friends" />

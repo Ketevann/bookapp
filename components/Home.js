@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, View, ScrollView, Image, TouchableOpacity } from 'react-native';
 import { Header, Card, CardSection, Button, Spinner } from './common'
 import { saveBook, createBookShelf } from '../redux/actions/bookActions';
-import { getPreferences, getDefualt } from '../redux/actions/preferencesActions';
+import { getPreferences, getDefualt, getSuggestions } from '../redux/actions/preferencesActions';
 import { loginDispatch, loginDispatchFalse } from '../redux/actions/authActions'
 import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
@@ -18,8 +18,9 @@ class Home extends Component {
       firebase.auth().onAuthStateChanged((user) => {
         if (user) {
           this.props.loginDispatch(user.uid);
-          this.props.getPreferences(user.uid);//if logged in, then check for saved preferences, loads either preferred books or defualt(if there are no preferences) to state
-      }
+          //this.props.getPreferences(user.uid);//if logged in, then check for saved preferences, loads either preferred books or defualt(if there are no preferences) to state
+         this.props.getSuggestions(user.uid)
+    }
         else {
           this.props.loginDispatchFalse()
           this.props.getDefualt() //if not logged in, then loads defualt books to state
@@ -108,6 +109,7 @@ export default connect(
     getDefualt,
     getPreferences,
     createBookShelf,
+    getSuggestions,
     saveBook
   })(Home)
 
