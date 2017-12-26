@@ -11,7 +11,6 @@ import { Header, Card, CardSection, Button, Spinner } from './common'
 import { getSavedBooks,removeBooks,
 markAsRead } from '../redux/actions/bookActions';
 import { loginDispatch, loginDispatchFalse } from '../redux/actions/authActions'
-
 import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
 import firebase from 'firebase';
@@ -48,20 +47,20 @@ onRead(title){
   render() {
 
 
-    { console.log(this.props,  this.props.book.savedBooks, "preferences=======================================>") }
+    { console.log(this.props,  "preferences=======================================>") }
 
 
     return (
       <ScrollView>
 
 
-      {this.props.renderBooks
+      {this.props.book
 ?
-   this.props.renderBooks.map(book =>{
+   this.props.book.savedBooks.map(book =>{
 
 
          return (<View><Text>{book.title}</Text>
-        {this.props.auth.userId === this.props.book.user
+        {this.props.auth.userId === this.props.user
  ?
           <View>
          <Button onPress={() => this.onDelete(book.title)}>Delete</Button>
@@ -70,7 +69,7 @@ onRead(title){
          </View>)
     })
 
-  :  null}
+  :   <Spinner size='large' />}
 
 
       </ScrollView>
@@ -90,7 +89,7 @@ const styles = StyleSheet.create({
 });
 
 export default connect(
-  ({ book, auth, preferences, friends }) => ({ book: book, auth: auth, preferences: preferences, friends: friends }),
+  ({ auth, preferences, friends, book }) => ({ auth: auth, preferences: preferences, friends: friends, book: book }),
   {
     loginDispatch,
     loginDispatchFalse,

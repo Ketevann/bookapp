@@ -4,7 +4,8 @@ import {
     BOOK_SEARCH,
     BOOK_BOOL,
     AUTHOR_BOOL,
-    GET_SAVED_BOOK
+    GET_SAVED_BOOK,
+    CLEAR
 } from './action-types'
 import { GOOGLE_API_KEY } from '../../keys'
 import firebase from 'firebase';
@@ -121,8 +122,9 @@ export const getSavedBooks = (user, dispatch) =>
         })
 
 
-
-
+export const clearBooks = (dispatch) =>
+    dispatch =>
+        dispatch({type: CLEAR})
 
 
 
