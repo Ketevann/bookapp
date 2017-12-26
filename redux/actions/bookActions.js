@@ -4,7 +4,8 @@ import {
     BOOK_SEARCH,
     BOOK_BOOL,
     AUTHOR_BOOL,
-    GET_SAVED_BOOK
+    GET_SAVED_BOOK,
+    CLEAR
 } from './action-types'
 import { GOOGLE_API_KEY } from '../../keys'
 import firebase from 'firebase';
@@ -35,26 +36,26 @@ export const getBookSuggestions = (books, dispatch) =>
 export const createBookShelf = (title, userID, dispatch) =>
     //start a new books branch
     dispatch => {
-        firebase.database().ref(`users/${userID}/`).child('books').set([{title:title, read:false}])
+        firebase.database().ref(`users/${userID}/`).child('books').set([{ title: title, read: false }])
     }
 
 export const saveBook = (title, userID, dispatch) =>
-    dispatch => {
+        dispatch => {
 
 
-firebase.database().ref(`users/${userID}/books`).once('value', (snapshot) => {
-        const savedBook = Object.values(snapshot.val());
-        let hasBook=false;
-         for (var i=0; i<savedBook.length; i++){
-            if (savedBook[i].title ===title){
-                //alert(savedBook[i].title);
-                hasBook=true;
-            };
-        }
-       
-        hasBook ? alert('already saved') : firebase.database().ref(`users/${userID}/`).child('books').set([...savedBook, {title:title, read:false}]);
-    });
-}
+        firebase.database().ref(`users/${userID}/books`).once('value', (snapshot) => {
+                    const savedBook = Object.values(snapshot.val());
+                    let hasBook = false;
+                     for (var i = 0; i < savedBook.length; i++) {
+                            if (savedBook[i].title === title) {
+                                    //alert(savedBook[i].title);
+                                    hasBook = true;
+                            };
+                    }
+
+                    hasBook ? alert('already saved') : firebase.database().ref(`users/${userID}/`).child('books').set([...savedBook, { title: title, read: false }]);
+            });
+    }
 
 export const changeBook = (type, dispatch) =>
     dispatch =>
@@ -111,25 +112,28 @@ export const findSimilarBooks = (keyword, placeholder, dispatch) =>
 export const getSavedBooks = (user, dispatch) =>
     dispatch => {
         var savedBook = [];
+        console.log(' in geeet', user)
         firebase.database().ref(`users/${user}/books`).once('value', (snapshot) => {
             if (snapshot.val())
                 savedBook = Object.values(snapshot.val())
             console.log(savedBook, 'savedBook')
-                        dispatch({ type: GET_SAVED_BOOK, payload: savedBook })
-
+            dispatch({ type: GET_SAVED_BOOK, payload: savedBook, user: user })
 
         })
 
 
-
-
+export const clearBooks = (dispatch) =>
+    dispatch =>
+        dispatch({type: CLEAR})
 
 
 
         // console.log(savedBook, 'savedBook')
     }
 
-
+// export const getBooks = (user, dispatch) =>
+//     dispatch =>
+//       dispatch({ type: GET_SAVED_BOOK, payload: savedBook })
 
 
 
@@ -189,7 +193,7 @@ export const removeBooks = (uid, saved, dispatch) =>
                         })
 
                         console.log('saved books in remove', savedBooks)
-                        dispatch({ type: GET_SAVED_BOOK, payload: savedBooks })
+                        dispatch({ type: GET_SAVED_BOOK, payload: savedBooks, user: uid })
                         break;
                     }
                 }

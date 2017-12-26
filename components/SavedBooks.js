@@ -11,7 +11,6 @@ import { Header, Card, CardSection, Button, Spinner } from './common'
 import { getSavedBooks,removeBooks,
 markAsRead } from '../redux/actions/bookActions';
 import { loginDispatch, loginDispatchFalse } from '../redux/actions/authActions'
-
 import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
 import firebase from 'firebase';
@@ -20,23 +19,17 @@ import { width, height, totalSize } from 'react-native-dimension';
 
 class SavedBooks extends Component {
 
-componentWillMount() {
+// componentWillMount() {
 
 
 
-     firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        this.props.loginDispatch(user.uid)
-         const {userId} = this.props.auth
-console.log(user.uid, ' USER ID')
-
-  this.props.getSavedBooks(user.uid)
-      }
-      else this.props.loginDispatchFalse()
-    })
+//   console.log(this.props.user, ' printing suer');
+//   this.props.getSavedBooks(this.props.user)
 
 
-  }
+
+
+//   }
 
 
 onDelete(title){
@@ -54,24 +47,29 @@ onRead(title){
   render() {
 
 
-    { console.log(this.props,  this.props.book.savedBooks, "preferences=======================================>") }
+    { console.log(this.props,  "preferences=======================================>") }
 
 
     return (
       <ScrollView>
 
 
-      {this.props.book.savedBooks
+      {this.props.book
 ?
-        this.props.book.savedBooks.map(book =>{
+   this.props.book.savedBooks.map(book =>{
 
 
-         return (<View><Text>{book.title}</Text><Button onPress={() => this.onDelete(book.title)}>Delete</Button>
+         return (<View><Text>{book.title}</Text>
+        {this.props.auth.userId === this.props.user
+ ?
+          <View>
+         <Button onPress={() => this.onDelete(book.title)}>Delete</Button>
          <Button onPress={() => this.onRead(book.title)}>Read</Button>
+         </View> : null}
          </View>)
     })
 
-  :  null}
+  :   <Spinner size='large' />}
 
 
       </ScrollView>
@@ -91,7 +89,7 @@ const styles = StyleSheet.create({
 });
 
 export default connect(
-  ({ book, auth, preferences }) => ({ book: book, auth: auth, preferences: preferences }),
+  ({ auth, preferences, friends, book }) => ({ auth: auth, preferences: preferences, friends: friends, book: book }),
   {
     loginDispatch,
     loginDispatchFalse,
