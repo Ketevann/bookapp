@@ -28,7 +28,7 @@ class PreferencesForm extends Component {
   handleSubmit(){
             const userId= this.props.auth.userId
             const {title,author}= this.props.preferences;
-            this.props.updatePreferences({ title:title, author:author}, userId);
+            this.props.updatePreferences({ title, author}, userId);
   }
 
   onEmailChange(email) {

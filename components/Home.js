@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, View, ScrollView, Image, TouchableOpacity } from 'react-native';
 import { Header, Card, CardSection, Button, Spinner } from './common'
 import { saveBook, createBookShelf } from '../redux/actions/bookActions';
-import { getPreferences, getDefualt, getSuggestions } from '../redux/actions/preferencesActions';
+import { getSuggestions, getDefualt } from '../redux/actions/preferencesActions';
 import { loginDispatch, loginDispatchFalse } from '../redux/actions/authActions'
 import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
@@ -14,18 +14,17 @@ import axios from 'axios';
 import Search from './Search'
 import Footer from './Footer'
 class Home extends Component {
-  componentWillMount(){
-      firebase.auth().onAuthStateChanged((user) => {
-        if (user) {
-          this.props.loginDispatch(user.uid);
-          //this.props.getPreferences(user.uid);//if logged in, then check for saved preferences, loads either preferred books or defualt(if there are no preferences) to state
-         this.props.getSuggestions(user.uid)
-    }
-        else {
-          this.props.loginDispatchFalse()
-          this.props.getDefualt() //if not logged in, then loads defualt books to state
-        }
-      })
+  componentWillMount() {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        this.props.loginDispatch(user.uid);
+        this.props.getSuggestions(user.uid);//if logged in, then check for saved preferences, loads either preferred books or defualt(if there are no preferences) to state
+      }
+      else {
+        this.props.loginDispatchFalse()
+        this.props.getDefualt() //if not logged in, then loads defualt books to state
+      }
+    })
   }
 
   onSaveBook(book) {
@@ -36,9 +35,9 @@ class Home extends Component {
 
   }
   render() {
-     const { saveBook } = this.props
-     const { loggedIn } = this.props.auth
-   const   { preferences } = this.props.preferences;
+    const { saveBook } = this.props
+    const { loggedIn } = this.props.auth
+    const { preferences } = this.props.preferences;
     { console.log(this.props.preferences.preferences, "preferences=======================================>") }
 
 
@@ -70,9 +69,9 @@ class Home extends Component {
 
             <Card>
               {preferences ? preferences.map((book, index) => <Book key={index} book={book} onSaveBook={this.onSaveBook.bind(this)} />) : <Spinner size='large' />}
-              {loggedIn ? <CardSection> 
-                            <Button onPress={() => Actions.preferencesForm()}> Preferences </Button>
-                          </CardSection>:null}
+              {loggedIn ? <CardSection>
+                <Button onPress={() => Actions.preferencesForm()}> Preferences </Button>
+              </CardSection> : null}
               <CardSection>
                 {loggedIn ? <Button onPress={() => firebase.auth().signOut()}>Log Out</Button> : <Button onPress={() => Actions.login()}> Sign in </Button>}
               </CardSection>
@@ -107,9 +106,8 @@ export default connect(
   {
     loginDispatch, loginDispatchFalse,
     getDefualt,
-    getPreferences,
-    createBookShelf,
     getSuggestions,
+    createBookShelf,
     saveBook
   })(Home)
 
