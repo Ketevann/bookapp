@@ -4,7 +4,8 @@ import {
  UPDATE_AUTHOR,
  UPDATE_GENRE,
  CLEAR_BOOKS,
- UPDATE_SUGGESTIONS
+ UPDATE_SUGGESTIONS,
+ HAS_SUGGESTIONS
 } from '../actions/action-types'
 
 
@@ -22,6 +23,9 @@ export default (preferences = INITIAL_STATE, action) => {
     case UPDATE_SUGGESTIONS:
       //alert(action.payload)
       return {...preferences, preferences:action.payload}
+      case HAS_SUGGESTIONS:
+        return {...preferences, preferences:action.payload}
+
     default:
       return preferences
   }

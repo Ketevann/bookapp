@@ -32,6 +32,8 @@ export default (book = INITIAL_STATE, action) => {
 
 
             return {...book, savedBooks: action.payload, user: action.user }
+            case CLEAR :
+               return {...book, savedBooks: null }
     default:
       return book
   }

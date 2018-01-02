@@ -203,3 +203,7 @@ export const removeBooks = (uid, saved, dispatch) =>
 
     }
 
+
+export const cleaer = (dispatch) =>
+    dispatch =>
+        dispatch({type: CLEAR})
