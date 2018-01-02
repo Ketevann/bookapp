@@ -72,10 +72,17 @@ export const updatePreferences = (newPrefs, userID, dispatch) =>
                 preferenceRef.set(newPrefs)
             })
             .then(() => {
-                find(newPrefs, userID, dispatch);
-                suggestionsRef.once('value', (snapshot) => {
-                    console.log(snapshot.val(), ' in update prefers')
-                })
+                //here we keep getting an array of promises, so promise.all fixes that  
+                 const promises=find(newPrefs, userID, dispatch);
+                        return Promise.all(promises)
+            }).then((res)=>{
+                //console.log( res, "------------------------->Origin")
+                //res here is an array of arrays. each child array has books data
+                    res.forEach((book)=>{
+                        if (book){//if the array child exists (cuz we get a "undefined" if there was no preference for that "keyword")
+                                saveSuggestions(book, userID, dispatch)
+                            }
+                    })
             })
     }
 
@@ -99,38 +106,44 @@ export const saveSuggestions = (books, userID, dispatch) => {
                 throw ("Error")
             const savedSuggestions = Object.values(snapshot.val());
             suggestionsPref.set([...savedSuggestions, ...books]);
-            store.dispatch({ type: UPDATE_SUGGESTIONS, payload: savedSuggestions })
+            dispatch({ type: UPDATE_SUGGESTIONS, payload: savedSuggestions })
         })
         .catch(error => {
             console.log('34');
             suggestionsPref.set([...books]);
-            store.dispatch({ type: UPDATE_SUGGESTIONS, payload: books })
+            dispatch({ type: UPDATE_SUGGESTIONS, payload: books });
         })
-        //.then(()=> dispatch({ type: UPDATE_SUGGESTIONS, payload: savedSuggestions }))
+       //.then(()=> dispatch({ type: UPDATE_SUGGESTIONS, payload: savedSuggestions }))
 
 }
 
 export const getBooksFromApi = (books, userID, dispatch) => {
     const bookPromises = books.map((book) =>
         axios.get(`https://www.googleapis.com/books/v1/volumes?q=${book.Name}&key=${GOOGLE_API_KEY}`));
-    axios.all(bookPromises)
-        .then(axios.spread((...args) => {
-            //collect returned data for each api call in array
-            const bookList = args.map((book) => {
-               // console.log(book.data.items[0].volumeInfo.title, "title");
-                return book.data.items[0].volumeInfo;
-            })
-            return saveSuggestions(bookList, userID, dispatch)
-        }))
-        .catch((error) => {
-            console.error(error);
-        });
+        return axios.all(bookPromises)
+            .then(axios.spread((...args) => {
+                //collect returned data for each api call in array
+                return args.map((book) => {
+                       //return book.data.items[0].volumeInfo;
+                       //returning only the data we need
+                    return {
+                                title:book.data.items[0].volumeInfo.title,
+                                author: book.data.items[0].volumeInfo.authors[0],
+                                imageLinks:book.data.items[0].volumeInfo.imageLinks ? book.data.items[0].volumeInfo.imageLinks: null,
+                                description: book.data.items[0].volumeInfo.description ? book.data.items[0].volumeInfo.description: null
+                             }
+                })
+            
+            }))
+            .catch((error) => {
+                console.error(error);
+            });
 }
 
 
 export const getDefualt = dispatch =>
     dispatch =>
-        getBooksData(defaultBooks.list, dispatch);//send default books to google api
+        getBooksFromApi(defaultBooks.list, dispatch);//send default books to google api
 
 export const clearBooks = (dispatch) =>
     dispatch => dispatch({ type: CLEAR_BOOKS });//clears preferences books array
@@ -162,21 +175,22 @@ export const clearBooks = (dispatch) =>
 
 export const find = (preferences, userID, dispatch) => {
     console.log(Object.keys(preferences), 'alala', preferences)
-    Object.keys(preferences).forEach(keyword => {
+    //using map so that we can collect and group all promises in an arraryto be returned to origin (origin is the function that started the chain of function calls) 
+    //map returns an array
+    return Object.keys(preferences).map(keyword => {
         console.log(keyword, 'keyword')
         if (preferences[keyword] !== '') {
             console.log(preferences[keyword], 'check check')
-            axios.get(`https://tastedive.com/api/similar?q=${preferences[keyword]}&k=${TASTE_DIVE_API_KEY}&limit=2&type=${keyword}`)
+            return axios.get(`https://tastedive.com/api/similar?q=${preferences[keyword]}&k=${TASTE_DIVE_API_KEY}&limit=2&type=${keyword}`)
                 .then(res => {
                     console.log(res, ' res!!!')
-                    return getBooksFromApi(res.data.Similar.Results, userID, dispatch)
+                    return  getBooksFromApi(res.data.Similar.Results, userID, dispatch)
                 })
                 .catch((error) => {
                     console.error(error);
                 });
                     }
     })
-
 }
 
 export const validate = (preferences) => {
