@@ -1,10 +1,13 @@
-const INITIAL_STATE = { title: '', author: '', genre: '', loading: true , books:false, preferences: [] }
+const INITIAL_STATE = { preferenceType: null, keyWord:'', title: '', author: '', genre: '', loading: true , books:false,  preferences: null, hasSugguestions:false}
 import {
  UPDATE_TITLE,
  UPDATE_AUTHOR,
  UPDATE_GENRE,
- FETCHED_BOOKS,
  CLEAR_BOOKS,
+ UPDATE_PREFERENCE_TYPE,
+ UPDATE_PREFERENCE_KEYWORD,
+ UPDATE_SUGGESTIONS,
+ HAS_SUGGESTIONS
 } from '../actions/action-types'
 
 
@@ -19,10 +22,17 @@ export default (preferences = INITIAL_STATE, action) => {
     case UPDATE_GENRE:
       //alert("UPDATE_GENRE");
       return { ...preferences, genre: action.payload };
-    case CLEAR_BOOKS:
-      return {...preferences, preferences:[]}
-    case FETCHED_BOOKS:
-      return {...preferences, preferences: [...preferences.preferences , ...action.payload], books:true }
+    case UPDATE_PREFERENCE_KEYWORD:
+      //alert("UPDATE_GENRE");
+      return { ...preferences, keyWord: action.payload };
+    case UPDATE_PREFERENCE_TYPE:
+      return { ...preferences, preferenceType: action.payload }
+    case UPDATE_SUGGESTIONS:
+      //alert(action.payload)
+      return {...preferences, preferences:action.payload}
+      case HAS_SUGGESTIONS:
+        return {...preferences, preferences:action.payload}
+
     default:
       return preferences
   }
