@@ -38,7 +38,7 @@ class Home extends Component {
     const { saveBook } = this.props
     const { loggedIn } = this.props.auth
     const { preferences } = this.props.preferences;
-    // { console.log(this.props.preferences.preferences, this.props, "preferences=======================================>") }
+    { console.log(this.props.preferences.preferences, this.props, "preferences=======================================>") }
 
 
     return (
