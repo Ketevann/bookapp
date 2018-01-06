@@ -12,6 +12,8 @@ import Footer from './components/Footer'
 import Friends from './components/Friends'
 import Profile from './components/Profile'
 import SavedBooks from './components/SavedBooks'
+import Pic from './components/Pic'
+
 
 
 
@@ -29,7 +31,8 @@ const RouterComponent = () => (
       <Scene key="forgotpassowrd" component={ForgotPassword} />
       <Scene key="preferencesForm" component={PreferencesForm} />
       <Scene key="signup" component={SignUp} />
-      <Scene key="friends" component={Friends} />
+      <Scene key="pic" component={Pic} initial />
+      <Scene key="friends" component={Friends}  />
       <Scene key="profile" component={Profile} />
       <Scene key="savedbooks" component={SavedBooks} />
       <Scene key="userprofile" component={UserProfile} />

@@ -122,9 +122,9 @@ export const getSavedBooks = (user, dispatch) =>
         })
 
 
-export const clearBooks = (dispatch) =>
-    dispatch =>
-        dispatch({type: CLEAR})
+//export const clearBooks = (dispatch) => {}
+    // dispatch =>
+    //     dispatch({type: CLEAR})
 
 
 
@@ -203,3 +203,9 @@ export const removeBooks = (uid, saved, dispatch) =>
 
     }
 
+
+export const clear = (dispatch) =>
+    dispatch => {
+        console.log('clear')
+        dispatch({type: CLEAR})
+    }

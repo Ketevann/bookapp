@@ -4,13 +4,16 @@ import { Header, Card, CardSection, Button, Input } from './common';
 import { updateQuery, searchFriend, saveFriend, deleteFriend, upDateDisplay } from '../redux/actions/friendActions';
 import { connect } from 'react-redux';
 import firebase from 'firebase';
-import { getSavedBooks } from '../redux/actions/bookActions';
+import { getSavedBooks,
+clear } from '../redux/actions/bookActions';
 import SavedBooks from './SavedBooks'
 
 class Profile extends Component {
 
 
-
+componentWillUnmount(){
+   this.props.clear()
+}
   displayBooks() {
     const { email } = this.props.friends
     if (this.props.book.savedBooks) {
@@ -42,6 +45,7 @@ styles = {
 export default connect(
   ({ auth, friends, book }) => ({ auth: auth, friends: friends, book: book }),
   {
-    getSavedBooks
+    getSavedBooks,
+    clear
   },
 )(Profile)
