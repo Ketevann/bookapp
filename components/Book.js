@@ -6,17 +6,20 @@ import   firebase from 'firebase';
 
 
 class Book extends Component {
-  
+
   render() {
+
     const { imageLinks, title } = this.props.book,
-          { loggedIn } = this.props.auth;
+          { loggedIn } = this.props.auth,
+          {book} = this.props
+           console.log(this.props,' in BOOK', book)
     return (
      <TouchableOpacity style={styles.container} >
           {/*<View style={styles.imageContainer}>
             <Image  source={ {uri: imageLinks.thumbnail}} style={styles.image} />
-          </View>*/} 
-           <Text style={styles.title} >{title}</Text>           
-          { loggedIn ?  <Button onPress={()=>this.props.onSaveBook(title)}> Save </Button> : <Text>sign in to save</Text>}
+          </View>*/}
+           <Text style={styles.title} >{title}</Text>
+          { loggedIn ?  <Button onPress={()=>this.props.onSaveBook(book)}> Save </Button> : <Text>sign in to save</Text>}
      </TouchableOpacity>
     );
   }
@@ -32,8 +35,8 @@ const styles = StyleSheet.create({
   },
   image: {
     flex:1,
-    width: 66, 
-    height: 58             
+    width: 66,
+    height: 58
   }
 });
 
