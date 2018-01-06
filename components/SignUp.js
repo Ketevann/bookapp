@@ -4,6 +4,7 @@ import { Header, Card, CardSection, Button, Input, Spinner } from './common'
 import firebase from 'firebase'
 import {connect} from 'react-redux'
 import {forgotPassword, emailDispatch, passwordDispatch, passwordConfirmChange, signUpUser} from '../redux/actions/authActions'
+
 class SignUp extends Component {
 
 
@@ -46,6 +47,9 @@ onForgotPassword(email) {
   this.props.passwordConfirmChange(text)
 }
 
+onUploadPress(){
+  console.log('ww');
+}
 
   render() {
     console.log(this.props, 'in sign up')
@@ -81,6 +85,9 @@ onForgotPassword(email) {
 
           <CardSection>
             <Button onPress={this.OnButtonPress.bind(this)}>Next</Button>
+          </CardSection>
+          <CardSection>
+            <Button onPress={this.onUploadPress.bind(this)}>Upload Avatar</Button>
           </CardSection>
           <CardSection>
             <Text>{this.props.auth.error}</Text>
