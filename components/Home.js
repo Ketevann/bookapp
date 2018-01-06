@@ -34,6 +34,16 @@ class Home extends Component {
     //checking if a books db branch exists
 
   }
+  display(){
+    console.log(this.props.auth.userId,this.props.displaySuggestions, 'bbb' )
+
+ const {userId} = this.props.auth
+     firebase.database().ref(`users/${userId}/`).child('suggestions').once('value', (snapshot) =>{
+             if (!snapshot.val())
+
+    this.props.displaySuggestions(this.props.auth.userId)
+     })
+  }
   render() {
     const { saveBook } = this.props
     const { loggedIn } = this.props.auth
@@ -44,6 +54,7 @@ class Home extends Component {
     return (
 
       <View style={{ flex: 1 }}>
+      {this.display()}
         <ScrollView style={styles.container}>
           <Search />
 
@@ -77,6 +88,7 @@ class Home extends Component {
               </CardSection>
             </Card>
           }
+          <Button onpress={Actions.pic()}></Button>
         </ScrollView>
 
 
