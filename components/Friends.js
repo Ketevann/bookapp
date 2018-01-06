@@ -5,7 +5,7 @@ import { updateQuery,
   searchFriend, saveFriend,
   deleteFriend, upDateDisplay,
 getUserFriends} from '../redux/actions/friendActions';
-import {getSavedBooks, clear} from '../redux/actions/bookActions';
+import {getSavedBooks} from '../redux/actions/bookActions';
 import { connect } from 'react-redux';
 import   firebase from 'firebase';
 import { Actions} from 'react-native-router-flux';
@@ -23,7 +23,7 @@ class Friends extends Component {
     componentWillUnmount(){
         this.props.upDateDisplay(false); //removes the display component when user leaves the page
         this.props.updateQuery('');//clears the email input bar when user leaves the page
-        this.props.clear()
+        //this.props.clear()
     }
 
     onEmailChange(email) {
@@ -118,8 +118,8 @@ class Friends extends Component {
           </CardSection>
           {this.props.friends && this.props.friends.userFriends?
 
-            this.props.friends.userFriends.map(users =>{
-              return (<Text onPress={() => this.getUserBooks(users.email)}>{users.email}</Text>)
+            this.props.friends.userFriends.map((users, index) =>{
+              return (<Text key={index} onPress={() => this.getUserBooks(users.email)}>{users.email}</Text>)
             })
      :  null }
 
@@ -146,7 +146,6 @@ export default connect(
       upDateDisplay,
       getUserFriends,
       getSavedBooks,
-      clear
 
     },
   )(Friends)
