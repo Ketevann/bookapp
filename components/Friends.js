@@ -23,7 +23,6 @@ class Friends extends Component {
     componentWillUnmount(){
         this.props.upDateDisplay(false); //removes the display component when user leaves the page
         this.props.updateQuery('');//clears the email input bar when user leaves the page
-        //this.props.clear()
     }
 
     onEmailChange(email) {
