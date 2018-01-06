@@ -23,7 +23,6 @@ class Friends extends Component {
     componentWillUnmount(){
         this.props.upDateDisplay(false); //removes the display component when user leaves the page
         this.props.updateQuery('');//clears the email input bar when user leaves the page
-
     }
 
     onEmailChange(email) {
@@ -118,8 +117,8 @@ class Friends extends Component {
           </CardSection>
           {this.props.friends && this.props.friends.userFriends?
 
-            this.props.friends.userFriends.map(users =>{
-              return (<Text onPress={() => this.getUserBooks(users.email)}>{users.email}</Text>)
+            this.props.friends.userFriends.map((users, index) =>{
+              return (<Text key={index} onPress={() => this.getUserBooks(users.email)}>{users.email}</Text>)
             })
      :  null }
 

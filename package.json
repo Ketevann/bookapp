@@ -2,6 +2,7 @@
   "main": "node_modules/expo/AppEntry.js",
   "private": true,
   "dependencies": {
+    "Base64": "^1.0.1",
     "axios": "^0.17.1",
     "expo": "^23.0.0",
     "firebase": "^4.6.2",
