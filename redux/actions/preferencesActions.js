@@ -45,7 +45,6 @@ export const updatePreferences = (newPrefs, userID, dispatch) =>
 
         preferenceRef.once('value')
             .then(snapshot => {
-
                 if (!snapshot.val())
                     throw ("Error")
                
