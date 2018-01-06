@@ -56,10 +56,10 @@ onRead(title){
 
       {this.props.book
 ?
-   this.props.book.savedBooks.map(book =>{
+   this.props.book.savedBooks.map((book,index)=>{
 
 
-         return (<View><Text>{book.title}</Text>
+         return (<View key={index} ><Text>{book.title}</Text>
         {this.props.auth.userId === this.props.user
  ?
           <View>
