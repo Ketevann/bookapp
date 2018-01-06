@@ -1,12 +1,7 @@
 import {
-    UPDATE_TITLE,
-    UPDATE_AUTHOR,
-    UPDATE_GENRE,
-    UPDATE_PREFERENCES,
     UPDATE_PREFERENCE_TYPE,
     UPDATE_PREFERENCE_KEYWORD,
-    UPDATE_SUGGESTIONS,
-    HAS_SUGGESTIONS
+    UPDATE_SUGGESTIONS
 } from './action-types'
 import firebase from 'firebase';
 import axios from 'axios';
@@ -16,28 +11,6 @@ import defaultBooks from '../../components/data/defaultBooks';
 import { Actions } from 'react-native-router-flux';
 import store from '../../store'
 
-
-// export const updateTitle = (title, dispatch) =>
-//     //console.log('UPDATE TITLE',title);
-//     dispatch => dispatch({
-//         type: UPDATE_TITLE,
-//         payload: title
-//     })
-
-// export const updateAuthor = (author, dispatch) =>
-//     //console.log('UPDATE AUTHOR',author);
-//     dispatch => dispatch({
-//         type: UPDATE_AUTHOR,
-//         payload: author
-//     })
-
-
-
-// export const hasSuggestions = (bool) =>
-//     ({
-//         type: HAS_SUGGESTIONS,
-//         payload: bool
-//     })
 
 export const updatePrefType = (preference) => {
   return {
@@ -67,30 +40,11 @@ export const keyWordDispatch = (keyWord) => {
 export const updatePreferences = (newPrefs, userID, dispatch) =>
     dispatch => {
         console.log('UPDATE ALL PREFERENCES FireBase', newPrefs);
-        //preferences firebase reference
-    
-        //console.log(newPrefs,"90909090909900==========9090909090============0990909090>")
         const preferenceRef = firebase.database().ref(`users/${userID}/`).child('preferences');
         const suggestionsRef = firebase.database().ref(`users/${userID}/suggestions`);
 
         preferenceRef.once('value')
             .then(snapshot => {
-                //  if (newPrefs.title !== "" || newPrefs.author !== "")
-                //     {   console.log('NULLLL')
-                //         suggestionsRef.set(null);}
-                // if (!snapshot.val())
-                //     throw ("Error")
-
-                // let currentPrefs = snapshot.val();
-
-                // if (currentPrefs.title !== newPrefs.title && newPrefs.title !== "") {
-                //     preferenceRef.update({ title: newPrefs.title })
-
-                // }
-                // if (currentPrefs.author !== newPrefs.author && newPrefs.author !== "") {
-                //     preferenceRef.update({ author: newPrefs.author })
-                // }
-                
 
                 if (!snapshot.val())
                     throw ("Error")
@@ -100,7 +54,6 @@ export const updatePreferences = (newPrefs, userID, dispatch) =>
                     newPrefType=Object.keys(newPrefs)[0],
                     newPrefValue=Object.values(newPrefs)[0];
              
-                    //input validation should be done before submitting?
                 if (currentPrefValue!== newPrefValue && newPrefValue !== "" && newPrefType!==null) {
                     suggestionsRef.set(null);
                     preferenceRef.set(null);
@@ -118,7 +71,6 @@ export const updatePreferences = (newPrefs, userID, dispatch) =>
                 return find(newPrefs);//calling TasteDive
             })
             .then ((similarTitles)=>{
-                //console.log(titles,"90909090909900==========9090909090============0990909090>")
                 return  getBooksFromApi(similarTitles.data.Similar.Results)//calling googleAPI
             })
             .then((booksData)=>{
@@ -127,45 +79,6 @@ export const updatePreferences = (newPrefs, userID, dispatch) =>
                    dispatch({ type: UPDATE_SUGGESTIONS, payload: booksData });
             })
     }
-
-
-// export const displaySuggestions = (userID, dispatch) => {
-//     console.log('display Suggestions *** nnnnn')
-
-//         console.log('kkk')
-//         // firebase.database().ref(`users/${userID}/suggestions`).once('value', (snapshot) => {
-//         //     console.log('display Suggestions ***', snapshot.val())
-//         //     const savedSuggestions = snapshot.val();
-//         //     dispatch(hasSuggestions(savedSuggestions))
-//         // });
-
-// }
-// export const saveSuggestions = (books, userID, dispatch) => {
-//     // const suggestionsPref = firebase.database().ref(`users/${userID}/`).child('suggestions');
-//     // suggestionsPref.once('value')
-//     //     .then(snapshot => {//i dont think we append in this version of code, i think we can just, get rid of spread operator and throw/catch, that part was for appending.
-//     //         if (!snapshot.val())
-//     //             throw ("Error")
-                
-//     //         const savedSuggestions = Object.values(snapshot.val());
-//     //         suggestionsPref.set([...savedSuggestions, ...books]);
-//     //         dispatch({ type: UPDATE_SUGGESTIONS, payload: savedSuggestions })
-//     //     })
-//     //     .catch(error => {
-//     //         console.log('34');
-//     //         suggestionsPref.set([...books]);
-//     //         dispatch({ type: UPDATE_SUGGESTIONS, payload: books });
-//     //     })
-//     //     .then(()=>Actions.home());//instead of calling "display" we just redirect to home. 
-    
-//     //i dont think we append in this version of code, i think we can just, get rid of spread operator and throw/catch, that part was for appending.
-//      const suggestionsPref = firebase.database().ref(`users/${userID}/`).child('suggestions');
-//         suggestionsPref.set([...books])
-//         .then(()=>{
-//             dispatch({ type: UPDATE_SUGGESTIONS, payload: books });
-//         })
-//         .then(()=>Actions.home());//instead of calling "display" we just redirect to home. 
-// }
 
 export const getBooksFromApi = (books) => {//we get an array of titles and return an array of book data
     const bookPromises = books.map((book) => axios.get(`https://www.googleapis.com/books/v1/volumes?q=${book.Name}&key=${GOOGLE_API_KEY}`));
@@ -189,25 +102,9 @@ export const getBooksFromApi = (books) => {//we get an array of titles and retur
 }
 
 export const find = (preferences) => {//we get an object of preferences and return an array of titles
-    //console.log(Object.keys(preferences), 'alala', preferences)
-    //using map so that we can collect unresolved promises in an arrary 
-    // let titlePromise = Object.keys(preferences).map(keyword => {
-    //                         console.log(keyword, 'keyword')
-    //                         //if (preferences[keyword] !== '') {
-    //                             console.log(preferences[keyword], 'check check')
-    //                             return axios.get(`https://tastedive.com/api/similar?q=${preferences[keyword]}&k=${TASTE_DIVE_API_KEY}&limit=2&type=${keyword}`)
-    //                         //}
-    //                     })
-     
-
     //we return a promise that resolves into an array of all titles to be sent to googleAPI
     let type=Object.keys(preferences)[0];     
     return axios.get(`https://tastedive.com/api/similar?q=${preferences[type]}&k=${TASTE_DIVE_API_KEY}&limit=2&type=${type}`);
-            // .then((similarTitles)=>{
-            //     return similarTitles.data.Similar.Results;
-            // }).catch((error) => {
-            //     console.error(error);
-            // });        
 }
 
 
@@ -240,9 +137,11 @@ export const loadPrefBooks = (userID, dispatch) => {// we dont need to call a di
             })
 }
 
-
-
-
+export const getDefualt=(dispatch)=>//setting defualt books to suggestions state
+    dispatch=> firebase.database().ref(`default`).once('value', (snapshot) => {
+                    const defaultBooks = snapshot.val();
+                    dispatch({ type: UPDATE_SUGGESTIONS, payload: defaultBooks });  
+            })
 
 export const getSuggestions = (userID, dispatch) =>//we call this function in componentWillMount, so we dont need to call a display function
     dispatch =>
