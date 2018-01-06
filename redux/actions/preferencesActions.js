@@ -48,9 +48,10 @@ export const updatePreferences = (newPrefs, userID, dispatch) =>
 
         preferenceRef.once('value')
             .then(snapshot => {
-                 if (newPrefs.title !== "" || newPrefs.author !== "")
-                    {   console.log('NULLLL')
-                        suggestionsRef.set(null);}
+                if (newPrefs.title !== "" || newPrefs.author !== "") {
+                    console.log('NULLLL')
+                    suggestionsRef.set(null);
+                }
                 if (!snapshot.val())
                     throw ("Error")
 
@@ -80,18 +81,21 @@ export const updatePreferences = (newPrefs, userID, dispatch) =>
     }
 
 
-export const displaySuggestions = (userID, dispatch) => {
-    console.log('display Suggestions *** nnnnn')
+export const displaySuggestions = (userID, dispatch) =>
+    dispatch =>
+        firebase.database().ref(`users/${userID}/`).child('suggestions').once('value', (snapshot) => {
+            if (snapshot.val())
+            //     throw ("Error")
+            {
+                console.log(snapshot.val(), ' val')
+                const savedSuggestions = Object.values(snapshot.val());
+                //suggestionsPref.set([...savedSuggestions, ...books]);
+               // dispatch({ type: UPDATE_SUGGESTIONS, payload: savedSuggestions })
+            }
+        })
 
-        console.log('kkk')
-        // firebase.database().ref(`users/${userID}/suggestions`).once('value', (snapshot) => {
-        //     console.log('display Suggestions ***', snapshot.val())
-        //     const savedSuggestions = snapshot.val();
-        //     dispatch(hasSuggestions(savedSuggestions))
-        // });
-
-}
 export const saveSuggestions = (books, userID, dispatch) => {
+    console.log(books, userID, ' bla bla')
     const suggestionsPref = firebase.database().ref(`users/${userID}/`).child('suggestions');
     suggestionsPref.once('value')
         .then(snapshot => {
@@ -99,32 +103,51 @@ export const saveSuggestions = (books, userID, dispatch) => {
                 throw ("Error")
             const savedSuggestions = Object.values(snapshot.val());
             suggestionsPref.set([...savedSuggestions, ...books]);
-            store.dispatch({ type: UPDATE_SUGGESTIONS, payload: savedSuggestions })
+            // store.dispatch({ type: UPDATE_SUGGESTIONS, payload: savedSuggestions })
         })
         .catch(error => {
             console.log('34');
             suggestionsPref.set([...books]);
-            store.dispatch({ type: UPDATE_SUGGESTIONS, payload: books })
+            //store.dispatch({ type: UPDATE_SUGGESTIONS, payload: books })
         })
-        //.then(()=> dispatch({ type: UPDATE_SUGGESTIONS, payload: savedSuggestions }))
+    //.then(()=> Promise.resolve('resolved'))
+    //.then(()=> dispatch({ type: UPDATE_SUGGESTIONS, payload: savedSuggestions }))
 
 }
 
 export const getBooksFromApi = (books, userID, dispatch) => {
-    const bookPromises = books.map((book) =>
-        axios.get(`https://www.googleapis.com/books/v1/volumes?q=${book.Name}&key=${GOOGLE_API_KEY}`));
-    axios.all(bookPromises)
-        .then(axios.spread((...args) => {
-            //collect returned data for each api call in array
-            const bookList = args.map((book) => {
-               // console.log(book.data.items[0].volumeInfo.title, "title");
-                return book.data.items[0].volumeInfo;
-            })
-            return saveSuggestions(bookList, userID, dispatch)
-        }))
+    console.log(books,' books')
+     books.map((book) =>
+        axios.get(`https://www.googleapis.com/books/v1/volumes?q=${book.Name}&key=${GOOGLE_API_KEY}`)
+        .then(bookPromises =>{
+            const promise =  Promise.all([bookPromises])
+            console.log('promise', promise)
+        return promise
+        })
+
+        //     .then(axios.spread((...args) => {
+        //         //collect returned data for each api call in array
+        //         return args.map((book) => {
+        //            // console.log(book.data.items[0].volumeInfo.title, "title");
+        //             return book.data.items[0].volumeInfo;
+        //         })
+
+
+        //         //return saveSuggestions(bookList, userID, dispatch)
+        //         //return Promise.all([bookList])
+
+        //         // .then(value => {
+
+        //             console.log( 'value3', bookList)
+        //             return bookList
+
+        //     //})
+        // }))
+
+        .then(books => books)
         .catch((error) => {
             console.error(error);
-        });
+        }))
 }
 
 
@@ -168,13 +191,28 @@ export const find = (preferences, userID, dispatch) => {
             console.log(preferences[keyword], 'check check')
             axios.get(`https://tastedive.com/api/similar?q=${preferences[keyword]}&k=${TASTE_DIVE_API_KEY}&limit=2&type=${keyword}`)
                 .then(res => {
-                    console.log(res, ' res!!!')
-                    return getBooksFromApi(res.data.Similar.Results, userID, dispatch)
+                    return Promise.all([res.data.Similar.Results])
+                })
+                .then((val) => {
+                    Promise.all([getBooksFromApi(val)])
+                        .then(val2 => {
+                            console.log(val2, 'val2');
+                            const books = val2[0][0].data.items
+                            return books.map((info) => {
+                                console.log(info.volumeInfo, 'infoVolume')
+                                return info.volumeInfo;
+                            })
+                        })
+                        .then(bookList => {
+                            saveSuggestions(bookList, userID)
+                           // dispatch({ type: UPDATE_SUGGESTIONS, payload: bookList })
+                        })
+
                 })
                 .catch((error) => {
                     console.error(error);
                 });
-                    }
+        }
     })
 
 }
@@ -190,17 +228,17 @@ export const validate = (preferences) => {
 export const loadPrefBooks = (userID, dispatch) => {
     console.log('load pred')
     firebase.database().ref(`users/${userID}/`).child('preferences').once('value')
-     .then(snapshot => {
-        const preferences = snapshot.val();//this is the  preferences object
-        if (validate(preferences)) {
-            //find user's preferences
-            return find(preferences, userID, dispatch)
+        .then(snapshot => {
+            const preferences = snapshot.val();//this is the  preferences object
+            if (validate(preferences)) {
+                //find user's preferences
+                return find(preferences, userID, dispatch)
 
-        } else {
-            console.log("no prefs, loading defualt suggestions");
-            return getBooksFromApi(defaultBooks.list, userID, dispatch);
-        }
-    })
+            } else {
+                console.log("no prefs, loading defualt suggestions");
+                return getBooksFromApi(defaultBooks.list, userID, dispatch);
+            }
+        })
 }
 
 
@@ -215,17 +253,19 @@ export const getSuggestions = (userID, dispatch) =>
                     throw ("Error")
                 const suggestions = Object.values(snapshot.val());
                 dispatch({ type: UPDATE_SUGGESTIONS, payload: suggestions })
-               // displaySuggestions(userID, dispatch)
-            })
+                // displaySuggestions(userID, dispatch)
+            }).then(() => console.log('val val'))
             .catch((error) => {
                 loadPrefBooks(userID, dispatch)
+            })
+
 
             //.then( displaySuggestions(userID, dispatch))
-//                // displaySuggestions(userID, dispatch)
+               // displaySuggestions(userID, dispatch)
 //                Promise.all([loadPrefBooks]).then(values => {
 //   console.log(values, 'val, va'); // [3, 1337, "foo"]
 
-})
+// })
 
 // .then(() => displaySuggestions(userID, dispatch))
 // })
