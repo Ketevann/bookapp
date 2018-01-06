@@ -2,6 +2,7 @@
   "main": "node_modules/expo/AppEntry.js",
   "private": true,
   "dependencies": {
+    "Base64": "^1.0.1",
     "axios": "^0.17.1",
     "expo": "^23.0.0",
     "firebase": "^4.6.2",
@@ -9,6 +10,8 @@
     "react-native": "https://github.com/expo/react-native/archive/sdk-23.0.0.tar.gz",
     "react-native-dimension": "^1.0.6",
     "react-native-elements": "^0.18.5",
+    "react-native-fetch-blob": "^0.10.8",
+    "react-native-image-crop-picker": "^0.19.1",
     "react-native-router-flux": "^4.0.0-beta.24",
     "react-native-scripts": "^1.8.0",
     "react-redux": "^5.0.6",
