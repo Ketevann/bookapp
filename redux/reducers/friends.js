@@ -1,4 +1,4 @@
-const INITIAL_STATE = { email:'', found:false, display:false, friendStatus:false, userFriends: null}
+const INITIAL_STATE = { email:'', found:false, display:false, friendStatus:false, userFriends: []}
 import {
   UPDATE_QUERY,
   UPDATE_FRIEND_STATUS,

@@ -1,25 +1,25 @@
 import React, { Component } from 'react';
-import { View, Text , Picker, ScrollView} from 'react-native';
+import { View, Text , Picker, ScrollView, FlatList, Image, StyleSheet, TouchableHighlight, Animated} from 'react-native';
 import { Header, Card, CardSection, Button, Input } from './common';
 import { updateQuery,
   searchFriend, saveFriend,
-  deleteFriend, upDateDisplay,
+  deleteFriend, upDateDisplay,updateFriends,
 getUserFriends} from '../redux/actions/friendActions';
 import {getSavedBooks} from '../redux/actions/bookActions';
 import { connect } from 'react-redux';
 import   firebase from 'firebase';
 import { Actions} from 'react-native-router-flux';
 import {Spinner} from './common'
+import AnimatedFlick from './AnimatedFlick'
+
+const ANIMATION_DURATION = 500;
+
 class Friends extends Component {
-
-   // state = { friendId: null }
-
-  // componentDidMount() {
-  //   this.props.clearBooks()
-
-
-  // }
-
+  constructor(props) {
+    super(props);
+   this._animated = new Animated.Value(1);
+  }
+ 
     componentWillUnmount(){
         this.props.upDateDisplay(false); //removes the display component when user leaves the page
         this.props.updateQuery('');//clears the email input bar when user leaves the page
@@ -57,8 +57,22 @@ class Friends extends Component {
         return (this.props.friends.display ? this.renderSearchResults() : null)
     }
 
+    handleRemove(index){
+        Animated.timing(this._animated, {
+          toValue: 0,
+          duration: ANIMATION_DURATION,
+          useNativeDriver: true,
+        }).start(this.onRemove.bind(this,index));
+      
+      };
 
-
+    onRemove(index){
+        const { updateFriends, auth } = this.props;
+        const friends = this.props.friends.userFriends;
+              start = friends.slice(0, index),
+              end = friends.slice(index + 1),
+        updateFriends( auth.userId, start.concat(end));
+    };
 
 
 
@@ -85,12 +99,46 @@ class Friends extends Component {
      })
     }
 
+renderRow(friend){
+  return (
+    <AnimatedFlick>
+      <View>
+        <View style={ styles.listContainer}>
+          <Image style={styles.listAvatar}
+                source={{ uri:friend.item.avatar === null || friend.item.avatar === undefined ? 'https://via.placeholder.com/70x70.jpg' : friend.item.avatar }}
+          />
+          <Text style={styles.listText} onPress={this.getUserBooks.bind(this, friend.item.email)}>{friend.item.email}</Text>  
+        </View> 
+        <View style={styles.cellBorder} />
+      </View>
+      <TouchableHighlight 
+        onPress={this.handleRemove.bind(this,friend.index)} 
+        style={ { justifyContent: 'center', alignItems: 'center' ,width: 90, height:100, backgroundColor:"yellow" }}>
+          <Text style={{  textAlign: 'center',}} >Delete</Text>
+      </TouchableHighlight>
+    </AnimatedFlick>
+  );
+}
+renderSeparator(){
+    return (
+      <View
+        style={{
+          height: 1,
+          width: "86%",
+          backgroundColor: "#CED0CE",
+          marginLeft: "14%"
+        }}
+      />
+    );
+  };
+
+
   render() {
     {console.log(this.props,' jessica')}
     const { loggedIn } = this.props.auth;
     const { friendStatus } = this.props.friends;
     return (
-       <ScrollView style={styles.container}>
+       <ScrollView >
          <Header headerText="Friends" />
            <Card>
            <CardSection>
@@ -107,35 +155,45 @@ class Friends extends Component {
           <CardSection>
             { this.renderSearchDisplay() }
           </CardSection>
-
           <CardSection>
             { this.displayUser() }
           </CardSection>
-
           <CardSection>
           <Button onPress={() => this.onSeeFriends()}>See All friends</Button>
-
           </CardSection>
-          {this.props.friends && this.props.friends.userFriends?
-
-            this.props.friends.userFriends.map((users, index) =>{
-              return (<Text key={index} onPress={() => this.getUserBooks(users.email)}>{users.email}</Text>)
-            })
-     :  null }
-
+          <FlatList
+              data={this.props.friends.userFriends}
+              extraData={this.state}
+              renderItem={this.renderRow.bind(this)}
+              ItemSeparatorComponent={this.renderSeparator.bind(this)}
+              keyExtractor={(item, index) => index}
+              />
            </Card>
       </ScrollView>
     )
   }
 }
 
-styles = {
-  container: {
+ const styles = StyleSheet.create({
+  listContainer: {
     flex: 1,
-    paddingHorizontal: 10
-  }
-}
-
+    padding: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor:'white',
+    height:70,
+    width:380
+  },
+  listText: {
+    marginLeft: 12,
+    fontSize: 16,
+  },
+  listAvatar: {
+    height: 40,
+    width: 40,
+    borderRadius: 20,
+  },
+});
 export default connect(
     ({ auth, friends, book }) => ({auth: auth, friends: friends, book: book}),
     {
@@ -146,6 +204,7 @@ export default connect(
       upDateDisplay,
       getUserFriends,
       getSavedBooks,
+      updateFriends
 
     },
   )(Friends)

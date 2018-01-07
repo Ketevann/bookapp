@@ -150,3 +150,8 @@ export const getUserFriends = (userId, dispatch) =>
              console.log(snapshot.val(), 'friends')
              dispatch({type: GET_FRIENDS, payload:snapshot.val()})
          })
+
+export const updateFriends = (userId,updatedFriends) => 
+  dispatch =>
+    firebase.database().ref(`users/${userId}/`).child('friends').set([...updatedFriends]).then(()=>
+      dispatch({type: GET_FRIENDS, payload:updatedFriends}))
