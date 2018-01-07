@@ -31,7 +31,7 @@ const RouterComponent = () => (
       <Scene key="forgotpassowrd" component={ForgotPassword} />
       <Scene key="preferencesForm" component={PreferencesForm} />
       <Scene key="signup" component={SignUp} />
-      <Scene key="pic" component={Pic} initial />
+      <Scene key="pic" component={Pic} />
       <Scene key="friends" component={Friends}  />
       <Scene key="profile" component={Profile} />
       <Scene key="savedbooks" component={SavedBooks} />
