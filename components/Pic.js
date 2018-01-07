@@ -17,7 +17,7 @@ import { connect } from 'react-redux'
 
 
 const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
-const btoa= (input:string = '')  => {
+export const btoa= (input:string = '')  => {
     let str = input;
     let output = '';
 

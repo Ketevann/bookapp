@@ -5,6 +5,7 @@ import {
     BOOK_BOOL,
     AUTHOR_BOOL,
     GET_SAVED_BOOK,
+    READ,
     CLEAR
 } from './action-types'
 import { GOOGLE_API_KEY } from '../../keys'
@@ -149,16 +150,19 @@ export const markAsRead = (uid, title, dispatch) =>
             //db books are returned as an object, iterate object and save values (titles) in array
             console.log(snapshot.val(), 'SNAPPPP')
 
-
+            let bool
 
             for (var i = 0; i < snapshot.val().length; i++) {
                 console.log(snapshot.val()[i], ' III')
                 if (snapshot.val()[i] && snapshot.val()[i].title === title) {
                     index = i;
                     if (snapshot.val()[i].read === true)
-                        firebase.database().ref(`users/${uid}/books/${index}`).update({  read: false })
-                    else firebase.database().ref(`users/${uid}/books/${index}`).update({  read: true })
+                     bool = false
+                     else bool = true
+                        firebase.database().ref(`users/${uid}/books/${index}`).update({  read: bool })
 
+                    // else firebase.database().ref(`users/${uid}/books/${index}`).update({  read: true })
+                   return dispatch({type: READ, payload: bool})
 
 
                     break;

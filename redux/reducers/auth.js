@@ -28,7 +28,7 @@ export default (auth = INITIAL_STATE, action) => {
       return { ...auth, loading: true, error: '' };
     case LOGGEDIN:
     console.log(action, 'action in LOGGED')
-      return { loggedIn: true, userId:action.payload };
+      return { loggedIn: true, userId:action.payload, image:action.image };
     case NOTLOGGEDIN:
       return { ...auth, loggedIn: false };
     case FORGOT:

@@ -12,14 +12,14 @@ import {
 import { Header, CardSection, Spinner,Button } from './common'
 import { getSavedBooks,removeBooks,
 markAsRead } from '../redux/actions/bookActions';
-import { loginDispatch, loginDispatchFalse } from '../redux/actions/authActions'
 import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
 import firebase from 'firebase';
 import axios from 'axios';
 import Dimensions from 'Dimensions'
 var {height, width} = Dimensions.get('window')
-import { Card } from 'react-native-elements'
+import { Card, Icon } from 'react-native-elements'
+
 class SavedBooks extends Component {
 
   constructor(props){
@@ -53,12 +53,13 @@ onRead(title){
   this.props.markAsRead(this.props.auth.userId, title)
 }
 
-renderElemets(){
+renderElemets(color){
   const {savedBooks} =  this.props.book
   console.log(' undered', this.props.book)
       if(this.props.book){
 
         return savedBooks.map((book,index)=>{
+
          return (
 
            <View>
@@ -71,8 +72,27 @@ renderElemets(){
         {this.props.auth.userId === this.props.user ?
           <View>
 
-           <Button onPress={() => this.onDelete(book.title)}>Delete</Button>
-         <Button onPress={() => this.onRead(book.title)}>Read</Button>
+
+<View
+style={{flexDirection:'row', margin: 10}}
+>
+<Icon
+  raised
+  name='check'
+  type='font-awesome'
+  color={color}
+  onPress={() => this.onRead(book.title)} />
+
+
+<Icon
+  raised
+  name='delete'
+  type='delete'
+  color='#f50'
+  onPress={() => this.onDelete(book.title)} />
+</View>
+
+
 
          </View> : null}
          </View>)
@@ -84,7 +104,12 @@ renderElemets(){
 
 
   render() {
-
+    let color
+    {this.props.book && this.props.book.read === true ?
+      color =  '#f50'
+      :
+      color = 'gray'
+    }
 
     { console.log(this.props,  "preferences=======================================>") }
 
@@ -93,7 +118,7 @@ renderElemets(){
       <ScrollView>
 
 
-    {this.renderElemets()}
+    {this.renderElemets(color)}
 
       </ScrollView>
     );
@@ -121,8 +146,7 @@ const styles = StyleSheet.create({
 export default connect(
   ({ auth, preferences, friends, book }) => ({ auth: auth, preferences: preferences, friends: friends, book: book }),
   {
-    loginDispatch,
-    loginDispatchFalse,
+
     getSavedBooks,
     removeBooks,
     markAsRead
