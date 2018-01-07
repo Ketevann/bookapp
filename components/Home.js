@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, View, ScrollView, Image, TouchableOpacity } from 'react-native';
 import { Header, Card, CardSection, Button, Spinner } from './common'
 import { saveBook, createBookShelf } from '../redux/actions/bookActions';
-import { getSuggestions, getDefualt, displaySuggestions } from '../redux/actions/preferencesActions';
+import { getSuggestions, getDefualt } from '../redux/actions/preferencesActions';
 import { loginDispatch, loginDispatchFalse } from '../redux/actions/authActions'
 import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
@@ -34,27 +34,18 @@ class Home extends Component {
     //checking if a books db branch exists
 
   }
-  display(){
-    console.log(this.props.auth.userId,this.props.displaySuggestions, 'bbb' )
-
- const {userId} = this.props.auth
-     firebase.database().ref(`users/${userId}/`).child('suggestions').once('value', (snapshot) =>{
-             if (!snapshot.val())
-
-    this.props.displaySuggestions(this.props.auth.userId)
-     })
-  }
+ 
   render() {
     const { saveBook } = this.props
     const { loggedIn } = this.props.auth
     const { preferences } = this.props.preferences;
-    { console.log(this.props.preferences.preferences, this.props, "preferences=======================================>") }
+    // { console.log(this.props.preferences.preferences, this.props, "preferences=======================================>") }
 
 
     return (
 
       <View style={{ flex: 1 }}>
-      {this.display()}
+
         <ScrollView style={styles.container}>
           <Search />
 
@@ -88,7 +79,7 @@ class Home extends Component {
               </CardSection>
             </Card>
           }
-          <Button onpress={Actions.pic()}></Button>
+          <Button onpress={()=>Actions.pic()}>Pic</Button>
         </ScrollView>
 
 
@@ -120,8 +111,7 @@ export default connect(
     getDefualt,
     getSuggestions,
     createBookShelf,
-    saveBook,
-    displaySuggestions
+    saveBook
 
   })(Home)
 
