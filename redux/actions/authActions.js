@@ -45,7 +45,7 @@ console.log('signed checked', password === confirm)
           .then(user =>{
             console.log('signed uppppp yoo', user)
             firebase.database().ref(`users/${user.uid}`).set({ email: email, avatar: false })//saving user email to db
-            Actions.preferencesForm()
+            //Actions.preferencesForm()
            return loginUserSuccess(dispatch, user)
 
             })

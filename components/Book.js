@@ -12,7 +12,7 @@ class Book extends Component {
     const { imageLinks, title } = this.props.book,
           { loggedIn } = this.props.auth,
           {book} = this.props
-           console.log(this.props,' in BOOK', book)
+        // console.log(this.props,' in BOOK', book)
     return (
      <TouchableOpacity style={styles.container} >
           {/*<View style={styles.imageContainer}>

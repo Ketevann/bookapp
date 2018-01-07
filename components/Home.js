@@ -14,7 +14,7 @@ import axios from 'axios';
 import Search from './Search'
 import Footer from './Footer'
 class Home extends Component {
-  componentWillMount() {
+  componentDidMount() {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         this.props.loginDispatch(user.uid);
