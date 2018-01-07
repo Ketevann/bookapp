@@ -45,6 +45,7 @@ export const updatePreferences = (newPrefs, userID, dispatch) =>
 
         preferenceRef.once('value')
             .then(snapshot => {
+
                 if (!snapshot.val())
                     throw ("Error")
                
@@ -101,6 +102,7 @@ export const getBooksFromApi = (books) => {//we get an array of titles and retur
             });
 }
 
+
 export const find = (preferences) => {//we get an object of preferences and return an array of titles
     //we return a promise that resolves into an array of all titles to be sent to googleAPI
     let type=Object.keys(preferences)[0];     
@@ -111,10 +113,12 @@ export const find = (preferences) => {//we get an object of preferences and retu
 export const loadPrefBooks = (userID, dispatch) => {// we dont need to call a display function
   const suggestionsRef = firebase.database().ref(`users/${userID}/suggestions`);
         firebase.database().ref(`users/${userID}/`).child('preferences').once('value')
+
         .then(snapshot => {
             const preferences = snapshot.val();//this is the  preferences object
             if (!snapshot.val())
                 throw ("Error")
+
                         
             return find(preferences);//calling TasteDive
             //we return a promise that resolves into array of titles to be sent to googleAPI
@@ -135,6 +139,7 @@ export const loadPrefBooks = (userID, dispatch) => {// we dont need to call a di
                     dispatch({ type: UPDATE_SUGGESTIONS, payload: defaultBooks });  
                 })
             })
+
 }
 
 export const getDefualt=(dispatch)=>//setting defualt books to suggestions state
@@ -152,5 +157,7 @@ export const getSuggestions = (userID, dispatch) =>//we call this function in co
                 
                 const suggestions = Object.values(snapshot.val());
                 dispatch({ type: UPDATE_SUGGESTIONS, payload: suggestions })
+
             })
             .catch((error) => loadPrefBooks(userID, dispatch))//else check for preferences, if none, load default
+

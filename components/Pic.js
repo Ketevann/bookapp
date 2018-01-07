@@ -13,6 +13,7 @@ import firebase from 'firebase'
 //import RNFetchBlob from 'react-native-fetch-blob'
 import { ImagePicker } from 'expo';
 
+
 const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
 const btoa= (input:string = '')  => {
     let str = input;
@@ -52,6 +53,7 @@ const btoa= (input:string = '')  => {
 
     return output;
   }
+
 
 export default class RNF extends Component {
   state = {

@@ -28,9 +28,10 @@ class Home extends Component {
   }
 
   onSaveBook(book) {
+    console.log(book, 'book')
     const userId = this.props.auth.userId;
     firebase.database().ref(`users/${userId}/books`).once('value', snapshot =>
-      snapshot.val() ? this.props.saveBook(book, userId) : this.props.createBookShelf(book, userId));
+      snapshot.val() ? this.props.saveBook(book, userId, ) : this.props.createBookShelf(book, userId));
     //checking if a books db branch exists
 
   }
@@ -79,7 +80,11 @@ class Home extends Component {
               </CardSection>
             </Card>
           }
+<<<<<<< HEAD
           <Button onpress={()=>Actions.pic()}>Pic</Button>
+=======
+          <Button onpress={() => Actions.pic()}></Button>
+>>>>>>> a3c7e8f6b18c51fd281381647c78accc93ede3c1
         </ScrollView>
 
 

@@ -33,28 +33,31 @@ export const getBookSuggestions = (books, dispatch) =>
     }
 
 
-export const createBookShelf = (title, userID, dispatch) =>
+export const createBookShelf = (book, userID, dispatch) =>
     //start a new books branch
+
     dispatch => {
-        firebase.database().ref(`users/${userID}/`).child('books').set([{ title: title, read: false }])
+        console.log(book, userID, '***')
+        const { author, description, imageLinks, title } = book;
+        firebase.database().ref(`users/${userID}/`).child('books').set([{ title: title, read: false, author: author, description: description, image: imageLinks }])
     }
 
-export const saveBook = (title, userID, dispatch) =>
-        dispatch => {
-
-
+export const saveBook = (book, userID, dispatch) =>
+    dispatch => {
+        console.log(book, userID, '*** save')
+        const { author, description, imageLinks, title } = book;
         firebase.database().ref(`users/${userID}/books`).once('value', (snapshot) => {
-                    const savedBook = Object.values(snapshot.val());
-                    let hasBook = false;
-                     for (var i = 0; i < savedBook.length; i++) {
-                            if (savedBook[i].title === title) {
-                                    //alert(savedBook[i].title);
-                                    hasBook = true;
-                            };
-                    }
+            const savedBook = Object.values(snapshot.val());
+            let hasBook = false;
+            for (var i = 0; i < savedBook.length; i++) {
+                if (savedBook[i].title === title) {
+                    //alert(savedBook[i].title);
+                    hasBook = true;
+                };
+            }
 
-                    hasBook ? alert('already saved') : firebase.database().ref(`users/${userID}/`).child('books').set([...savedBook, { title: title, read: false }]);
-            });
+            hasBook ? alert('already saved') : firebase.database().ref(`users/${userID}/`).child('books').set([...savedBook, { title: title, read: false, author: author, description: description, image: imageLinks }]);
+        });
     }
 
 export const changeBook = (type, dispatch) =>
@@ -122,9 +125,9 @@ export const getSavedBooks = (user, dispatch) =>
         })
 
 
-//export const clearBooks = (dispatch) => {}
-    // dispatch =>
-    //     dispatch({type: CLEAR})
+        //export const clearBooks = (dispatch) => {}
+        // dispatch =>
+        //     dispatch({type: CLEAR})
 
 
 
@@ -153,8 +156,8 @@ export const markAsRead = (uid, title, dispatch) =>
                 if (snapshot.val()[i] && snapshot.val()[i].title === title) {
                     index = i;
                     if (snapshot.val()[i].read === true)
-                        firebase.database().ref(`users/${uid}/books/${index}`).set({ title: title, read: false })
-                    else firebase.database().ref(`users/${uid}/books/${index}`).set({ title: title, read: true })
+                        firebase.database().ref(`users/${uid}/books/${index}`).update({  read: false })
+                    else firebase.database().ref(`users/${uid}/books/${index}`).update({  read: true })
 
 
 
@@ -207,5 +210,5 @@ export const removeBooks = (uid, saved, dispatch) =>
 export const clear = (dispatch) =>
     dispatch => {
         console.log('clear')
-        dispatch({type: CLEAR})
+        dispatch({ type: CLEAR })
     }
