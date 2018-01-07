@@ -12,10 +12,12 @@ import {
 import firebase from 'firebase'
 //import RNFetchBlob from 'react-native-fetch-blob'
 import { ImagePicker } from 'expo';
+import {dispatchCamera} from '../redux/actions/cameraActions'
+import { connect } from 'react-redux'
 
 
 const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
-const btoa= (input:string = '')  => {
+export const btoa= (input:string = '')  => {
     let str = input;
     let output = '';
 
@@ -28,10 +30,10 @@ const btoa= (input:string = '')  => {
       if (charCode > 0xFF) {
         throw new Error("'btoa' failed: The string to be encoded contains characters outside of the Latin1 range.");
       }
-      
+
       block = block << 8 | charCode;
     }
-    
+
     return output;
   }
 
@@ -55,16 +57,17 @@ const btoa= (input:string = '')  => {
   }
 
 
-export default class RNF extends Component {
+class RNF extends Component {
   state = {
     image: null,
   };
 
   componentDidMount() {
-    firebase.database().ref(`users/pic`).once('value', (snapshot) => {
-      console.log(snapshot.val());
-      this.setState({ image: btoa(snapshot.val().blobs) })
-    })
+    // firebase.database().ref(`users/pic`).once('value', (snapshot) => {
+    //   console.log(snapshot.val());
+    //   this.setState({ image: btoa(snapshot.val().blobs) })
+    // })
+    this._pickImage()
   }
   _pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -77,26 +80,20 @@ export default class RNF extends Component {
 
 
     var byteCharacters = atob(result.base64);
-    firebase.database().ref(`users/pic`).set({ blobs: byteCharacters })
-    if (!result.cancelled) {
-      this.setState({ image: result.uri });
-    }
+    const {id} = this.props
+    console.log(id, ' ID ID')
+    firebase.database().ref(`users/${id}`).update({ avatar: byteCharacters })
+    this.props.dispatchCamera(false)
+    // //
   };
   render() {
     let { image } = this.state;
     console.log(image, ' iamge')
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Button
-          title="Pick an image from camera roll"
-          onPress={this._pickImage}
-        />
-        {image ?
-          <Image
-            style={{ width: 200, height: 200 }}
-            source={{ uri: `data:image/jpeg;base64,${image}` }} />
 
-          : null}
+
+
         <View style={{ margin: 60 }}>
           <Text></Text>
         </View>
@@ -105,3 +102,17 @@ export default class RNF extends Component {
 
   }
 }
+//dispatchCamera
+export default connect(({cameraRoll}) => ({ cameraRoll}), {
+  dispatchCamera
+})(RNF);
+// {image ?
+//           <Image
+//             style={{ width: 200, height: 200 }}
+//             source={{ uri: `data:image/jpeg;base64,${image}` }} />
+
+//           : null}
+  // <Button
+  //         title="Pick an image from camera roll"
+  //         onPress={this._pickImage}
+  //       />

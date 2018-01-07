@@ -9,14 +9,14 @@ import {Actions} from 'react-native-router-flux';
 
 class Login extends Component {
 
-  componentWillMount() {
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        this.props.loginDispatch()
-      }
-      else this.props.loginDispatchFalse()
-    })
-  }
+  // componentWillMount() {
+  //   firebase.auth().onAuthStateChanged((user) => {
+  //     if (user) {
+  //       this.props.loginDispatch()
+  //     }
+  //     else this.props.loginDispatchFalse()
+  //   })
+  // }
 
   renderContent() {
     console.log(this.props.auth.loggedIn, 'logged in')

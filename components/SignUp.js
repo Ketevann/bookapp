@@ -2,8 +2,18 @@ import React, { Component } from 'react'
 import { View, Text } from 'react-native'
 import { Header, Card, CardSection, Button, Input, Spinner } from './common'
 import firebase from 'firebase'
-import {connect} from 'react-redux'
-import {forgotPassword, emailDispatch, passwordDispatch, passwordConfirmChange, signUpUser} from '../redux/actions/authActions'
+import { connect } from 'react-redux'
+import {
+  forgotPassword,
+  emailDispatch,
+  passwordDispatch,
+  passwordConfirmChange,
+  signUpUser
+} from '../redux/actions/authActions'
+import {dispatchCamera} from '../redux/actions/cameraActions'
+import RNF from './Pic'
+import { Actions } from 'react-native-router-flux';
+
 class SignUp extends Component {
 
 
@@ -18,7 +28,6 @@ class SignUp extends Component {
   // });
   //   }
 
-
   OnButtonPress() {
 
 
@@ -28,29 +37,49 @@ class SignUp extends Component {
 
   }
 
-onForgotPassword(email) {
-  this.props.forgotPassword(email)
-}
+  onForgotPassword(email) {
+    this.props.forgotPassword(email)
+  }
 
- onEmailChange(text) {
-   console.log('hh',this.props.auth, text)
-  this.props.emailDispatch(text)
+  onEmailChange(text) {
+    console.log('hh', this.props.auth, text)
+    this.props.emailDispatch(text)
   }
   onPasswordChange(text) {
     console.log('text')
-  this.props.passwordDispatch(text)
-}
+    this.props.passwordDispatch(text)
+  }
 
   onPasswordConfirm(text) {
     console.log('text')
-  this.props.passwordConfirmChange(text)
-}
+    this.props.passwordConfirmChange(text)
+  }
 
+  onUploadPress() {
+    console.log('ww');
+    this.props.dispatchCamera(true)
+   // this.setState({shoComponent:true})
+
+  }
+  OnRedirect(){
+    Actions.preferencesForm()
+
+  }
 
   render() {
     console.log(this.props, 'in sign up')
+
     return (
       <View>
+      {this.props.auth.loggedIn ?
+      <CardSection>
+
+            <Button onPress={this.onUploadPress.bind(this)}>Upload Avatar</Button>
+            {this.props.cameraRoll.showComponent?
+              <RNF id={this.props.auth.userId}/>
+         :null }
+          </CardSection>
+     :
         <Card>
           <CardSection>
             <Input
@@ -78,14 +107,21 @@ onForgotPassword(email) {
               value={this.props.auth.passwordConfirm}
             />
           </CardSection>
-
+          </Card>
+      }
           <CardSection>
-            <Button onPress={this.OnButtonPress.bind(this)}>Next</Button>
+          {
+            this.props.auth.loggedIn ?
+            <Button onPress={(this.OnRedirect.bind(this))}>Next</Button>
+            :
+            <Button onPress={this.OnButtonPress.bind(this)}>Sign Up</Button>
+          }
           </CardSection>
+
+
           <CardSection>
             <Text>{this.props.auth.error}</Text>
           </CardSection>
-        </Card>
       </View>
 
     )
@@ -113,7 +149,10 @@ styles = {
   }
 }
 
-export default connect(({ auth }) => ({auth}), {forgotPassword, emailDispatch,
-passwordDispatch,
-passwordConfirmChange,
-signUpUser})(SignUp);
+export default connect(({ auth, cameraRoll }) => ({ auth, cameraRoll }), {
+  forgotPassword, emailDispatch,
+  passwordDispatch,
+  passwordConfirmChange,
+  signUpUser,
+  dispatchCamera
+})(SignUp);

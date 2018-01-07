@@ -7,7 +7,7 @@ import {
 import firebase from 'firebase';
 import { Actions } from 'react-native-router-flux';
 import {getSavedBooks} from './bookActions'
-
+import {btoa} from '../../components/Pic'
 
 console.log(EMAIL_CHANGED, PASSWORD_CHANGED, ' CHANGEDDD!!!')
 
@@ -45,8 +45,8 @@ console.log('signed checked', password === confirm)
           .then(user =>{
             console.log('signed uppppp yoo', user)
             firebase.database().ref(`users/${user.uid}`).set({ email: email, avatar: false })//saving user email to db
-            Actions.preferencesForm()
-           return loginUserSuccess(dispatch, user)
+            //Actions.preferencesForm()
+           return loginUserSuccess(dispatch, user.uid)
 
             })
      .catch(() => loginUserFail(dispatch))
@@ -140,8 +140,13 @@ const loginFalse = () => { type: NOTLOGGEDIN }
 
 export const loginDispatch = (userId) =>
   dispatch =>
-    dispatch({ type: LOGGEDIN, payload: userId})
-
+    firebase.database().ref(`users/${userId}/avatar`).once('value', snapshot =>{
+     let image
+     if (snapshot.val() !== false)
+       image = btoa(snapshot.val())
+    else image = false
+    dispatch({ type: LOGGEDIN, payload: userId, image: image})
+    })
 export const loginDispatchFalse = () =>
   dispatch =>
     dispatch({ type: NOTLOGGEDIN })

@@ -21,18 +21,19 @@ export default (auth = INITIAL_STATE, action) => {
     case PASSWORD_CONFIRM:
       return { ...auth, passwordConfirm: action.payload };
     case LOGIN_USER_SUCESS:
-      return { ...auth, ...INITIAL_STATE, user: action.payload };
+      return { ...auth, ...INITIAL_STATE, user: action.payload.uid };
     case LOGIN_USER_FAIL:
       return { ...auth, error: "Authentication Failed", loading: false };
     case LOGIN_USER:
       return { ...auth, loading: true, error: '' };
     case LOGGEDIN:
-      return { loggedIn: true, userId:action.payload };
+    console.log(action, 'action in LOGGED')
+      return { loggedIn: true, userId:action.payload, image:action.image };
     case NOTLOGGEDIN:
       return { ...auth, loggedIn: false };
     case FORGOT:
       return { ...auth, email: '', error: '' };
-    
+
     default:
       return auth
   }
