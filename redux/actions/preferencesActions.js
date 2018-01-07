@@ -88,6 +88,7 @@ export const getBooksFromApi = (books) => {//we get an array of titles and retur
                 //axios.spread((...args) returns an array of resolved promises, meaning an array of book objects
                 //we map through the array and pick out only the data we need, we return an array of book data 
                 return args.map((book) => {
+                    book.data.items[0].volumeInfo ? console.log (book.data.items[0].volumeInfo, "----------------------------------->"): null
                     return {
                         title:book.data.items[0].volumeInfo.title,
                         author: book.data.items[0].volumeInfo.authors[0],
