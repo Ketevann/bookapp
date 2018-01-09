@@ -93,12 +93,12 @@ class PreferencesForm extends Component {
           </CardSection>*/}
            <CardSection>
            <RadioInput onChangeSelection={this.onPreferenceChange.bind(this)}>
-                <RadioButton  
+                <RadioButton
                     label= {'title'}
                     size={ 12}
                     color={ '#007aff'}
                 />
-                <RadioButton  
+                <RadioButton
                     label= {'author'}
                     size={ 12}
                     color={ '#007aff'}
@@ -109,10 +109,7 @@ class PreferencesForm extends Component {
             <Button onPress={this.handleSubmit.bind(this)} > update </Button>
           </CardSection>
         </Card>
-        <Header headerText="Friends" />
-          <Card>
-            <Button onPress={() => Actions.friends()} > Find Friends </Button>
-          </Card>
+
       </ScrollView>
     )
   }
@@ -127,7 +124,7 @@ styles = {
 
 export default connect(
     ({ preferences, auth }) => ({ preferences: preferences , auth: auth }),
-    { 
+    {
       updatePrefTypeDispatch,
       keyWordDispatch,
       updateTitle,

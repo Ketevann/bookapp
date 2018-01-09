@@ -209,10 +209,3 @@ export const removeBooks = (uid, saved, dispatch) =>
         });
 
     }
-
-
-export const clear = (dispatch) =>
-    dispatch => {
-        console.log('clear')
-        dispatch({ type: CLEAR })
-    }
