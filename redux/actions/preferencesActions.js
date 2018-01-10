@@ -8,33 +8,33 @@ import axios from 'axios';
 import { TASTE_DIVE_API_KEY } from '../../keys'
 import { GOOGLE_API_KEY } from '../../keys'
 import defaultBooks from '../../components/data/defaultBooks';
-import {defaultBookImg} from '../../components/data/defaultBookImg';
+import { defaultBookImg } from '../../components/data/defaultBookImg';
 import { Actions } from 'react-native-router-flux';
 import store from '../../store'
 
 
 export const updatePrefType = (preference) => {
-  return {
-    type: UPDATE_PREFERENCE_TYPE,
-    payload: preference
-  }
+    return {
+        type: UPDATE_PREFERENCE_TYPE,
+        payload: preference
+    }
 }
 
 export const updatePrefTypeDispatch = (preference) => {
-  return dispatch =>
-    dispatch(updatePrefType(preference))
+    return dispatch =>
+        dispatch(updatePrefType(preference))
 }
 
-export const updateKeyWord= (keyWord) => {
-  return {
-    type: UPDATE_PREFERENCE_KEYWORD,
-    payload: keyWord
-  }
+export const updateKeyWord = (keyWord) => {
+    return {
+        type: UPDATE_PREFERENCE_KEYWORD,
+        payload: keyWord
+    }
 }
 
 export const keyWordDispatch = (keyWord) => {
-  return dispatch =>
-    dispatch(updateKeyWord(keyWord))
+    return dispatch =>
+        dispatch(updateKeyWord(keyWord))
 }
 
 
@@ -50,12 +50,12 @@ export const updatePreferences = (newPrefs, userID, dispatch) =>
                 if (!snapshot.val())
                     throw ("Error")
 
-                let currentPrefType=Object.keys(snapshot.val())[0],
-                    currentPrefValue=Object.values(snapshot.val())[0],
-                    newPrefType=Object.keys(newPrefs)[0],
-                    newPrefValue=Object.values(newPrefs)[0];
+                let currentPrefType = Object.keys(snapshot.val())[0],
+                    currentPrefValue = Object.values(snapshot.val())[0],
+                    newPrefType = Object.keys(newPrefs)[0],
+                    newPrefValue = Object.values(newPrefs)[0];
 
-                if (currentPrefValue!== newPrefValue && newPrefValue !== "" && newPrefType!==null) {
+                if (currentPrefValue !== newPrefValue && newPrefValue !== "" && newPrefType !== null) {
                     suggestionsRef.set(null);
                     preferenceRef.set(null);
                     preferenceRef.update(newPrefs)
@@ -71,49 +71,76 @@ export const updatePreferences = (newPrefs, userID, dispatch) =>
                 //we return a single array of titles to be sent to googleAPI
                 return find(newPrefs);//calling TasteDive
             })
-            .then ((similarTitles)=>{
-                return  getBooksFromApi(similarTitles.data.Similar.Results)//calling googleAPI
+            .then((similarTitles) => {
+                console.log(similarTitles,' titlessss ------->>>>>>>')
+                return getBooksFromApi(similarTitles.data.Similar.Results)//calling googleAPI
             })
-            .then((booksData)=>{
-                  //saveSuggestions(booksData, userID, dispatch)//saving
-                   suggestionsRef.set([...booksData]);
-                   dispatch({ type: UPDATE_SUGGESTIONS, payload: booksData });
+            .then((booksData) => {
+                console.log(booksData,' booksData')
+                //saveSuggestions(booksData, userID, dispatch)//saving
+                suggestionsRef.set([...booksData]);
+                dispatch({ type: UPDATE_SUGGESTIONS, payload: booksData });
             })
     }
 
-export const getBooksFromApi = (books) => {//we get an array of titles and return an array of book data
+export const getBooksFromApi = (books, newList) => {//we get an array of titles and return an array of book data
     const bookPromises = books.map((book) => axios.get(`https://www.googleapis.com/books/v1/volumes?q=${book.Name}&key=${GOOGLE_API_KEY}`));
     //bookPromises is an array of unresolved promises
     return axios.all(bookPromises)
-            .then(axios.spread((...args) => {
-                //axios.spread((...args) returns an array of resolved promises, meaning an array of book objects
-                //we map through the array and pick out only the data we need, we return an array of book data
-                return args.map((book) => {
-                    book.data.items[0].volumeInfo ? console.log (book.data.items[0].volumeInfo, "----------------------------------->"): null
-                    return {
-                        title:book.data.items[0].volumeInfo.title,
-                        author: book.data.items[0].volumeInfo.authors[0],
-                        imageLinks:book.data.items[0].volumeInfo.imageLinks ? book.data.items[0].volumeInfo.imageLinks:{ smallThumbnail : defaultBookImg },//we have ternary cuz some books dont have image/descrition
-                        description: book.data.items[0].volumeInfo.description ? book.data.items[0].volumeInfo.description: null//without ternary, code crashes. unresolved promise error
-                    }
-                })
-            }))
-            .catch((error) => {
-                console.error(error);
-            });
+        .then(axios.spread((...args) => {
+            //axios.spread((...args) returns an array of resolved promises, meaning an array of book objects
+            //we map through the array and pick out only the data we need, we return an array of book data
+            var bookList
+            var newList = args.map((bookList, index) => {
+
+
+
+
+//                 console.log(book.volumeInfo, 'bok ==================> list all bookssss')
+    return bookList.data.items.map(book =>{
+
+   console.log(book, '666 ==================>')
+
+
+                return {
+                    title: book.volumeInfo.title ?book.volumeInfo.title : null,
+                    author: book.volumeInfo.authors ? book.volumeInfo.authors[0] : null,
+                    imageLinks: book.volumeInfo.imageLinks ? book.volumeInfo.imageLinks : { smallThumbnail: defaultBookImg },//we have ternary cuz some books dont have image/descrition
+                    description: book.volumeInfo.description ? book.volumeInfo.description : null//without ternary, code crashes. unresolved promise error
+                }
+            })
+            })
+       // })
+            console.log(newList, ' check all books')
+            // return newList
+
+//             var newL = newList.reduce(function (flat, toFlatten) {
+//     return flat.concat(Array.isArray(toFlatten) ? flatten(toFlatten) : toFlatten);
+//   }, []);
+var result = [].concat.apply([],newList)
+console.log(result, ' newLLLLLL')
+
+return result
+
+
+
+        }))
+        .catch((error) => {
+            console.error(error);
+        });
 }
 
 
 export const find = (preferences) => {//we get an object of preferences and return an array of titles
     //we return a promise that resolves into an array of all titles to be sent to googleAPI
-    let type=Object.keys(preferences)[0];
+    let type = Object.keys(preferences)[0];
     return axios.get(`https://tastedive.com/api/similar?q=${preferences[type]}&k=${TASTE_DIVE_API_KEY}&limit=2&type=${type}`);
 }
 
 
 export const loadPrefBooks = (userID, dispatch) => {// we dont need to call a display function
-  const suggestionsRef = firebase.database().ref(`users/${userID}/suggestions`);
-        firebase.database().ref(`users/${userID}/`).child('preferences').once('value')
+    const suggestionsRef = firebase.database().ref(`users/${userID}/suggestions`);
+    firebase.database().ref(`users/${userID}/`).child('preferences').once('value')
 
         .then(snapshot => {
             const preferences = snapshot.val();//this is the  preferences object
@@ -124,10 +151,11 @@ export const loadPrefBooks = (userID, dispatch) => {// we dont need to call a di
             return find(preferences);//calling TasteDive
             //we return a promise that resolves into array of titles to be sent to googleAPI
         })
-        .then ((similarTitles)=>{
-            return  getBooksFromApi(similarTitles.data.Similar.Results)//calling googleAPI
+        .then((similarTitles) => {
+            return getBooksFromApi(similarTitles.data.Similar.Results)//calling googleAPI
         })
-        .then((booksData)=>{
+        .then((booksData) => {
+            console.log(booksData,' booksDAta')
             suggestionsRef.set([...booksData]);
             dispatch({ type: UPDATE_SUGGESTIONS, payload: booksData });
         })
@@ -135,19 +163,19 @@ export const loadPrefBooks = (userID, dispatch) => {// we dont need to call a di
             console.log("no prefs, loading defualt suggestions");
             //we have a defualt branch in firebase,
             firebase.database().ref(`default`).once('value', (snapshot) => {
-                    const defaultBooks = snapshot.val();
-                    suggestionsRef.set([...defaultBooks]);//setting defualt books to suggestions branch
-                    dispatch({ type: UPDATE_SUGGESTIONS, payload: defaultBooks });
-                })
+                const defaultBooks = snapshot.val();
+                suggestionsRef.set([...defaultBooks]);//setting defualt books to suggestions branch
+                dispatch({ type: UPDATE_SUGGESTIONS, payload: defaultBooks });
             })
+        })
 
 }
 
-export const getDefualt=(dispatch)=>//setting defualt books to suggestions state
-    dispatch=> firebase.database().ref(`default`).once('value', (snapshot) => {
-                    const defaultBooks = snapshot.val();
-                    dispatch({ type: UPDATE_SUGGESTIONS, payload: defaultBooks });
-            })
+export const getDefualt = (dispatch) =>//setting defualt books to suggestions state
+    dispatch => firebase.database().ref(`default`).once('value', (snapshot) => {
+        const defaultBooks = snapshot.val();
+        dispatch({ type: UPDATE_SUGGESTIONS, payload: defaultBooks });
+    })
 
 export const getSuggestions = (userID, dispatch) =>//we call this function in componentWillMount, so we dont need to call a display function
     dispatch =>
@@ -164,12 +192,13 @@ export const getSuggestions = (userID, dispatch) =>//we call this function in co
 
 
 export const updateDefaultSuggestions = (userID, dispatch) =>
-    dispatch => getBooksFromApi(defaultBooks.list).then ((defaultSuggestions)=>{
-     firebase.database().ref(`default`).set([...defaultSuggestions]);
-})
+        dispatch => getBooksFromApi(defaultBooks.list).then((defaultSuggestions) => {
+        console.log(defaultSuggestions, 'defaultSgugest')
+        firebase.database().ref(`default`).set([...defaultSuggestions]);
+    })
 
 
-export const removeSuggestion = (suggested,uid, dispatch) =>
+export const removeSuggestion = (suggested, uid, dispatch) =>
     dispatch => {
 
         console.log('REMOVEEEE', uid, suggested)
@@ -188,7 +217,7 @@ export const removeSuggestion = (suggested,uid, dispatch) =>
                                 return suggested
                         })
 
-                        console.log(' removed '+ suggested, suggestions)
+                        console.log(' removed ' + suggested, suggestions)
                         dispatch({ type: UPDATE_SUGGESTIONS, payload: suggestions })
                         break;
                     }

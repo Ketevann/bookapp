@@ -87,7 +87,7 @@ class Deck extends Component {
   getCardStyle() {
     const { position } = this.state;
     const rotate = position.x.interpolate({
-      inputRange: [-SCREEN_WIDTH * 1.5, 0, SCREEN_WIDTH * 1.5],
+      inputRange: [-SCREEN_WIDTH, 0, SCREEN_WIDTH],
       outputRange: ['-120deg', '0deg', '120deg']
     });
 
@@ -103,9 +103,13 @@ class Deck extends Component {
     }
     console.log(this.props.data, 'dta', this.state.index)
     return this.props.data.map((item, i) => {
-      if (i < this.state.index) { return null; }
+      console.log(i, ' entered loop', item, this.props.data.length)
+      if (i < this.state.index) {
+        console.log('index is null should be the fist card', this.state.index, i)
+        return null; }
 
       if (i === this.state.index) {
+         console.log('index is equal thos should animate', this.state.index, i, item.title,' item')
         return (
          <Animated.View
             key={i}
@@ -117,23 +121,30 @@ class Deck extends Component {
         );
       }
 
+      if (i > this.state.index){
+         console.log('index is greater', 'state', this.state.index, 'index', i, item.title)
 
       return (
         <Animated.View
-          key={item.id}
+          key={i}
           style={[styles.cardStyle, { top: 10 * (i - this.state.index), zIndex: 5 }]}
         >
           {this.renderCard(item, i)}
         </Animated.View>
-      );
-    });
+      );}
+    }).reverse()
   }
 
 
 
   renderCard(item, index) {
-    console.log('render car', item)
-    if (item.imageLinks.smallThumbnail) {
+    console.log('in render Card', item.title, 'title =======>>>')
+
+
+
+
+    let modifiedLink = 'https://vignette.wikia.nocookie.net/fantendo/images/6/6e/Small-mario.png/revision/latest?cb=20120718024112'
+    if (item.imageLinks) {
       //   console.log(item.imageLinks.smallThumbnail, ' links')
       modifiedLink = item.imageLinks.smallThumbnail.replace(/zoom=[0-9]/, 'zoom=0')
     }
