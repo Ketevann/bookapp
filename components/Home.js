@@ -48,7 +48,6 @@ class Home extends Component {
 
       <View style={{ flex: 1 }}>
 
-        <ScrollView style={styles.container}>
           <Search />
 
           {this.props.book && this.props.book.similarbooks ?
@@ -72,7 +71,8 @@ class Home extends Component {
 
 
             <Card>
-
+              {preferences ?
+                 <Book  book={preferences} onSaveBook={this.onSaveBook.bind(this)} /> : <Spinner size='large' />}
               {loggedIn ? <CardSection>
                 <Button onPress={() => Actions.preferencesForm()}> Preferences </Button>
               </CardSection> : null}
@@ -81,9 +81,6 @@ class Home extends Component {
               </CardSection>
             </Card>
           }
-          {preferences ?
-                 <Book  book={preferences} onSaveBook={this.onSaveBook.bind(this)} /> : <Spinner size='large' />}
-        </ScrollView>
 
 
       </View>

@@ -8,6 +8,7 @@ import axios from 'axios';
 import { TASTE_DIVE_API_KEY } from '../../keys'
 import { GOOGLE_API_KEY } from '../../keys'
 import defaultBooks from '../../components/data/defaultBooks';
+import {defaultBookImg} from '../../components/data/defaultBookImg';
 import { Actions } from 'react-native-router-flux';
 import store from '../../store'
 
@@ -92,7 +93,7 @@ export const getBooksFromApi = (books) => {//we get an array of titles and retur
                     return {
                         title:book.data.items[0].volumeInfo.title,
                         author: book.data.items[0].volumeInfo.authors[0],
-                        imageLinks:book.data.items[0].volumeInfo.imageLinks ? book.data.items[0].volumeInfo.imageLinks: null,//we have ternary cuz some books dont have image/descrition
+                        imageLinks:book.data.items[0].volumeInfo.imageLinks ? book.data.items[0].volumeInfo.imageLinks:{ smallThumbnail : defaultBookImg },//we have ternary cuz some books dont have image/descrition
                         description: book.data.items[0].volumeInfo.description ? book.data.items[0].volumeInfo.description: null//without ternary, code crashes. unresolved promise error
                     }
                 })
@@ -163,7 +164,6 @@ export const getSuggestions = (userID, dispatch) =>//we call this function in co
 
 
 export const updateDefaultSuggestions = (userID, dispatch) =>
-    dispatch => {
-    const defaultSuggestions = getBooksFromApi(defaultBooks.list);
-          firebase.database().ref(`default`).set([...defaultSuggestions]);
-}
+    dispatch => getBooksFromApi(defaultBooks.list).then ((defaultSuggestions)=>{
+     firebase.database().ref(`default`).set([...defaultSuggestions]);
+})
