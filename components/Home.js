@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, View, ScrollView, Image, TouchableOpacity } from 'react-native';
 import { Header, Card, CardSection, Button, Spinner } from './common'
 import { saveBook, createBookShelf } from '../redux/actions/bookActions';
-import { getSuggestions, getDefualt } from '../redux/actions/preferencesActions';
+import { getSuggestions, getDefualt, removeSuggestion} from '../redux/actions/preferencesActions';
 import { loginDispatch, loginDispatchFalse } from '../redux/actions/authActions'
 import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
@@ -34,9 +34,14 @@ class Home extends Component {
     firebase.database().ref(`users/${userId}/books`).once('value', snapshot =>
       snapshot.val() ? this.props.saveBook(book, userId, ) : this.props.createBookShelf(book, userId));
     //checking if a books db branch exists
-
   }
 
+    onRemoveBook(book) {
+    const userId = this.props.auth.userId;
+    console.log( "dislike ", book, " ",userId)
+    this.props.removeSuggestion(book, userId ) 
+  }
+  
   render() {
     const { saveBook } = this.props
     const { loggedIn } = this.props.auth
@@ -47,7 +52,7 @@ class Home extends Component {
     return (
 
       <View style={{ flex: 1 }}>
-
+       
           <Search />
 
           {this.props.book && this.props.book.similarbooks ?
@@ -72,8 +77,8 @@ class Home extends Component {
 
             <Card>
               {preferences ?
-                 <Book  book={preferences} onSaveBook={this.onSaveBook.bind(this)} /> : <Spinner size='large' />}
-              {loggedIn ? <CardSection>
+                 <Book  book={preferences} onSaveBook={this.onSaveBook.bind(this)}  onRemoveBook={this.onRemoveBook.bind(this)}/> : <Spinner size='large' />}
+                {loggedIn ? <CardSection>
                 <Button onPress={() => Actions.preferencesForm()}> Preferences </Button>
               </CardSection> : null}
               <CardSection>
@@ -81,7 +86,7 @@ class Home extends Component {
               </CardSection>
             </Card>
           }
-
+          
 
       </View>
 
@@ -111,6 +116,7 @@ export default connect(
     getDefualt,
     getSuggestions,
     createBookShelf,
-    saveBook
+    saveBook,
+    removeSuggestion
 
   })(Home)

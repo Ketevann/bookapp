@@ -167,3 +167,34 @@ export const updateDefaultSuggestions = (userID, dispatch) =>
     dispatch => getBooksFromApi(defaultBooks.list).then ((defaultSuggestions)=>{
      firebase.database().ref(`default`).set([...defaultSuggestions]);
 })
+
+
+export const removeSuggestion = (suggested,uid, dispatch) =>
+    dispatch => {
+
+        console.log('REMOVEEEE', uid, suggested)
+
+        firebase.database().ref(`users/${uid}`).child('suggestions').once('value', function (snapshot) {
+            var index, suggestions;
+            console.log(snapshot.val(), "removing!!!!")
+            if (snapshot.val()) {
+                for (var i = 0; i < snapshot.val().length; i++) {
+                    if (snapshot.val()[i] && snapshot.val()[i].title === suggested) {
+                        index = i;
+
+                        firebase.database().ref(`users/${uid}/suggestions/${index}`).set(null)
+                        suggestions = snapshot.val().filter(book => {
+                            if (book.title !== snapshot.val()[i].title)
+                                return suggested
+                        })
+
+                        console.log(' removed '+ suggested, suggestions)
+                        dispatch({ type: UPDATE_SUGGESTIONS, payload: suggestions })
+                        break;
+                    }
+                }
+            }
+
+        });
+
+    }
