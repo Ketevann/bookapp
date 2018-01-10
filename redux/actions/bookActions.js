@@ -56,8 +56,8 @@ export const saveBook = (book, userID, dispatch) =>
                     hasBook = true;
                 };
             }
-
-            hasBook ? alert('already saved') : firebase.database().ref(`users/${userID}/`).child('books').set([...savedBook, { title: title, read: false, author: author, description: description, image: imageLinks }]);
+            //added ternary on description, error thrown when discription is undefined
+            hasBook ? alert('already saved') : firebase.database().ref(`users/${userID}/`).child('books').set([...savedBook, { title: title, read: false, author: author, description: description?description:null, image: imageLinks }]);
         });
     }
 
