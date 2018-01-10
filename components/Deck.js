@@ -71,15 +71,14 @@ class Deck extends Component {
   onSwipeComplete(direction) {
     const { onSwipeLeft, onSwipeRight, data } = this.props;
     const item = data[this.state.index];
-
-    direction === 'right' ? onSwipeRight(item) : onSwipeLeft(item);
+    direction === 'right' ? onSwipeRight(item) : onSwipeLeft(item.title);//for dislike on swipe we only need a title to remove from user suggestion in db
     this.state.position.setValue({ x: 0, y: 0 });
     this.setState({ index: this.state.index + 1 });
   }
 
   resetPosition() {
     Animated.spring(this.state.position, {
-      toValue: { x: 100, y: 0 }
+      toValue: { x: 0, y: 0 }// there was glitch on rest. card was not returning to original position 
     }).start();
   }
 
@@ -106,7 +105,7 @@ class Deck extends Component {
 
       if (i === this.state.index) {
         return (
-          <Animated.View
+         <Animated.View
             key={i}
             style={[this.getCardStyle(), styles.cardStyle, { zIndex: 99 }]}
             {...this.state.panResponder.panHandlers}
@@ -136,15 +135,14 @@ class Deck extends Component {
       //   console.log(item.imageLinks.smallThumbnail, ' links')
       modifiedLink = item.imageLinks.smallThumbnail.replace(/zoom=[0-9]/, 'zoom=0')
     }
-    return (
-      <Animated.View
+    return (  
+      <Animated.View style={{ backgroundColor: 'white' }}
         key={index}
       >
-        <Text>{item.author}</Text>
+       <Text>{item.author}</Text>
         <Image
           source={{ uri: modifiedLink }} style={{ width: width - 40, height: height - 300 }} />
-
-        <View
+        {/*<View
           style={{ flexDirection: 'row' }}
         >
           <Icon
@@ -166,7 +164,7 @@ class Deck extends Component {
           icon={{ name: 'code' }}
           backgroundColor="#03A9F4"
           title="View Now!"
-        />
+        />*/}
       </Animated.View>
     );
   }
@@ -190,8 +188,31 @@ class Deck extends Component {
     const { imageLinks, title } = this.props.data,
       { book } = this.props
     return (
-      <View>
-        {this.renderCards()}
+      <View> 
+        {this.renderCards()}<View
+          style={{ flexDirection: 'row', zIndex: 500 , top: height - 275, backgroundColor:'white', justifyContent: 'center', alignItems: 'center'}}
+          //this keeps the buttons from traveling with each card. buttons remain in position as user swioes but functionality is passed to the next card 
+        ><Icon
+            raised
+            name='like'
+            type='font-awesome'
+            color='#f50'
+            size={25}
+           onPress={() => this.forceSwipe('left')}//deletes a "disliked book from users suggestions"
+          />
+          <Button
+          icon={{ name: 'code' }}
+          backgroundColor="#03A9F4"
+          title="View Now!"
+        /><Icon
+            raised
+            name='cross'
+            type='cog'
+            color='#f50'
+            size={25}
+            onPress={() => this.forceSwipe('right')}//sabes a "liked" book to users branch on swipe right
+          />
+        </View>
       </View>
     );
   }

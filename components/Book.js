@@ -30,6 +30,8 @@ class Book extends Component {
 
         <Deck
           data={this.props.book}
+          onSwipeRight={this.props.onSaveBook}//passing save/delete suggestions function as props
+          onSwipeLeft={this.props.onRemoveBook}
         />
 
 
