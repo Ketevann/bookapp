@@ -9,7 +9,7 @@ import {
   Text,
   Image
 } from 'react-native';
-import {Card, Button} from 'react-native-elements'
+import { Card, Button, Icon } from 'react-native-elements'
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SWIPE_THRESHOLD = 0.25 * SCREEN_WIDTH;
 const SWIPE_OUT_DURATION = 250;
@@ -17,19 +17,24 @@ var { height, width } = Dimensions.get('window');
 
 class Deck extends Component {
   static defaultProps = {
-    onSwipeRight: () => {},
-    onSwipeLeft: () => {}
+    onSwipeRight: () => { },
+    onSwipeLeft: () => { }
   }
 
   constructor(props) {
     super(props);
-
+    //initialize animation valueXY deals with gestures and exposes x, y
+    //default is {x:0, y :0}
     const position = new Animated.ValueXY();
+
     const panResponder = PanResponder.create({
+      //detects touch
       onStartShouldSetPanResponder: () => true,
+      //detects movement
       onPanResponderMove: (event, gesture) => {
         position.setValue({ x: gesture.dx, y: gesture.dy });
       },
+      //detects release
       onPanResponderRelease: (event, gesture) => {
         if (gesture.dx > SWIPE_THRESHOLD) {
           this.forceSwipe('right');
@@ -74,7 +79,7 @@ class Deck extends Component {
 
   resetPosition() {
     Animated.spring(this.state.position, {
-      toValue: { x: 0, y: 0 }
+      toValue: { x: 100, y: 0 }
     }).start();
   }
 
@@ -95,7 +100,7 @@ class Deck extends Component {
     if (this.state.index >= this.props.data.length) {
       return this.renderNoMoreCards();
     }
-console.log(this.props.data, 'dta', this.state.index)
+    console.log(this.props.data, 'dta', this.state.index)
     return this.props.data.map((item, i) => {
       if (i < this.state.index) { return null; }
 
@@ -106,7 +111,7 @@ console.log(this.props.data, 'dta', this.state.index)
             style={[this.getCardStyle(), styles.cardStyle, { zIndex: 99 }]}
             {...this.state.panResponder.panHandlers}
           >
-            {this.renderCard(item)}
+            {this.renderCard(item, i)}
           </Animated.View>
         );
       }
@@ -117,28 +122,46 @@ console.log(this.props.data, 'dta', this.state.index)
           key={item.id}
           style={[styles.cardStyle, { top: 10 * (i - this.state.index), zIndex: 5 }]}
         >
-          {this.renderCard(item)}
+          {this.renderCard(item, i)}
         </Animated.View>
       );
-    }).reverse();
+    });
   }
 
 
 
-  renderCard(item) {
+  renderCard(item, index) {
     console.log('render car', item)
     if (item.imageLinks.smallThumbnail) {
-    //   console.log(item.imageLinks.smallThumbnail, ' links')
-       modifiedLink = item.imageLinks.smallThumbnail.replace(/zoom=[0-9]/, 'zoom=0')
+      //   console.log(item.imageLinks.smallThumbnail, ' links')
+      modifiedLink = item.imageLinks.smallThumbnail.replace(/zoom=[0-9]/, 'zoom=0')
     }
     return (
-      <Animated.View>
-       <Text>{item.author}</Text>
-       <Image
-        source={{ uri: modifiedLink }} style={{width:width, height: height}} />
-        <Text style={{ marginBottom: 10 }}>
-          I can customize the Card further.
-        </Text>
+      <Animated.View
+        key={index}
+      >
+        <Text>{item.author}</Text>
+        <Image
+          source={{ uri: modifiedLink }} style={{ width: width - 40, height: height - 300 }} />
+
+        <View
+          style={{ flexDirection: 'row' }}
+        >
+          <Icon
+            raised
+            name='like'
+            type='font-awesome'
+            color='#f50'
+            size={25}
+          />
+          <Icon
+            raised
+            name='cross'
+            type='cog'
+            color='#f50'
+            size={25}
+          />
+        </View>
         <Button
           icon={{ name: 'code' }}
           backgroundColor="#03A9F4"
@@ -165,7 +188,7 @@ console.log(this.props.data, 'dta', this.state.index)
 
   render() {
     const { imageLinks, title } = this.props.data,
-          {book} = this.props
+      { book } = this.props
     return (
       <View>
         {this.renderCards()}

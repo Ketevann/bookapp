@@ -26,49 +26,54 @@ class Book extends Component {
      let modifiedLink;
 
     return (
-      <TouchableOpacity style={styles.container}>
-         {
-
-          this.props.book && this.props.book.map((item, index) => {
-            console.log(item, 'item', )
-            if (item.imageLinks.smallThumbnail) {
-      console.log(item.imageLinks.smallThumbnail, ' links')
-      modifiedLink = this.replaceZoomDigit(item.imageLinks.smallThumbnail)
-    }
-            return (
-              <View
-              key={index}
-              >
-                <Text style={styles.title} >{item.title}</Text>
-                <Image
-
-                  source={{ uri: modifiedLink }} style={styles.image} />
-                {loggedIn ?
-                  <Icon
-                    raised
-                    name='heart'
-                    type='font-awesome'
-                    color='#f50'
-                    size={44}
-                    onPress={() => this.props.onSaveBook(book)} />
-                  : <Text>sign in to save</Text>}
 
 
-              </View>
-            )
-          })
-
-
-        }
         <Deck
           data={this.props.book}
         />
 
-      </TouchableOpacity>
+
     );
   }
 }
 
+
+
+
+
+ //      {
+
+    //       this.props.book && this.props.book.map((item, index) => {
+    //         console.log(item, 'item', )
+    //         if (item.imageLinks.smallThumbnail) {
+    //   console.log(item.imageLinks.smallThumbnail, ' links')
+    //   modifiedLink = this.replaceZoomDigit(item.imageLinks.smallThumbnail)
+    // }
+    //         return (
+    //           <View
+    //           key={index}
+    //           >
+    //             <Text style={styles.title} >{item.title}</Text>
+    //             <Image
+
+    //               source={{ uri: modifiedLink }} style={styles.image} />
+    //             {loggedIn ?
+    //               <Icon
+    //                 raised
+    //                 name='heart'
+    //                 type='font-awesome'
+    //                 color='#f50'
+    //                 size={44}
+    //                 onPress={() => this.props.onSaveBook(book)} />
+    //               : <Text>sign in to save</Text>}
+
+
+    //           </View>
+    //         )
+    //       })
+
+
+    //     }
 
 
 const styles = StyleSheet.create({

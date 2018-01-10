@@ -48,7 +48,6 @@ class Home extends Component {
 
       <View style={{ flex: 1 }}>
 
-        <ScrollView style={styles.container}>
           <Search />
 
           {this.props.book && this.props.book.similarbooks ?
@@ -82,7 +81,6 @@ class Home extends Component {
               </CardSection>
             </Card>
           }
-        </ScrollView>
 
 
       </View>
