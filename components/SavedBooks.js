@@ -59,7 +59,11 @@ renderElemets(color){
       if(this.props.book){
 
         return savedBooks.map((book,index)=>{
-
+          let modifiedLink
+           if (book.image.smallThumbnail) {
+      //   console.log(item.imageLinks.smallThumbnail, ' links')
+       modifiedLink = book.image.smallThumbnail.replace(/zoom=[0-9]/, 'zoom=0')
+    }
          return (
 
            <View>
@@ -67,7 +71,7 @@ renderElemets(color){
 
            <Image
           style={{height: 400, width: 250}}
-          source={{uri: `https://ia800606.us.archive.org/zipview.php?zip=/18/items/olcovers645/olcovers645-L.zip&file=6453948-L.jpg`}}
+          source={{uri: modifiedLink}}
         />
         {this.props.auth.userId === this.props.user ?
           <View>

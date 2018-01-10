@@ -187,15 +187,20 @@ export const removeBooks = (uid, saved, dispatch) =>
         console.log('REMOVEEEE', uid, saved)
 
         firebase.database().ref(`users/${uid}`).child('books').once('value', function (snapshot) {
-            var index, savedBooks;
+            let index, savedBooks, savedBooksArray
+
             console.log(snapshot.val(), "saved!!!!")
             if (snapshot.val()) {
-                for (var i = 0; i < snapshot.val().length; i++) {
-                    if (snapshot.val()[i] && snapshot.val()[i].title === saved) {
+                savedBooksArray = snapshot.val();
+                if (snapshot.val().isArray === false) {
+                    savedBooksArray = Object.keys(snapshot.val())
+                }
+                for (var i = 0; i < savedBooksArray.length; i++) {
+                    if (savedBooksArray[i] && savedBooksArray[i].title === saved) {
                         index = i;
                         firebase.database().ref(`users/${uid}/books/${index}`).set(null)
-                        savedBooks = snapshot.val().filter(book => {
-                            if (book.title !== snapshot.val()[i].title)
+                        savedBooks = savedBooksArray.filter(book => {
+                            if (book.title !== savedBooksArray[i].title)
                                 return book
                         })
 

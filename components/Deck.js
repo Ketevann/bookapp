@@ -10,6 +10,8 @@ import {
   Image
 } from 'react-native';
 import { Card, Button, Icon } from 'react-native-elements'
+import { Actions } from 'react-native-router-flux';
+
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SWIPE_THRESHOLD = 0.25 * SCREEN_WIDTH;
 const SWIPE_OUT_DURATION = 250;
@@ -78,7 +80,7 @@ class Deck extends Component {
 
   resetPosition() {
     Animated.spring(this.state.position, {
-      toValue: { x: 0, y: 0 }// there was glitch on rest. card was not returning to original position 
+      toValue: { x: 0, y: 0 }// there was glitch on rest. card was not returning to original position
     }).start();
   }
 
@@ -135,7 +137,7 @@ class Deck extends Component {
       //   console.log(item.imageLinks.smallThumbnail, ' links')
       modifiedLink = item.imageLinks.smallThumbnail.replace(/zoom=[0-9]/, 'zoom=0')
     }
-    return (  
+    return (
       <Animated.View style={{ backgroundColor: 'white' }}
         key={index}
       >
@@ -175,9 +177,11 @@ class Deck extends Component {
         <Text style={{ marginBottom: 10 }}>
           There's no more content here!
         </Text>
+
         <Button
           backgroundColor="#03A9F4"
-          title="Get more!"
+          title="Update Preferences"
+          onPress={() => Actions.preferencesForm()}
         />
       </Card>
     );
@@ -188,14 +192,14 @@ class Deck extends Component {
     const { imageLinks, title } = this.props.data,
       { book } = this.props
     return (
-      <View> 
+      <View>
         {this.renderCards()}<View
           style={{ flexDirection: 'row', zIndex: 500 , top: height - 275, backgroundColor:'white', justifyContent: 'center', alignItems: 'center'}}
-          //this keeps the buttons from traveling with each card. buttons remain in position as user swioes but functionality is passed to the next card 
+          //this keeps the buttons from traveling with each card. buttons remain in position as user swioes but functionality is passed to the next card
         ><Icon
             raised
-            name='like'
-            type='font-awesome'
+            name='close'
+            type='Foundation'
             color='#f50'
             size={25}
            onPress={() => this.forceSwipe('left')}//deletes a "disliked book from users suggestions"
@@ -206,8 +210,8 @@ class Deck extends Component {
           title="View Now!"
         /><Icon
             raised
-            name='cross'
-            type='cog'
+            name='heart'
+            type='font-awesome'
             color='#f50'
             size={25}
             onPress={() => this.forceSwipe('right')}//sabes a "liked" book to users branch on swipe right
