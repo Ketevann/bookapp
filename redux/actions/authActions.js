@@ -143,7 +143,7 @@ export const loginDispatch = (userId) =>
     firebase.database().ref(`users/${userId}/avatar`).once('value', snapshot =>{
      let image
      if (snapshot.val() !== false)
-       image = btoa(snapshot.val())
+       image = (snapshot.val())
     else image = false
     dispatch({ type: LOGGEDIN, payload: userId, image: image})
     })

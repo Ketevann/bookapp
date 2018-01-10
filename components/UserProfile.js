@@ -10,7 +10,6 @@ import {
 import { Header, Card, CardSection, Button, Spinner } from './common'
 import { getSavedBooks,removeBooks,
 markAsRead } from '../redux/actions/bookActions';
-import { loginDispatch, loginDispatchFalse } from '../redux/actions/authActions'
 
 import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
@@ -92,10 +91,9 @@ const styles = StyleSheet.create({
 });
 
 export default connect(
-  ({ book, auth, preferences, friends }) => ({ book: book, auth: auth, preferences: preferences, friends: friends }),
+  ({ book, auth, preferences,  }) => ({ book: book, auth: auth, preferences: preferences }),
   {
-    loginDispatch,
-    loginDispatchFalse,
+
     getSavedBooks,
     removeBooks,
     markAsRead

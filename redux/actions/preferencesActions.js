@@ -48,12 +48,12 @@ export const updatePreferences = (newPrefs, userID, dispatch) =>
 
                 if (!snapshot.val())
                     throw ("Error")
-               
+
                 let currentPrefType=Object.keys(snapshot.val())[0],
                     currentPrefValue=Object.values(snapshot.val())[0],
                     newPrefType=Object.keys(newPrefs)[0],
                     newPrefValue=Object.values(newPrefs)[0];
-             
+
                 if (currentPrefValue!== newPrefValue && newPrefValue !== "" && newPrefType!==null) {
                     suggestionsRef.set(null);
                     preferenceRef.set(null);
@@ -86,7 +86,7 @@ export const getBooksFromApi = (books) => {//we get an array of titles and retur
     return axios.all(bookPromises)
             .then(axios.spread((...args) => {
                 //axios.spread((...args) returns an array of resolved promises, meaning an array of book objects
-                //we map through the array and pick out only the data we need, we return an array of book data 
+                //we map through the array and pick out only the data we need, we return an array of book data
                 return args.map((book) => {
                     book.data.items[0].volumeInfo ? console.log (book.data.items[0].volumeInfo, "----------------------------------->"): null
                     return {
@@ -105,7 +105,7 @@ export const getBooksFromApi = (books) => {//we get an array of titles and retur
 
 export const find = (preferences) => {//we get an object of preferences and return an array of titles
     //we return a promise that resolves into an array of all titles to be sent to googleAPI
-    let type=Object.keys(preferences)[0];     
+    let type=Object.keys(preferences)[0];
     return axios.get(`https://tastedive.com/api/similar?q=${preferences[type]}&k=${TASTE_DIVE_API_KEY}&limit=2&type=${type}`);
 }
 
@@ -119,7 +119,7 @@ export const loadPrefBooks = (userID, dispatch) => {// we dont need to call a di
             if (!snapshot.val())
                 throw ("Error")
 
-                        
+
             return find(preferences);//calling TasteDive
             //we return a promise that resolves into array of titles to be sent to googleAPI
         })
@@ -129,14 +129,14 @@ export const loadPrefBooks = (userID, dispatch) => {// we dont need to call a di
         .then((booksData)=>{
             suggestionsRef.set([...booksData]);
             dispatch({ type: UPDATE_SUGGESTIONS, payload: booksData });
-        })  
+        })
         .catch(error => {
-            console.log("no prefs, loading defualt suggestions"); 
-            //we have a defualt branch in firebase, 
+            console.log("no prefs, loading defualt suggestions");
+            //we have a defualt branch in firebase,
             firebase.database().ref(`default`).once('value', (snapshot) => {
                     const defaultBooks = snapshot.val();
                     suggestionsRef.set([...defaultBooks]);//setting defualt books to suggestions branch
-                    dispatch({ type: UPDATE_SUGGESTIONS, payload: defaultBooks });  
+                    dispatch({ type: UPDATE_SUGGESTIONS, payload: defaultBooks });
                 })
             })
 
@@ -145,7 +145,7 @@ export const loadPrefBooks = (userID, dispatch) => {// we dont need to call a di
 export const getDefualt=(dispatch)=>//setting defualt books to suggestions state
     dispatch=> firebase.database().ref(`default`).once('value', (snapshot) => {
                     const defaultBooks = snapshot.val();
-                    dispatch({ type: UPDATE_SUGGESTIONS, payload: defaultBooks });  
+                    dispatch({ type: UPDATE_SUGGESTIONS, payload: defaultBooks });
             })
 
 export const getSuggestions = (userID, dispatch) =>//we call this function in componentWillMount, so we dont need to call a display function
@@ -154,10 +154,16 @@ export const getSuggestions = (userID, dispatch) =>//we call this function in co
             .then(function (snapshot) {
                 if (!snapshot.val())
                     throw ("Error")
-                
+
                 const suggestions = Object.values(snapshot.val());
                 dispatch({ type: UPDATE_SUGGESTIONS, payload: suggestions })
 
             })
             .catch((error) => loadPrefBooks(userID, dispatch))//else check for preferences, if none, load default
 
+
+export const updateDefaultSuggestions = (userID, dispatch) =>
+    dispatch => {
+    const defaultSuggestions = getBooksFromApi(defaultBooks.list);
+          firebase.database().ref(`default`).set([...defaultSuggestions]);
+}

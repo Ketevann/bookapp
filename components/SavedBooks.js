@@ -144,11 +144,10 @@ const styles = StyleSheet.create({
 });
 
 export default connect(
-  ({ auth, preferences, friends, book }) => ({ auth: auth, preferences: preferences, friends: friends, book: book }),
+  ({ auth, preferences,  book }) => ({ auth: auth, preferences: preferences,  book: book }),
   {
 
     getSavedBooks,
     removeBooks,
     markAsRead
   })(SavedBooks)
-
