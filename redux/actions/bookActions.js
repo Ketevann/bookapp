@@ -56,8 +56,8 @@ export const saveBook = (book, userID, dispatch) =>
                     hasBook = true;
                 };
             }
-
-            hasBook ? alert('already saved') : firebase.database().ref(`users/${userID}/`).child('books').set([...savedBook, { title: title, read: false, author: author, description: description, image: imageLinks }]);
+            //added ternary on description, error thrown when discription is undefined
+            hasBook ? alert('already saved') : firebase.database().ref(`users/${userID}/`).child('books').set([...savedBook, { title: title, read: false, author: author, description: description?description:null, image: imageLinks }]);
         });
     }
 
@@ -150,19 +150,24 @@ export const markAsRead = (uid, title, dispatch) =>
             //db books are returned as an object, iterate object and save values (titles) in array
             console.log(snapshot.val(), 'SNAPPPP')
 
-            let bool
-
-            for (var i = 0; i < snapshot.val().length; i++) {
-                console.log(snapshot.val()[i], ' III')
-                if (snapshot.val()[i] && snapshot.val()[i].title === title) {
+            let bool,
+             savedBooksArray = snapshot.val();
+                if (Array.isArray(snapshot.val()) === false) {
+                    console.log('false')
+                    savedBooksArray = Object.values(snapshot.val())
+                    console.log(savedBooksArray,'ddd');
+                }
+            for (var i = 0; i < savedBooksArray.length; i++) {
+                console.log(savedBooksArray[i], ' III')
+                if (savedBooksArray[i] && savedBooksArray[i].title === title) {
                     index = i;
-                    if (snapshot.val()[i].read === true)
+                    if (savedBooksArray[i].read === true)
                      bool = false
                      else bool = true
                         firebase.database().ref(`users/${uid}/books/${index}`).update({  read: bool })
 
                     // else firebase.database().ref(`users/${uid}/books/${index}`).update({  read: true })
-                   return dispatch({type: READ, payload: bool})
+                   return dispatch({type: READ, payload: bool, title})
 
 
                     break;
@@ -187,15 +192,23 @@ export const removeBooks = (uid, saved, dispatch) =>
         console.log('REMOVEEEE', uid, saved)
 
         firebase.database().ref(`users/${uid}`).child('books').once('value', function (snapshot) {
-            var index, savedBooks;
+            let index, savedBooks, savedBooksArray
+
             console.log(snapshot.val(), "saved!!!!")
             if (snapshot.val()) {
-                for (var i = 0; i < snapshot.val().length; i++) {
-                    if (snapshot.val()[i] && snapshot.val()[i].title === saved) {
+                savedBooksArray = snapshot.val();
+                if (Array.isArray(snapshot.val()) === false) {
+                    console.log('false')
+                    savedBooksArray = Object.values(snapshot.val())
+                    console.log(savedBooksArray,'ddd');
+                }
+                for (var i = 0; i < savedBooksArray.length; i++) {
+                    console.log(savedBooksArray[i], ' array')
+                    if (savedBooksArray[i] && savedBooksArray[i].title === saved) {
                         index = i;
-                        firebase.database().ref(`users/${uid}/books/${index}`).set(null)
-                        savedBooks = snapshot.val().filter(book => {
-                            if (book.title !== snapshot.val()[i].title)
+
+                        savedBooks = savedBooksArray.filter(book => {
+                            if (book.title !== savedBooksArray[i].title)
                                 return book
                         })
 
@@ -204,6 +217,8 @@ export const removeBooks = (uid, saved, dispatch) =>
                         break;
                     }
                 }
+                firebase.database().ref(`users/${uid}/books`).set(savedBooks)
+                console.log(savedBooks, 'sss')
             }
 
         });
