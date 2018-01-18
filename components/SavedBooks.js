@@ -6,152 +6,108 @@ import {
   Image,
   ScrollView,
   Animated,
-  PanResponder
-
+  PanResponder,
+  TouchableOpacity
 } from 'react-native';
-import { Header, CardSection, Spinner,Button } from './common'
-import { getSavedBooks,removeBooks,
-markAsRead } from '../redux/actions/bookActions';
+import { Header, CardSection, Spinner, Button } from './common'
+import {  getSavedBooks, removeBooks, markAsRead } from '../redux/actions/bookActions';
 import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
 import firebase from 'firebase';
 import axios from 'axios';
 import Dimensions from 'Dimensions'
-var {height, width} = Dimensions.get('window')
+import AnimatedFlick from './AnimatedFlick';
+var { height, width } = Dimensions.get('window')
 import { Card, Icon } from 'react-native-elements'
+import BookCard from './BookCard'
 
 class SavedBooks extends Component {
 
-  constructor(props){
-    super()
-    //const panResponder = PanResponder.create({
+    constructor(props) {
+      super()
+      //const panResponder = PanResponder.create({
 
    // });
    // this.state = {panResponder}
-
-  }
-// componentWillMount() {
-
-
-
-//   console.log(this.props.user, ' printing suer');
-//   this.props.getSavedBooks(this.props.user)
-
-
-
-
-//   }
-
-
-onDelete(title){
-  console.log('76l4BsVra7MZrR7NzuPv6XRg5BP2', 'Pan', ' ****')
-  this.props.removeBooks(this.props.auth.userId, title)
-}
-
-onRead(title){
-  console.log('76l4BsVra7MZrR7NzuPv6XRg5BP2', 'Pan', ' ****')
-  this.props.markAsRead(this.props.auth.userId, title)
-}
-
-renderElemets(color){
-  const {savedBooks} =  this.props.book
-  console.log(' undered', this.props.book)
-      if(this.props.book){
-
-        return savedBooks.map((book,index)=>{
-          let modifiedLink
-           if (book.image.smallThumbnail) {
-      //   console.log(item.imageLinks.smallThumbnail, ' links')
-       modifiedLink = book.image.smallThumbnail.replace(/zoom=[0-9]/, 'zoom=0')
-    }
-         return (
-
-           <View>
-          <Text>{book.title}</Text>
-
-           <Image
-          style={{height: 400, width: 250}}
-          source={{uri: modifiedLink}}
-        />
-        {this.props.auth.userId === this.props.user ?
-          <View>
-
-
-<View
-style={{flexDirection:'row', margin: 10}}
->
-<Icon
-  raised
-  name='check'
-  type='font-awesome'
-  color={color}
-  onPress={() => this.onRead(book.title)} />
-
-
-<Icon
-  raised
-  name='delete'
-  type='delete'
-  color='#f50'
-  onPress={() => this.onDelete(book.title)} />
-</View>
-
-
-
-         </View> : null}
-         </View>)
-    })
+  
   }
 
-  else return <Spinner size='large' />
-}
-
-
-  render() {
-    let color
-    {this.props.book && this.props.book.read === true ?
-      color =  '#f50'
-      :
-      color = 'gray'
-    }
-
-    { console.log(this.props,  "preferences=======================================>") }
-
-
+render() {
     return (
-      <ScrollView>
-
-
-    {this.renderElemets(color)}
-
-      </ScrollView>
-    );
-  }
+    
+         this.props.book.savedBooks.map((book,index)=>{
+            return (
+              <View key={index}>
+              <BookCard
+                key={index}
+                books={book}
+                index={index}
+              />
+        </View>
+       
+      
+      )
+    })
+  )}
 }
+
+
+
+
 
 
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#FFF',
-  },
-  imageStyle: {
-    position: 'absolute',
-  top: 0,
-  left: 0,
-  bottom: 0,
-  right: 0,
-  }
+
+container: {
+
+flex: 1,
+
+backgroundColor: '#FFF',
+
+},
+
+imageStyle: {
+
+position: 'absolute',
+
+top: 0,
+
+left: 0,
+
+bottom: 0,
+
+right: 0,
+
+},
+
+cardStyle: {
+
+height: 400, width: 250, backfaceVisibility: 'hidden',
+
+},
+
+
+
+flipCardBack: {
+
+position: "absolute",
+
+top: 0,
+
+},
+
+
+
 
 
 });
 
 export default connect(
-  ({ auth, preferences,  book }) => ({ auth: auth, preferences: preferences,  book: book }),
-  {
+({ auth, preferences, book }) => ({ auth: auth, preferences: preferences, book: book }),
+{
 
-    getSavedBooks,
-    removeBooks,
-    markAsRead
-  })(SavedBooks)
+getSavedBooks,
+removeBooks,
+markAsRead
+})(SavedBooks)

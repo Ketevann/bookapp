@@ -40,7 +40,7 @@ export const createBookShelf = (book, userID, dispatch) =>
     dispatch => {
         console.log(book, userID, '***')
         const { author, description, imageLinks, title } = book;
-        firebase.database().ref(`users/${userID}/`).child('books').set([{ title: title, read: false, author: author, description: description, image: imageLinks }])
+        firebase.database().ref(`users/${userID}/`).child('books').set([{ title: title, read: false, author: author, description: description ? description:null, image: imageLinks }])
     }
 
 export const saveBook = (book, userID, dispatch) =>
@@ -142,39 +142,39 @@ export const getSavedBooks = (user, dispatch) =>
 
 
 export const markAsRead = (uid, title, dispatch) =>
-    dispatch => {
+    dispatch => {
 
 
-        firebase.database().ref(`users/${uid}/books`).once('value', (snapshot) => {
-            const savedBook = Object.values(snapshot.val());
-            //db books are returned as an object, iterate object and save values (titles) in array
-            console.log(snapshot.val(), 'SNAPPPP')
+        firebase.database().ref(`users/${uid}/books`).once('value', (snapshot) => {
+            const savedBook = Object.values(snapshot.val());
+            //db books are returned as an object, iterate object and save values (titles) in array
+            console.log(snapshot.val(), 'SNAPPPP')
 
-            let bool
+            let bool
 
-            for (var i = 0; i < snapshot.val().length; i++) {
-                console.log(snapshot.val()[i], ' III')
-                if (snapshot.val()[i] && snapshot.val()[i].title === title) {
-                    index = i;
-                    if (snapshot.val()[i].read === true)
-                     bool = false
-                     else bool = true
-                        firebase.database().ref(`users/${uid}/books/${index}`).update({  read: bool })
+            for (var i = 0; i < snapshot.val().length; i++) {
+                console.log(snapshot.val()[i], ' III')
+                if (snapshot.val()[i] && snapshot.val()[i].title === title) {
+                    index = i;
+                    if (snapshot.val()[i].read === true)
+                        bool = false
+                    else bool = true
+                    firebase.database().ref(`users/${uid}/books/${index}`).update({ read: bool })
 
-                    // else firebase.database().ref(`users/${uid}/books/${index}`).update({  read: true })
-                   return dispatch({type: READ, payload: bool})
-
-
-                    break;
-                }
-            }
-
-        });
+                    // else firebase.database().ref(`users/${uid}/books/${index}`).update({  read: true })
+                    return dispatch({ type: READ, payload: bool })
 
 
+                    break;
+                }
+            }
+
+        });
 
 
-    }
+
+
+    }
 
 
 
