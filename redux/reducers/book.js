@@ -11,7 +11,7 @@ import {
   CLEAR
 } from '../actions/action-types'
 
-const INITIAL_STATE = { saved:null, bookSuggestions:null, error:'', searchbooks: '', similarbooks: '', booksbool: true, authors: false, placeholder: 'books', savedBooks: null, user: null, read:false}
+const INITIAL_STATE = { saved:null, bookSuggestions:null, error:'', searchbooks: '', similarbooks: '', booksbool: true, authors: false, placeholder: 'books', savedBooks: [], user: null, read:false}
 
 export default (book = INITIAL_STATE, action) => {
   switch (action.type) {
@@ -32,7 +32,16 @@ export default (book = INITIAL_STATE, action) => {
           case GET_SAVED_BOOK:
             return {...book, savedBooks: action.payload, user: action.user }
             case READ:
-              return {...book, read: action.payload}
+             let newBook = { ...book };
+             console.log(action.title, ' title')
+               let newSavedBooks = newBook.savedBooks.map(book =>{
+                 if (book.title === action.title ){
+                   console.log('equal')
+                   book.read = action.payload;
+                 }
+                 return book;
+               })
+              return {...book, savedBooks: newSavedBooks}
             case CLEAR :
                return {...book, savedBooks: null }
     default:

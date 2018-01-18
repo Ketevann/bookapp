@@ -83,8 +83,14 @@ class BookCard extends Component {
   }
 
 
-  renderElemets(book, color) {
-    let modifiedLink
+  renderElemets(book) {
+    let color;
+    console.log('READ', book.read, book)
+    if (book.read === true) {
+      color = '#f50';
+    } else color = 'gray';
+
+    let modifiedLink;
     if (book.image.smallThumbnail) {
       modifiedLink = book.image.smallThumbnail.replace(/zoom=[0-9]/, 'zoom=0')
     }
@@ -108,15 +114,15 @@ class BookCard extends Component {
           >
 
             <Animated.Image
-             style={[this.frontCardStyle(), styles.cardStyle]}
+              style={[this.frontCardStyle(), styles.cardStyle]}
 
               source={{ uri: modifiedLink }}
             />
 
           </Animated.View>
           <Animated.View
-
-            style={[this.backCardStyle(), styles.cardStyle, styles.flipCardBack]}>
+            style={[this.backCardStyle(), styles.cardStyle, styles.flipCardBack]}
+          >
             <Text>{book.description}</Text>
           </Animated.View>
 
@@ -125,22 +131,22 @@ class BookCard extends Component {
 
 
         </TouchableOpacity>
-    <Animated.View
-              style={{ flexDirection: 'row', margin: 20 }}
-            >
-              <Icon
-                raised
-                name='check'
-                type='font-awesome'
-                color={color}
-                onPress={() => this.onRead(book.title)} />
-              <Icon
-                raised
-                name='delete'
-                type='delete'
-                color='#f50'
-                onPress={() => this.onDelete(book.title)} />
-            </Animated.View>
+        <Animated.View
+          style={{ flexDirection: 'row', margin: 20 }}
+        >
+          <Icon
+            raised
+            name='check'
+            type='font-awesome'
+            color={color}
+            onPress={() => this.onRead(book.title)} />
+          <Icon
+            raised
+            name='delete'
+            type='delete'
+            color='#f50'
+            onPress={() => this.onDelete(book.title)} />
+        </Animated.View>
 
 
 
@@ -152,18 +158,18 @@ class BookCard extends Component {
 
 
   render() {
-    console.log(this.props, this.props.book.read)
-    var color = 'gray'
-    {
-      this.props.book && this.props.book.read === true ?
-        color = '#f50'
-        :
-        color = 'gray'
-    }
+     console.log(this.props)
+    // var color = 'gray'
+    // {
+    //   this.props.book && this.props.book.read === true ?
+    //     color = '#f50'
+    //     :
+    //     color = 'gray'
+    // }
 
     return (
 
-      this.renderElemets(this.props.books, color)
+      this.renderElemets(this.props.books)
 
     );
   }
@@ -225,7 +231,7 @@ const styles = StyleSheet.create({
 
 export default connect(
 
-  ({ auth, preferences, book }) => ({ auth: auth, preferences: preferences, book }),
+  ({ auth, preferences }) => ({ auth: auth, preferences: preferences }),
 
   {
 

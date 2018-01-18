@@ -3,10 +3,11 @@ import { View, Text, Picker, ScrollView } from 'react-native';
 import { Header, Card, CardSection, Button, Input } from './common';
 import { connect } from 'react-redux';
 import firebase from 'firebase';
-import { getSavedBooks
- } from '../redux/actions/bookActions';
-import {Avatar} from 'react-native-elements'
-import SavedBooks from './SavedBooks'
+import {
+  getSavedBooks
+} from '../redux/actions/bookActions';
+import { Avatar } from 'react-native-elements'
+import BookCard from './BookCard'
 
 class Profile extends Component {
 
@@ -14,7 +15,18 @@ class Profile extends Component {
 
   displayBooks() {
     if (this.props.book.savedBooks) {
-      return <SavedBooks renderBooks={this.props.book.savedBooks} user={this.props.book.user} />
+      return this.props.book.savedBooks.map((book, index) => {
+        return (
+            <BookCard
+              key={index}
+              books={book}
+              index={index}
+
+            />
+
+        )
+      });
+
     }
     else return null
   }
@@ -24,20 +36,22 @@ class Profile extends Component {
     const { loggedIn } = this.props.auth;
     return (
       <ScrollView style={styles.container}>
-  <View>
-  <Avatar
-  containerStyle={{position: 'absolute', right: 0}}
-  large
-  rounded
-  source={{uri: `data:image/jpeg;base64,${this.props.auth.image}` }}
-  onPress={() => console.log("Works!")}
-  activeOpacity={0.7}
-/>
-</View>
-  <View>
-        {this.displayBooks()}
+        <View>
+          <Avatar
+            containerStyle={{ position: 'absolute', right: 0 }}
+            large
+            rounded
+            source={{ uri: `data:image/jpeg;base64,${this.props.auth.image}` }}
+            onPress={() => console.log("Works!")}
+            activeOpacity={0.7}
+          />
+        </View>
+        <View
+          style={{ alignItems: 'center' }}
+        >
+          {this.displayBooks()}
 
-</View>
+        </View>
       </ScrollView>
     )
   }
@@ -46,12 +60,12 @@ class Profile extends Component {
 styles = {
   container: {
     flex: 1,
-    paddingHorizontal: 10
+    paddingHorizontal: 10,
   }
 }
 
 export default connect(
-  ({ auth,  book }) => ({ auth: auth,  book: book }),
+  ({ auth, book }) => ({ auth: auth, book: book }),
   {
     getSavedBooks,
   },

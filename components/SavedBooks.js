@@ -10,7 +10,7 @@ import {
   TouchableOpacity
 } from 'react-native';
 import { Header, CardSection, Spinner, Button } from './common'
-import {  getSavedBooks, removeBooks, markAsRead } from '../redux/actions/bookActions';
+import { getSavedBooks, removeBooks, markAsRead } from '../redux/actions/bookActions';
 import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
 import firebase from 'firebase';
@@ -23,34 +23,36 @@ import BookCard from './BookCard'
 
 class SavedBooks extends Component {
 
-    constructor(props) {
-      super()
-      //const panResponder = PanResponder.create({
-
-   // });
-   // this.state = {panResponder}
-  
+  constructor(props) {
+    super()
   }
 
-render() {
+
+  render() {
     return (
-    
-         this.props.book.savedBooks.map((book,index)=>{
-            return (
-              <View key={index}>
-              <BookCard
-                key={index}
-                books={book}
-                index={index}
-              />
-        </View>
-       
-      
-      )
-    })
-  )}
+ null
+    )
+  }
 }
 
+// render() {
+//     return (
+    
+//          this.props.book.savedBooks.map((book,index)=>{
+//             return (
+//               <View key={index}>
+//               <BookCard
+//                 key={index}
+//                 books={book}
+//                 index={index}
+//               />
+//         </View>
+       
+      
+//       )
+//     })
+//   )}
+// }
 
 
 
@@ -59,43 +61,42 @@ render() {
 
 const styles = StyleSheet.create({
 
-container: {
+  container: {
 
-flex: 1,
+    flex: 1,
 
-backgroundColor: '#FFF',
+    backgroundColor: '#FFF',
 
-},
+  },
 
-imageStyle: {
+  imageStyle: {
 
-position: 'absolute',
+    position: 'absolute',
 
-top: 0,
+    top: 0,
 
-left: 0,
+    left: 0,
 
-bottom: 0,
+    bottom: 0,
 
-right: 0,
+    right: 0,
 
-},
-
+  },
 cardStyle: {
 
-height: 400, width: 250, backfaceVisibility: 'hidden',
+    height: 400, width: 250, backfaceVisibility: 'hidden',
 
-},
+  },
 
 
 
-flipCardBack: {
+  flipCardBack: {
 
-position: "absolute",
+    position: "absolute",
 
-top: 0,
+    top: 0,
 
-},
+  },
 
 
 
@@ -103,11 +104,20 @@ top: 0,
 
 });
 
-export default connect(
-({ auth, preferences, book }) => ({ auth: auth, preferences: preferences, book: book }),
-{
 
-getSavedBooks,
-removeBooks,
-markAsRead
-})(SavedBooks)
+
+export default connect(
+
+  ({ auth, preferences, book }) => ({ auth: auth, preferences: preferences, book: book }),
+
+  {
+
+
+
+    getSavedBooks,
+
+    removeBooks,
+
+    markAsRead
+
+  })(SavedBooks)
