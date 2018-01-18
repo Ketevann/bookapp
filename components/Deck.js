@@ -101,15 +101,15 @@ class Deck extends Component {
     if (this.state.index >= this.props.data.length) {
       return this.renderNoMoreCards();
     }
-    console.log(this.props.data, 'dta', this.state.index)
+   // console.log(this.props.data, 'dta', this.state.index)
     return this.props.data.map((item, i) => {
-      console.log(i, ' entered loop', item, this.props.data.length)
+     // console.log(i, ' entered loop', item, this.props.data.length)
       if (i < this.state.index) {
-        console.log('index is null should be the fist card', this.state.index, i)
+       // console.log('index is null should be the fist card', this.state.index, i)
         return null; }
 
       if (i === this.state.index) {
-         console.log('index is equal thos should animate', this.state.index, i, item.title,' item')
+        // console.log('index is equal thos should animate', this.state.index, i, item.title,' item')
         return (
          <Animated.View
             key={i}
@@ -122,7 +122,7 @@ class Deck extends Component {
       }
 
       if (i > this.state.index){
-         console.log('index is greater', 'state', this.state.index, 'index', i, item.title)
+       //  console.log('index is greater', 'state', this.state.index, 'index', i, item.title)
 
       return (
         <Animated.View
@@ -138,7 +138,7 @@ class Deck extends Component {
 
 
   renderCard(item, index) {
-    console.log('in render Card', item.title, 'title =======>>>')
+ //   console.log('in render Card', item.title, 'title =======>>>')
 
 
 

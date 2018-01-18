@@ -150,19 +150,24 @@ export const markAsRead = (uid, title, dispatch) =>
             //db books are returned as an object, iterate object and save values (titles) in array
             console.log(snapshot.val(), 'SNAPPPP')
 
-            let bool
-
-            for (var i = 0; i < snapshot.val().length; i++) {
-                console.log(snapshot.val()[i], ' III')
-                if (snapshot.val()[i] && snapshot.val()[i].title === title) {
+            let bool,
+             savedBooksArray = snapshot.val();
+                if (Array.isArray(snapshot.val()) === false) {
+                    console.log('false')
+                    savedBooksArray = Object.values(snapshot.val())
+                    console.log(savedBooksArray,'ddd');
+                }
+            for (var i = 0; i < savedBooksArray.length; i++) {
+                console.log(savedBooksArray[i], ' III')
+                if (savedBooksArray[i] && savedBooksArray[i].title === title) {
                     index = i;
-                    if (snapshot.val()[i].read === true)
+                    if (savedBooksArray[i].read === true)
                      bool = false
                      else bool = true
                         firebase.database().ref(`users/${uid}/books/${index}`).update({  read: bool })
 
                     // else firebase.database().ref(`users/${uid}/books/${index}`).update({  read: true })
-                   return dispatch({type: READ, payload: bool})
+                   return dispatch({type: READ, payload: bool, title})
 
 
                     break;
@@ -192,13 +197,16 @@ export const removeBooks = (uid, saved, dispatch) =>
             console.log(snapshot.val(), "saved!!!!")
             if (snapshot.val()) {
                 savedBooksArray = snapshot.val();
-                if (snapshot.val().isArray === false) {
-                    savedBooksArray = Object.keys(snapshot.val())
+                if (Array.isArray(snapshot.val()) === false) {
+                    console.log('false')
+                    savedBooksArray = Object.values(snapshot.val())
+                    console.log(savedBooksArray,'ddd');
                 }
                 for (var i = 0; i < savedBooksArray.length; i++) {
+                    console.log(savedBooksArray[i], ' array')
                     if (savedBooksArray[i] && savedBooksArray[i].title === saved) {
                         index = i;
-                        firebase.database().ref(`users/${uid}/books/${index}`).set(null)
+
                         savedBooks = savedBooksArray.filter(book => {
                             if (book.title !== savedBooksArray[i].title)
                                 return book
@@ -209,6 +217,8 @@ export const removeBooks = (uid, saved, dispatch) =>
                         break;
                     }
                 }
+                firebase.database().ref(`users/${uid}/books`).set(savedBooks)
+                console.log(savedBooks, 'sss')
             }
 
         });
