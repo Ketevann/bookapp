@@ -44,10 +44,6 @@ dispatch =>{
         firebase.database().ref(`users/${userID}/`).child('preferences').set(null);
 }
 
-
-      
-
-
 export const updatePreferences = (newPrefs, userID, dispatch) =>
     dispatch => {
         console.log('UPDATE ALL PREFERENCES FireBase', newPrefs);
