@@ -35,6 +35,24 @@ class SavedBooks extends Component {
   }
 }
 
+// render() {
+//     return (
+    
+//          this.props.book.savedBooks.map((book,index)=>{
+//             return (
+//               <View key={index}>
+//               <BookCard
+//                 key={index}
+//                 books={book}
+//                 index={index}
+//               />
+//         </View>
+       
+      
+//       )
+//     })
+//   )}
+// }
 
 
 
@@ -64,8 +82,7 @@ const styles = StyleSheet.create({
     right: 0,
 
   },
-
-  cardStyle: {
+cardStyle: {
 
     height: 400, width: 250, backfaceVisibility: 'hidden',
 
