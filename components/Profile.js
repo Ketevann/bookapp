@@ -14,6 +14,7 @@ class Profile extends Component {
 
 
   displayBooks() {
+    console.log('run this function', this.props.book.savedBooks)
     if (this.props.book.savedBooks) {
       return this.props.book.savedBooks.map((book, index) => {
         return (
