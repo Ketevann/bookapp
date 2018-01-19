@@ -213,14 +213,19 @@ export const removeSuggestion = (suggested, uid, dispatch) =>
             var index, suggestions;
            // console.log(snapshot.val(), "removing!!!!")
             if (snapshot.val()) {
-                 console.log(snapshot.val(), "removing!!!!")
-                for (var i = 0; i < snapshot.val().length; i++) {
-                    //alert('bob')
-                    console.log(snapshot.val()[i], " ", suggested, "------->?")
-                    if (snapshot.val()[i] && snapshot.val()[i].title === suggested) {
-                       // index = i;
-                       suggestions=snapshot.val();
+                suggestions=snapshot.val();
 
+                // console.log(snapshot.val(), "removing!!!!")
+                  if (Array.isArray(snapshot.val()) === false) {
+                    console.log('false')
+                    suggestions = Object.values(snapshot.val())
+                    console.log(suggestions,'ddd');
+                }
+
+                for (var i = 0; i < suggestions.length; i++) {
+                    if (suggestions[i] && suggestions[i].title === suggested) {
+                       // index = i;
+                     
                       
                         // suggestions = snapshot.val().filter(book => {
                         //     if (book.title !== snapshot.val()[i].title)
