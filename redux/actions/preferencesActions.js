@@ -38,6 +38,12 @@ export const keyWordDispatch = (keyWord) => {
 }
 
 
+export const clearPreferences = (userID, dispatch) => 
+dispatch =>{
+        //dispatch({ type: UPDATE_SUGGESTIONS, payload: [0] })
+        firebase.database().ref(`users/${userID}/`).child('preferences').set(null);
+}
+
 export const updatePreferences = (newPrefs, userID, dispatch) =>
     dispatch => {
         console.log('UPDATE ALL PREFERENCES FireBase', newPrefs);
@@ -200,28 +206,35 @@ export const updateDefaultSuggestions = (userID, dispatch) =>
 
 export const removeSuggestion = (suggested, uid, dispatch) =>
     dispatch => {
-
+        //alert(suggested); 
         console.log('REMOVEEEE', uid, suggested)
 
         firebase.database().ref(`users/${uid}`).child('suggestions').once('value', function (snapshot) {
             var index, suggestions;
-            console.log(snapshot.val(), "removing!!!!")
+           // console.log(snapshot.val(), "removing!!!!")
             if (snapshot.val()) {
+                 console.log(snapshot.val(), "removing!!!!")
                 for (var i = 0; i < snapshot.val().length; i++) {
+                    //alert('bob')
+                    console.log(snapshot.val()[i], " ", suggested, "------->?")
                     if (snapshot.val()[i] && snapshot.val()[i].title === suggested) {
-                        index = i;
+                       // index = i;
+                       suggestions=snapshot.val();
 
-                        firebase.database().ref(`users/${uid}/suggestions/${index}`).set(null)
-                        suggestions = snapshot.val().filter(book => {
-                            if (book.title !== snapshot.val()[i].title)
-                                return suggested
-                        })
+                      
+                        // suggestions = snapshot.val().filter(book => {
+                        //     if (book.title !== snapshot.val()[i].title)
+                        //         return suggested
+                        // })
 
+                        suggestions.splice(i, 1);
                         console.log(' removed ' + suggested, suggestions)
-                        dispatch({ type: UPDATE_SUGGESTIONS, payload: suggestions })
+                        //dispatch({ type: UPDATE_SUGGESTIONS, payload: suggestions })
                         break;
                     }
+                     
                 }
+                 firebase.database().ref(`users/${uid}/suggestions`).set(suggestions)
             }
 
         });

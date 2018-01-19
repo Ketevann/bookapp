@@ -40,7 +40,7 @@ export const createBookShelf = (book, userID, dispatch) =>
     dispatch => {
         console.log(book, userID, '***')
         const { author, description, imageLinks, title } = book;
-        firebase.database().ref(`users/${userID}/`).child('books').set([{ title: title, read: false, author: author, description: description, image: imageLinks }])
+        firebase.database().ref(`users/${userID}/`).child('books').set([{ title: title, read: false, author: author, description: description ? description:null, image: imageLinks }])
     }
 
 export const saveBook = (book, userID, dispatch) =>
@@ -142,13 +142,13 @@ export const getSavedBooks = (user, dispatch) =>
 
 
 export const markAsRead = (uid, title, dispatch) =>
-    dispatch => {
+    dispatch => {
 
 
-        firebase.database().ref(`users/${uid}/books`).once('value', (snapshot) => {
-            const savedBook = Object.values(snapshot.val());
-            //db books are returned as an object, iterate object and save values (titles) in array
-            console.log(snapshot.val(), 'SNAPPPP')
+        firebase.database().ref(`users/${uid}/books`).once('value', (snapshot) => {
+            const savedBook = Object.values(snapshot.val());
+            //db books are returned as an object, iterate object and save values (titles) in array
+            console.log(snapshot.val(), 'SNAPPPP')
 
             let bool,
              savedBooksArray = snapshot.val();
@@ -170,16 +170,16 @@ export const markAsRead = (uid, title, dispatch) =>
                  return dispatch({ type: GET_SAVED_BOOK, payload: savedBooksArray, user: uid })
 
 
-                    break;
-                }
-            }
+                    break;
+                }
+            }
 
-        });
-
-
+        });
 
 
-    }
+
+
+    }
 
 
 

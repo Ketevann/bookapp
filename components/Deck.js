@@ -183,6 +183,7 @@ class Deck extends Component {
   }
 
   renderNoMoreCards() {
+    this.props.onEnd(); //deletes prefrences when user reaches end of book suggestions 
     return (
       <Card title="All Done!">
         <Text style={{ marginBottom: 10 }}>

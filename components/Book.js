@@ -4,6 +4,7 @@ import { Button } from './common';
 import { connect } from 'react-redux';
 import firebase from 'firebase';
 import { Card, Icon } from 'react-native-elements'
+import { clearPreferences } from '../redux/actions/preferencesActions';
 //import Dimensions from 'Dimensions'
 import Deck from './Deck';
 var { height, width } = Dimensions.get('window');
@@ -15,9 +16,13 @@ class Book extends Component {
     return link.replace(/zoom=[0-9]/, 'zoom=0')
 
   }
+  onEnd(){
+    const userId = this.props.auth.userId;
+    this.props.clearPreferences(userId)
+  }
 
   render() {
-
+  // const { preferences } = this.props.preferences;
 
     // const { imageLinks, title } = this.props.book,
     const   { loggedIn } = this.props.auth
@@ -32,6 +37,7 @@ class Book extends Component {
           data={this.props.book}
           onSwipeRight={this.props.onSaveBook}//passing save/delete suggestions function as props
           onSwipeLeft={this.props.onRemoveBook}
+          onEnd={ this.onEnd.bind(this) }
         />
 
 
@@ -92,5 +98,5 @@ const styles = StyleSheet.create({
 });
 
 
-export default connect(({ auth }) => ({ auth: auth }), null)(Book)
+export default connect(({ auth ,preferences }) => ({ auth: auth , preferences: preferences}), { clearPreferences})(Book)
 
