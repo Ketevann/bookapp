@@ -85,7 +85,7 @@ class BookCard extends Component {
 
   renderElemets(book) {
     let color;
-    console.log('READ', book.read, book)
+    console.log('READ')
     if (book.read === true) {
       color = '#f50';
     } else color = 'gray';
@@ -158,7 +158,7 @@ class BookCard extends Component {
 
 
   render() {
-     console.log(this.props)
+    // console.log(this.props, this.props.book.read)
     // var color = 'gray'
     // {
     //   this.props.book && this.props.book.read === true ?

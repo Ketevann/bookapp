@@ -155,7 +155,7 @@ export const markAsRead = (uid, title, dispatch) =>
                 if (Array.isArray(snapshot.val()) === false) {
                     console.log('false')
                     savedBooksArray = Object.values(snapshot.val())
-                    console.log(savedBooksArray,'ddd');
+                    console.log(savedBooksArray, 'ddd');
                 }
             for (var i = 0; i < savedBooksArray.length; i++) {
                 console.log(savedBooksArray[i], ' III')
@@ -165,9 +165,9 @@ export const markAsRead = (uid, title, dispatch) =>
                      bool = false
                      else bool = true
                         firebase.database().ref(`users/${uid}/books/${index}`).update({  read: bool })
-
+                        savedBooksArray[i].read = bool;
                     // else firebase.database().ref(`users/${uid}/books/${index}`).update({  read: true })
-                   return dispatch({type: READ, payload: bool, title})
+                 return dispatch({ type: GET_SAVED_BOOK, payload: savedBooksArray, user: uid })
 
 
                     break;
