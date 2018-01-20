@@ -68,11 +68,6 @@ class Home extends Component {
               </CardSection>
             </Card>
           }
-<<<<<<< HEAD
-=======
-
-
->>>>>>> d95de20c795af2ec55d462ac6b01a101a2fa0ba3
       </View>
 
 
