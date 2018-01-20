@@ -28,25 +28,10 @@ class Home extends Component {
     })
   }
   
-  onSaveBook(book) {
-    console.log(book, 'book')
-    const userId = this.props.auth.userId;
-    firebase.database().ref(`users/${userId}/books`).once('value', snapshot =>
-      snapshot.val() ? this.props.saveBook(book, userId, ) : this.props.createBookShelf(book, userId));
-    //checking if a books db branch exists
-  }
-
-    onRemoveBook(book) {
-    const userId = this.props.auth.userId;
-    console.log( "dislike ", book, " ",userId)
-    this.props.removeSuggestion(book, userId ) 
-  }
-  
   render() {
     const { saveBook } = this.props
     const { loggedIn } = this.props.auth
-    const { preferences , loading } = this.props.preferences;
-    { console.log( this.props, "preferences=======================================>") }
+    { console.log( this.props, "preferences") }
 
 
     return (
@@ -76,18 +61,13 @@ class Home extends Component {
 
 
             <Card>
-              { (preferences && !loading ) ?
-                 <Book  book={preferences} onSaveBook={this.onSaveBook.bind(this)}  onRemoveBook={this.onRemoveBook.bind(this)}/> : <Spinner size='large' />  }
-                {loggedIn ? <CardSection>
-                <Button onPress={() => Actions.preferencesForm()}> Preferences </Button>
-              </CardSection> : null}
+              <Book/>
+                {loggedIn ? <CardSection><Button onPress={() => Actions.preferencesForm()}> Preferences </Button></CardSection> : null}
               <CardSection>
                 {loggedIn ? <Button onPress={() => firebase.auth().signOut()}>Log Out</Button> : <Button onPress={() => Actions.login()}> Sign in </Button>}
               </CardSection>
             </Card>
           }
-          
-
       </View>
 
 
