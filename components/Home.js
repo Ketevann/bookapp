@@ -45,7 +45,7 @@ class Home extends Component {
   render() {
     const { saveBook } = this.props
     const { loggedIn } = this.props.auth
-    const { preferences } = this.props.preferences;
+    const { preferences , loading } = this.props.preferences;
     { console.log( this.props, "preferences=======================================>") }
 
 
@@ -76,8 +76,8 @@ class Home extends Component {
 
 
             <Card>
-              {preferences ?
-                 <Book  book={preferences} onSaveBook={this.onSaveBook.bind(this)}  onRemoveBook={this.onRemoveBook.bind(this)}/> : <Spinner size='large' />}
+              { (preferences && !loading ) ?
+                 <Book  book={preferences} onSaveBook={this.onSaveBook.bind(this)}  onRemoveBook={this.onRemoveBook.bind(this)}/> : <Spinner size='large' />  }
                 {loggedIn ? <CardSection>
                 <Button onPress={() => Actions.preferencesForm()}> Preferences </Button>
               </CardSection> : null}

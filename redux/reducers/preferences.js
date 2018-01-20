@@ -2,7 +2,8 @@ const INITIAL_STATE = { preferenceType: null, keyWord:'', title: '', author: '',
 import {
  UPDATE_PREFERENCE_TYPE,
  UPDATE_PREFERENCE_KEYWORD,
- UPDATE_SUGGESTIONS
+ UPDATE_SUGGESTIONS,
+ LOADING
 } from '../actions/action-types'
 
 
@@ -13,7 +14,9 @@ export default (preferences = INITIAL_STATE, action) => {
     case UPDATE_PREFERENCE_TYPE:
       return { ...preferences, preferenceType: action.payload };
     case UPDATE_SUGGESTIONS:
-      return {...preferences, preferences:action.payload};
+      return {...preferences, preferences:action.payload };
+    case LOADING:
+      return {...preferences, loading: action.payload };
     default:
       return preferences
   }

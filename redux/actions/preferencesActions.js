@@ -1,7 +1,8 @@
 import {
     UPDATE_PREFERENCE_TYPE,
     UPDATE_PREFERENCE_KEYWORD,
-    UPDATE_SUGGESTIONS
+    UPDATE_SUGGESTIONS,
+    LOADING
 } from './action-types'
 import firebase from 'firebase';
 import axios from 'axios';
@@ -184,7 +185,8 @@ export const getDefualt = (dispatch) =>//setting defualt books to suggestions st
     })
 
 export const getSuggestions = (userID, dispatch) =>//we call this function in componentWillMount, so we dont need to call a display function
-    dispatch =>
+    dispatch =>{
+        dispatch({ type: LOADING , payload: true })
         firebase.database().ref(`users/${userID}/suggestions`).once('value')//if there are suggestions we load those to state
             .then(function (snapshot) {
                 if (!snapshot.val())
@@ -192,9 +194,11 @@ export const getSuggestions = (userID, dispatch) =>//we call this function in co
 
                 const suggestions = Object.values(snapshot.val());
                 dispatch({ type: UPDATE_SUGGESTIONS, payload: suggestions })
+                dispatch({ type: LOADING , payload: false })
 
             })
             .catch((error) => loadPrefBooks(userID, dispatch))//else check for preferences, if none, load default
+    }
 
 
 export const updateDefaultSuggestions = (userID, dispatch) =>
