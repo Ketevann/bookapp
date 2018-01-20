@@ -10,7 +10,13 @@ import { Avatar } from 'react-native-elements'
 import BookCard from './BookCard'
 
 class Profile extends Component {
-
+  constructor(props) {
+    super(props)
+    this.state = { scrollEnabled:true }
+  }
+  disableParentScroll(){
+    this.setState({ scrollEnabled: !this.state.scrollEnabled} )
+  }
 
 
   displayBooks() {
@@ -22,7 +28,7 @@ class Profile extends Component {
               key={index}
               books={book}
               index={index}
-
+              disableParentScroll={ this.disableParentScroll.bind(this) }
             />
 
         )
@@ -36,7 +42,7 @@ class Profile extends Component {
     { console.log(this.props, ' jessica') }
     const { loggedIn } = this.props.auth;
     return (
-      <ScrollView style={styles.container}>
+      <ScrollView style={styles.container} /*scrollEnabled={false}*/>
         <View>
           <Avatar
             containerStyle={{ position: 'absolute', right: 0 }}

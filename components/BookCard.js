@@ -3,8 +3,9 @@ import {
   StyleSheet,
   Text,
   View,
-
+  ScrollView,
   Animated,
+  Image,
   TouchableOpacity
 } from 'react-native';
 import { getSavedBooks, removeBooks, markAsRead } from '../redux/actions/bookActions';
@@ -13,11 +14,16 @@ import Dimensions from 'Dimensions'
 
 var { height, width } = Dimensions.get('window')
 import { Icon } from 'react-native-elements'
+const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
+  const paddingToBottom = 20;
+  return layoutMeasurement.height + contentOffset.y >=
+    contentSize.height - paddingToBottom;
+};
 
 class BookCard extends Component {
   constructor(props) {
     super(props)
-    this.state = { index: 0, value: 0 }
+    this.state = { index: 0, value: 0, scrollActive:false }
   }
 
   componentWillMount() {
@@ -53,7 +59,7 @@ class BookCard extends Component {
   }
 
 
-  flipCard(ind) {
+  flipCard(ind) {   
     console.log(ind, ' index in flipCard', this.value)
     if (this.value >= 90) {
       Animated.spring(this.animatedValue, {
@@ -94,11 +100,10 @@ class BookCard extends Component {
     if (book.image.smallThumbnail) {
       modifiedLink = book.image.smallThumbnail.replace(/zoom=[0-9]/, 'zoom=0')
     }
-
+  
     return (
 
-      <View
-      >
+      <View>
         <Text
           style={{
             fontFamily: 'Helvetica'
@@ -106,24 +111,50 @@ class BookCard extends Component {
           }}
 
         >{book.title}</Text>
+
+          <TouchableOpacity 
+            onPress={() => {
+                if (this.state.scrollActive===true){
+                      this.setState({scrollActive:false})
+                    }
+                this.flipCard()
+              }
+            } 
+            style={ {display: this.state.scrollActive?'flex':'none', flexDirection: 'row', justifyContent: 'flex-end' } }>
+          <Image 
+            style={ { width: 40, height: 40 } }
+            source={ require('../img/turn-right-arrow.png') }
+          />
+          <Text >Flip</Text>
+        </TouchableOpacity>
+
         <TouchableOpacity
-          onPress={() => this.flipCard()}>
-
-          <Animated.View
-
-          >
-
+          onPress={() => this.flipCard()}
+        >
+          
+          <Animated.View>
             <Animated.Image
               style={[this.frontCardStyle(), styles.cardStyle]}
-
               source={{ uri: modifiedLink }}
             />
 
           </Animated.View>
-          <Animated.View
-            style={[this.backCardStyle(), styles.cardStyle, styles.flipCardBack]}
+          <Animated.View style={[this.backCardStyle(), styles.cardStyle, styles.flipCardBack]} 
+            //onLayout={(e)=>{ console.log(e.nativeEvent.layout, "l") }}
+            onStartShouldSetResponder={ e => { this.props.disableParentScroll(); return this.state.scrollActive ? true : false } } //disables parent scrollView scroll functionality, allows current view to take control
+            onMoveShouldSetResponder={ e => true }//not sure what this does tbh lol but it makes the scroll more reactive to touch 
           >
-            <Text>{book.description}</Text>
+              <ScrollView
+                onScroll={ e => {
+                    if (e.nativeEvent.contentSize.height >  e.nativeEvent.layoutMeasurement.height){//checks if content is bigger then the view, then display arrow icon
+                      this.setState({scrollActive:true})
+                    }
+                    //console.log(e.nativeEvent.contentSize, "----------------------e", e.nativeEvent.layoutMeasurement)
+                  }
+                }
+              >
+              <Text >{book.description}</Text>
+            </ScrollView>
           </Animated.View>
 
 
