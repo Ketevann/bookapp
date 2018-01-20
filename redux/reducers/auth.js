@@ -5,7 +5,8 @@ import {
   LOGGEDIN,
   NOTLOGGEDIN,
   FORGOT,
-  PASSWORD_CONFIRM
+  PASSWORD_CONFIRM,
+  CLEARFORM
 } from '../actions/action-types'
 
 
@@ -23,7 +24,7 @@ export default (auth = INITIAL_STATE, action) => {
     case LOGIN_USER_SUCESS:
       return { ...auth, ...INITIAL_STATE, user: action.payload.uid };
     case LOGIN_USER_FAIL:
-      return { ...auth, error: "Authentication Failed", loading: false };
+      return { ...auth, error: action.error, loading: false };
     case LOGIN_USER:
       return { ...auth, loading: true, error: '' };
     case LOGGEDIN:
@@ -33,8 +34,9 @@ export default (auth = INITIAL_STATE, action) => {
       return { ...auth, loggedIn: false };
     case FORGOT:
       return { ...auth, email: '', error: '' };
-
+      case CLEARFORM:
+        return { ...auth, email:'', password: '', passwordConfirm: '', error:'' };
     default:
-      return auth
+      return auth;
   }
 }

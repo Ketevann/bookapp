@@ -27,7 +27,26 @@ class Home extends Component {
       }
     })
   }
+<<<<<<< HEAD
   
+=======
+
+  onSaveBook(book) {
+    console.log(book, 'book')
+    const userId = this.props.auth.userId;
+    firebase.database().ref(`users/${userId}/books`).once('value', snapshot =>
+      snapshot.val() ? this.props.saveBook(book, userId, ) : this.props.createBookShelf(book, userId));
+    //checking if a books db branch exists;
+     this.props.removeSuggestion(book, userId);
+  }
+
+    onRemoveBook(book) {
+    const userId = this.props.auth.userId;
+    console.log( "dislike ", book, " ",userId)
+    this.props.removeSuggestion(book, userId);
+  }
+
+>>>>>>> d95de20c795af2ec55d462ac6b01a101a2fa0ba3
   render() {
     const { saveBook } = this.props
     const { loggedIn } = this.props.auth
@@ -37,7 +56,7 @@ class Home extends Component {
     return (
 
       <View style={{ flex: 1 }}>
-       
+
           <Search />
 
           {this.props.book && this.props.book.similarbooks ?
@@ -68,6 +87,11 @@ class Home extends Component {
               </CardSection>
             </Card>
           }
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> d95de20c795af2ec55d462ac6b01a101a2fa0ba3
       </View>
 
 
