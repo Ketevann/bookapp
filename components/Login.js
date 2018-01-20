@@ -5,18 +5,22 @@ import { Header, Button, Spinner } from './common';
 import LoginForm  from './common/LoginForm'
 import { loginDispatch, loginDispatchFalse } from '../redux/actions/authActions'
 import { connect } from 'react-redux'
-import {Actions} from 'react-native-router-flux';
+import { clearForm } from '../redux/actions/authActions';
+import { Actions } from 'react-native-router-flux';
+
 
 class Login extends Component {
 
-  // componentWillMount() {
-  //   firebase.auth().onAuthStateChanged((user) => {
-  //     if (user) {
-  //       this.props.loginDispatch()
-  //     }
-  //     else this.props.loginDispatchFalse()
-  //   })
-  // }
+  componentWillMount() {
+    this.props.clearForm();
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        this.props.loginDispatch()
+      }
+      else this.props.loginDispatchFalse()
+    })
+
+  }
 
   renderContent() {
     console.log(this.props.auth.loggedIn, 'logged in')
@@ -56,5 +60,5 @@ class Login extends Component {
   }
 
   export default connect(({ auth }) => ({ auth: auth }),
-    { loginDispatch, loginDispatchFalse },
+    { loginDispatch, loginDispatchFalse, clearForm },
   )(Login)

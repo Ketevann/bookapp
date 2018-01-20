@@ -1,7 +1,8 @@
 import {
   EMAIL_CHANGED, PASSWORD_CHANGED, PASSWORD_CONFIRM,
   LOGIN_USER_SUCESS, LOGIN_USER_FAIL,
-  LOGIN_USER, NOTLOGGEDIN, LOGGEDIN, FORGOT
+  LOGIN_USER, NOTLOGGEDIN, LOGGEDIN, FORGOT,
+  CLEARFORM
 } from './action-types'
 
 import firebase from 'firebase';
@@ -27,11 +28,13 @@ export const loginUser = (email, password) => {
       .catch((error) => {
         console.log('erro', error)
 
-        firebase.auth().createUserWithEmailAndPassword(email, password)
-          .then(user =>
-            loginUserSuccess(dispatch, user))
-          .catch(() => loginUserFail(dispatch))
-      })
+        // firebase.auth().createUserWithEmailAndPassword(email, password)
+        //   .then(user =>
+        //     loginUserSuccess(dispatch, user))
+        const errorCode = error.code;
+        const errorMessage = error.message;
+          loginUserFail(dispatch, errorMessage);
+      });
   }
 }
 
@@ -49,10 +52,16 @@ console.log('signed checked', password === confirm)
            return loginUserSuccess(dispatch, user.uid)
 
             })
-     .catch(() => loginUserFail(dispatch))
+     .catch((error) =>{
+       console.log('ERROR!!!')
+      const errorCode = error.code;
+        const errorMessage = error.message;
+     loginUserFail(dispatch, errorMessage);
+    })
 }
 else {
-  loginUserFail(dispatch)
+  const error = 'Passwords do not match'
+  loginUserFail(dispatch, error);
 }
 }
 
@@ -68,14 +77,16 @@ export const forgotPassword = () =>
     }).catch(function (error) {
       // An error happened.
       console.log(error)
+      loginUserFail(dispatch, error.message);
     });
   }
 
 
-const loginUserFail = (dispatch, user) => {
+const loginUserFail = (dispatch, error) => {
   dispatch({
     type: LOGIN_USER_FAIL,
-    user
+
+    error
   });
 };
 
@@ -153,3 +164,6 @@ export const loginDispatchFalse = () =>
 
 
 
+export const clearForm = () =>
+  dispatch =>
+    dispatch({ type: CLEARFORM })

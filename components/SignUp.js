@@ -11,6 +11,8 @@ import {
   signUpUser
 } from '../redux/actions/authActions'
 import {dispatchCamera} from '../redux/actions/cameraActions'
+import {clearForm} from '../redux/actions/authActions';
+
 import RNF from './Pic'
 import { Actions } from 'react-native-router-flux';
 
@@ -27,6 +29,10 @@ class SignUp extends Component {
   //   // An error happened.
   // });
   //   }
+  componentWillMount(){
+    this.props.clearForm();
+
+  }
 
   OnButtonPress() {
 
@@ -154,5 +160,6 @@ export default connect(({ auth, cameraRoll }) => ({ auth, cameraRoll }), {
   passwordDispatch,
   passwordConfirmChange,
   signUpUser,
-  dispatchCamera
+  dispatchCamera,
+  clearForm
 })(SignUp);
