@@ -1,19 +1,15 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, ScrollView, Image, TouchableOpacity } from 'react-native';
 import { Header, Card, CardSection, Button, Spinner } from './common'
-import { saveBook, createBookShelf } from '../redux/actions/bookActions';
-import { getSuggestions, getDefualt, removeSuggestion} from '../redux/actions/preferencesActions';
+import { getSuggestions, getDefualt} from '../redux/actions/preferencesActions';
 import { loginDispatch, loginDispatchFalse } from '../redux/actions/authActions'
 import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
 import Dimensions from 'Dimensions'
 var {height, width} = Dimensions.get('window')
 import firebase from 'firebase';
-import defaultBooks from './data/defaultBooks';
 import Book from './Book';
-import axios from 'axios';
 import Search from './Search'
-import Footer from './Footer'
 class Home extends Component {
   componentWillMount() {
     firebase.auth().onAuthStateChanged((user) => {
@@ -27,27 +23,10 @@ class Home extends Component {
       }
     })
   }
-
-  onSaveBook(book) {
-    console.log(book, 'book')
-    const userId = this.props.auth.userId;
-    firebase.database().ref(`users/${userId}/books`).once('value', snapshot =>
-      snapshot.val() ? this.props.saveBook(book, userId, ) : this.props.createBookShelf(book, userId));
-    //checking if a books db branch exists;
-     this.props.removeSuggestion(book, userId);
-  }
-
-    onRemoveBook(book) {
-    const userId = this.props.auth.userId;
-    console.log( "dislike ", book, " ",userId)
-    this.props.removeSuggestion(book, userId);
-  }
-
+  
   render() {
-    const { saveBook } = this.props
     const { loggedIn } = this.props.auth
-    const { preferences , loading } = this.props.preferences;
-    { console.log( this.props, "preferences=======================================>") }
+    { console.log( this.props, "preferences") }
 
 
     return (
@@ -77,18 +56,13 @@ class Home extends Component {
 
 
             <Card>
-              { (preferences && !loading ) ?
-                 <Book  book={preferences} onSaveBook={this.onSaveBook.bind(this)}  onRemoveBook={this.onRemoveBook.bind(this)}/> : <Spinner size='large' />  }
-                {loggedIn ? <CardSection>
-                <Button onPress={() => Actions.preferencesForm()}> Preferences </Button>
-              </CardSection> : null}
+              <Book/>
+              {loggedIn ? <CardSection><Button onPress={() => Actions.preferencesForm()}> Preferences </Button></CardSection> : null}
               <CardSection>
                 {loggedIn ? <Button onPress={() => firebase.auth().signOut()}>Log Out</Button> : <Button onPress={() => Actions.login()}> Sign in </Button>}
               </CardSection>
             </Card>
           }
-
-
       </View>
 
 
@@ -115,9 +89,6 @@ export default connect(
   {
     loginDispatch, loginDispatchFalse,
     getDefualt,
-    getSuggestions,
-    createBookShelf,
-    saveBook,
-    removeSuggestion
+    getSuggestions
 
   })(Home)

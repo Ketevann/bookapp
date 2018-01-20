@@ -71,7 +71,6 @@ export const updatePreferences = (newPrefs, userID, dispatch) =>
             })
             .catch(error => {
                 console.log('no prefs, starting new branch');
-                alert('r')
                 preferenceRef.set(newPrefs)
             })
             .then(() => {
@@ -212,7 +211,6 @@ export const removeSuggestion = (suggested, uid, dispatch) =>
     dispatch => {
         //alert(suggested); 
         console.log('REMOVEEEE', uid, suggested)
-
         firebase.database().ref(`users/${uid}`).child('suggestions').once('value', function (snapshot) {
             var index, suggestions;
            // console.log(snapshot.val(), "removing!!!!")
