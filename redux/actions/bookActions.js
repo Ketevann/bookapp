@@ -34,31 +34,38 @@ export const getBookSuggestions = (books, dispatch) =>
     }
 
 
-export const createBookShelf = (book, userID, dispatch) =>
-    //start a new books branch
+// export const createBookShelf = (book, userID, dispatch) =>
+//     //start a new books branch
 
-    dispatch => {
-        console.log(book, userID, '***')
-        const { author, description, imageLinks, title } = book;
-        firebase.database().ref(`users/${userID}/`).child('books').set([{ title: title, read: false, author: author, description: description ? description:null, image: imageLinks }])
-    }
+//     dispatch => {
+//         console.log(book, userID, '***')
+//         const { author, description, imageLinks, title } = book;
+//         firebase.database().ref(`users/${userID}/`).child('books').set([{ title: title, read: false, author: author, description: description ? description:null, image: imageLinks }])
+//     }
 
 export const saveBook = (book, userID, dispatch) =>
     dispatch => {
         console.log(book, userID, '*** save')
         const { author, description, imageLinks, title } = book;
-        firebase.database().ref(`users/${userID}/books`).once('value', (snapshot) => {
-            const savedBook = Object.values(snapshot.val());
-            let hasBook = false;
-            for (var i = 0; i < savedBook.length; i++) {
-                if (savedBook[i].title === title) {
-                    //alert(savedBook[i].title);
-                    hasBook = true;
-                };
-            }
-            //added ternary on description, error thrown when discription is undefined
-            hasBook ? alert('already saved') : firebase.database().ref(`users/${userID}/`).child('books').set([...savedBook, { title: title, read: false, author: author, description: description?description:null, image: imageLinks }]);
-        });
+        firebase.database().ref(`users/${userID}/books`).once('value')
+            .then(snapshot=>{
+                if (!snapshot.val())//checking if a books branch exists in firebase
+                    throw ("Error")
+                    const savedBook = Object.values(snapshot.val());
+                    let hasBook = false;
+                    for (var i = 0; i < savedBook.length; i++) {
+                        if (savedBook[i].title === title) {
+                            //alert(savedBook[i].title);
+                            hasBook = true;
+                        };
+                }
+                //added ternary on description, error thrown when discription is undefined
+                hasBook ? alert('already saved') : firebase.database().ref(`users/${userID}/`).child('books').set([...savedBook, { title: title, read: false, author: author, description: description?description:null, image: imageLinks }]);
+            })
+            .catch(error => {
+                //starting a books branch in firebase if none exists already
+                firebase.database().ref(`users/${userID}/`).child('books').set([{ title: title, read: false, author: author, description: description ? description:null, image: imageLinks }])
+            })
     }
 
 export const changeBook = (type, dispatch) =>
