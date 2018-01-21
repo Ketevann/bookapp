@@ -183,7 +183,7 @@ class Deck extends Component {
   }
 
   renderNoMoreCards() {
-    this.props.onEnd(); //deletes prefrences when user reaches end of book suggestions 
+    this.props.onEnd(); //deletes prefrences when user reaches end of book suggestions
     return (
       <Card title="All Done!">
         <Text style={{ marginBottom: 10 }}>
@@ -201,6 +201,7 @@ class Deck extends Component {
 
 
   render() {
+    console.log('this.', this.props)
     const { imageLinks, title } = this.props.data,
       { book } = this.props
     return (
@@ -229,6 +230,7 @@ class Deck extends Component {
             onPress={() => this.forceSwipe('right')}//sabes a "liked" book to users branch on swipe right
           />
         </View>
+        <Text></Text>
       </View>
     );
   }
