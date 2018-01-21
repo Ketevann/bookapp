@@ -49,7 +49,7 @@ class Deck extends Component {
       }
     });
 
-    this.state = { panResponder, position, index: 0, description: '', title: '' };
+    this.state = { panResponder, position, index: 0, description: '', title: '', textHeight: null };
   }
 
 componentWillMount(){
@@ -293,12 +293,20 @@ renderText(item){
           />
         </View>
         <ScrollView
-          contentContainerStyle={{ alignItems: 'center', height: height}}
+        style={{flexGrow: 3}}
+          contentContainerStyle={{ alignItems: 'center', height:  this.state.textHeight + 100  }}
+          onScroll={(e) => {
+            console.log(e.nativeEvent.contentSize, height)
+            this.setState({textHeight : e.nativeEvent.contentSize.height })}}
           //this keeps the buttons from traveling with each card. buttons remain in position as user swioes but functionality is passed to the next card
           overScrollMode='auto'
         >
           <Text>{this.state.title}</Text>
-          <Text>{this.state.description}</Text>
+          <Text
+          onContentSizeChange={(event) => {
+console.log(event.nativeEvent.contentSize.height, 'on change')
+}}
+          >{this.state.description}</Text>
         </ScrollView>
 
       </View>
