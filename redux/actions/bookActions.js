@@ -21,6 +21,7 @@ export const getBookSuggestions = (books, dispatch) =>
             .then(axios.spread((...args) => {
                 //collect returned data for each api call in array
                 const bookList = args.map((book) => {
+                    console.log(args, 'args!!!!')
                     console.log(book.data.items[0].volumeInfo.title, "title");
                     return book.data.items[0].volumeInfo;
                 })

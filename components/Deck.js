@@ -7,7 +7,8 @@ import {
   LayoutAnimation,
   UIManager,
   Text,
-  Image
+  Image,
+  ScrollView
 } from 'react-native';
 import { Card, Button, Icon } from 'react-native-elements'
 import { Actions } from 'react-native-router-flux';
@@ -48,9 +49,13 @@ class Deck extends Component {
       }
     });
 
-    this.state = { panResponder, position, index: 0 };
+    this.state = { panResponder, position, index: 0, description: '', title: '' };
   }
 
+componentWillMount(){
+  console.log('this.tate', this.state)
+     this.getDescription()
+  }
   componentWillReceiveProps(nextProps) {
     if (nextProps.data !== this.props.data) {
       this.setState({ index: 0 });
@@ -58,6 +63,8 @@ class Deck extends Component {
   }
 
   componentWillUpdate() {
+    console.log('in will update ---------->', this.state.index)
+
     UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
     LayoutAnimation.spring();
   }
@@ -70,12 +77,25 @@ class Deck extends Component {
     }).start(() => this.onSwipeComplete(direction));
   }
 
+
   onSwipeComplete(direction) {
     const { onSwipeLeft, onSwipeRight, data } = this.props;
     const item = data[this.state.index];
-    direction === 'right' ? onSwipeRight(item) : onSwipeLeft(item.title);//for dislike on swipe we only need a title to remove from user suggestion in db
+    //direction === 'right' ? onSwipeRight(item) : onSwipeLeft(item.title);//for dislike on swipe we only need a title to remove from user suggestion in db
+
+
+
+
     this.state.position.setValue({ x: 0, y: 0 });
     this.setState({ index: this.state.index + 1 });
+    if (direction === 'right')
+     {onSwipeRight(item)
+     this.getDescription()
+    }
+     else {
+       onSwipeLeft(item.title)
+       this.getDescription()
+     }
   }
 
   resetPosition() {
@@ -111,6 +131,7 @@ class Deck extends Component {
       if (i === this.state.index) {
         // console.log('index is equal thos should animate', this.state.index, i, item.title,' item')
         return (
+          <View>
          <Animated.View
             key={i}
             style={[this.getCardStyle(), styles.cardStyle, { zIndex: 99 }]}
@@ -118,6 +139,7 @@ class Deck extends Component {
           >
             {this.renderCard(item, i)}
           </Animated.View>
+          </View>
         );
       }
 
@@ -125,19 +147,33 @@ class Deck extends Component {
        //  console.log('index is greater', 'state', this.state.index, 'index', i, item.title)
 
       return (
+        <View>
         <Animated.View
           key={i}
-          style={[styles.cardStyle, { top: 10 * (i - this.state.index), zIndex: 5 }]}
+          style={[styles.cardStyle]}
         >
           {this.renderCard(item, i)}
         </Animated.View>
+
+        </View>
       );}
+
     }).reverse()
   }
 
 
-
+renderText(item){
+  console.log()
+  return(
+    <ScrollView
+    contentContainerStyle={this.props.contentContainerStyle}
+    >
+    <Text>{item.description}</Text>
+    </ScrollView>
+  )
+}
   renderCard(item, index) {
+   // this.getDescription()
  //   console.log('in render Card', item.title, 'title =======>>>')
 
 
@@ -149,12 +185,14 @@ class Deck extends Component {
       modifiedLink = item.imageLinks.smallThumbnail.replace(/zoom=[0-9]/, 'zoom=0')
     }
     return (
+      <ScrollView>
       <Animated.View style={{ backgroundColor: 'white' }}
         key={index}
       >
        <Text>{item.author}</Text>
         <Image
           source={{ uri: modifiedLink }} style={{ width: width - 40, height: height - 300 }} />
+
         {/*<View
           style={{ flexDirection: 'row' }}
         >
@@ -178,11 +216,15 @@ class Deck extends Component {
           backgroundColor="#03A9F4"
           title="View Now!"
         />*/}
+
       </Animated.View>
+
+          </ScrollView>
     );
   }
 
   renderNoMoreCards() {
+    this.setState({description: '', title: ''})
     this.props.onEnd(); //deletes prefrences when user reaches end of book suggestions
     return (
       <Card title="All Done!">
@@ -199,17 +241,37 @@ class Deck extends Component {
     );
   }
 
+  getDescription(){
+    const {index} = this.state
+    console.log(index, 'get descrtiption index state')
+    const description = this.props.data.filter((elem, i) =>{
 
+        if(i === index) {
+           console.log('i and book', i, elem)
+          return elem;}
+    })
+
+    this.setState({ description: description[0].description, title: description[0].title })
+  }
   render() {
-    console.log('this.', this.props)
+    console.log('this.', this.props, this.state.index,' index')
+
+
+
     const { imageLinks, title } = this.props.data,
       { book } = this.props
     return (
-      <View>
-        {this.renderCards()}<View
-          style={{ flexDirection: 'row', zIndex: 500 , top: height - 275, backgroundColor:'white', justifyContent: 'center', alignItems: 'center'}}
-          //this keeps the buttons from traveling with each card. buttons remain in position as user swioes but functionality is passed to the next card
-        ><Icon
+      <View
+
+      >
+
+
+
+        {this.renderCards()}
+        <View
+        style={{flexDirection: 'row', marginTop: 220, alignItems: 'center'}}
+        >
+         <Icon
             raised
             name='close'
             type='Foundation'
@@ -230,7 +292,15 @@ class Deck extends Component {
             onPress={() => this.forceSwipe('right')}//sabes a "liked" book to users branch on swipe right
           />
         </View>
-        <Text></Text>
+        <ScrollView
+          contentContainerStyle={{ alignItems: 'center', height: height}}
+          //this keeps the buttons from traveling with each card. buttons remain in position as user swioes but functionality is passed to the next card
+          overScrollMode='auto'
+        >
+          <Text>{this.state.title}</Text>
+          <Text>{this.state.description}</Text>
+        </ScrollView>
+
       </View>
     );
   }
