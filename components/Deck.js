@@ -7,7 +7,9 @@ import {
   LayoutAnimation,
   UIManager,
   Text,
-  Image
+  Image,
+  Modal,
+  ScrollView
 } from 'react-native';
 import { Card, Button, Icon } from 'react-native-elements'
 import { Actions } from 'react-native-router-flux';
@@ -48,9 +50,12 @@ class Deck extends Component {
       }
     });
 
-    this.state = { panResponder, position, index: 0 };
+    this.state = { panResponder, position, index: 0 , modalVisible: false , description: '', title: ''};
   }
-
+  componentWillMount(){
+  console.log('this.tate', this.state)
+     this.getDescription()
+  }
   componentWillReceiveProps(nextProps) {
     if (nextProps.data !== this.props.data) {
       this.setState({ index: 0 });
@@ -61,7 +66,13 @@ class Deck extends Component {
     UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
     LayoutAnimation.spring();
   }
+  openModal() {
+    this.setState({modalVisible:true});
+  }
 
+  closeModal() {
+    this.setState({modalVisible:false});
+  }
   forceSwipe(direction) {
     const x = direction === 'right' ? SCREEN_WIDTH : -SCREEN_WIDTH;
     Animated.timing(this.state.position, {
@@ -76,6 +87,7 @@ class Deck extends Component {
     direction === 'right' ? onSwipeRight(item) : onSwipeLeft(item.title);//for dislike on swipe we only need a title to remove from user suggestion in db
     this.state.position.setValue({ x: 0, y: 0 });
     this.setState({ index: this.state.index + 1 });
+    this.getDescription()
   }
 
   resetPosition() {
@@ -198,7 +210,24 @@ class Deck extends Component {
       </Card>
     );
   }
+   getDescription(){
+    const {index} = this.state
+    
+    console.log(index, 'get descrtiption index state')
+    if ( index >= this.props.data.length) {
+      this.setState({ description: "", title: "" })
+      return null;
+    }
 
+    const description = this.props.data.filter((elem, i) =>{
+
+        if(i === index) {
+           console.log('i and book', i, elem)
+          return elem;}
+    })
+
+    this.setState({ description: description[0].description, title: description[0].title })
+  }
 
   render() {
     const { imageLinks, title } = this.props.data,
@@ -216,11 +245,16 @@ class Deck extends Component {
             size={25}
            onPress={() => this.forceSwipe('left')}//deletes a "disliked book from users suggestions"
           />
-          <Button
+          {/*<Button
           icon={{ name: 'code' }}
           backgroundColor="#03A9F4"
           title="View Now!"
-        /><Icon
+        />*/}
+         <Button
+              onPress={() => this.openModal()}
+              title="Description"
+          />
+        <Icon
             raised
             name='heart'
             type='font-awesome'
@@ -229,6 +263,27 @@ class Deck extends Component {
             onPress={() => this.forceSwipe('right')}//sabes a "liked" book to users branch on swipe right
           />
         </View>
+        <Modal
+              visible={this.state.modalVisible}
+              animationType={'slide'}
+              transparent={'true'}
+              onRequestClose={() => this.closeModal()}
+          >
+            <View style={styles.modalContainer}>
+              <View style={styles.innerContainer}>
+                <Text style={{ paddingBottom:20, justifyContent:'center',}}>{this.state.title}</Text>
+                <ScrollView /*centerContent={ true }*/>
+                  <View style={{flex:1, flexDirection: 'column', justifyContent:'center'}}><Text  /*style={{textAlign:"center", textAlignVertical:"center"}}*/>{this.state.description}</Text></View>
+                </ScrollView>
+                <Button
+                    style={{padding: 10,  paddingTop:20}}
+                    onPress={() => this.closeModal()}
+                    title="Close modal"
+                >
+                </Button>
+              </View>
+            </View>
+          </Modal>
       </View>
     );
   }
@@ -238,7 +293,27 @@ const styles = {
   cardStyle: {
     position: 'absolute',
     width: SCREEN_WIDTH
-  }
+  },
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  modalContainer: {
+    flex:1,
+    flexDirection:'row',
+    alignItems:'center',
+    justifyContent:'center',
+    backgroundColor: 'rgba(52, 52, 52, 0.8)'
+  },
+  innerContainer: {
+   // alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'white',
+    padding:10,
+    width: 0.75 * SCREEN_WIDTH,
+    height: 0.50 * Dimensions.get('window').height,
+    borderRadius:10
+  },
 };
 
 export default Deck;
