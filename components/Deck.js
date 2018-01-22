@@ -32,13 +32,18 @@ class Deck extends Component {
 
     const panResponder = PanResponder.create({
       //detects touch
-      onStartShouldSetPanResponder: () => true,
+      onStartShouldSetPanResponder: () => {
+        this.setState({allowScroll: false })
+        return true
+      },
       //detects movement
       onPanResponderMove: (event, gesture) => {
+
         position.setValue({ x: gesture.dx, y: gesture.dy });
       },
       //detects release
       onPanResponderRelease: (event, gesture) => {
+         this.setState({allowScroll: true })
         if (gesture.dx > SWIPE_THRESHOLD) {
           this.forceSwipe('right');
         } else if (gesture.dx < -SWIPE_THRESHOLD) {
@@ -49,7 +54,7 @@ class Deck extends Component {
       }
     });
 
-    this.state = { panResponder, position, index: 0, description: '', title: '', textHeight: null };
+    this.state = { panResponder, position, index: 0, description: '', title: '', allowSwipe: true };
   }
 
 componentWillMount(){
@@ -193,30 +198,6 @@ renderText(item){
         <Image
           source={{ uri: modifiedLink }} style={{ width: width - 40, height: height - 300 }} />
 
-        {/*<View
-          style={{ flexDirection: 'row' }}
-        >
-          <Icon
-            raised
-            name='like'
-            type='font-awesome'
-            color='#f50'
-            size={25}
-          />
-          <Icon
-            raised
-            name='cross'
-            type='cog'
-            color='#f50'
-            size={25}
-          />
-        </View>
-        <Button
-          icon={{ name: 'code' }}
-          backgroundColor="#03A9F4"
-          title="View Now!"
-        />*/}
-
       </Animated.View>
 
           </ScrollView>
@@ -265,6 +246,8 @@ renderText(item){
 
       >
 
+<ScrollView
+scrollEnabled={this.state.allowScroll}>
 
 
         {this.renderCards()}
@@ -292,23 +275,10 @@ renderText(item){
             onPress={() => this.forceSwipe('right')}//sabes a "liked" book to users branch on swipe right
           />
         </View>
-        <ScrollView
-        style={{flexGrow: 3}}
-          contentContainerStyle={{ alignItems: 'center', height:  this.state.textHeight + 100  }}
-          onScroll={(e) => {
-            console.log(e.nativeEvent.contentSize, height)
-            this.setState({textHeight : e.nativeEvent.contentSize.height })}}
-          //this keeps the buttons from traveling with each card. buttons remain in position as user swioes but functionality is passed to the next card
-          overScrollMode='auto'
-        >
-          <Text>{this.state.title}</Text>
-          <Text
-          onContentSizeChange={(event) => {
-console.log(event.nativeEvent.contentSize.height, 'on change')
-}}
-          >{this.state.description}</Text>
-        </ScrollView>
 
+          <Text>{this.state.title}</Text>
+          <Text>{this.state.description}</Text>
+          </ScrollView>
       </View>
     );
   }
