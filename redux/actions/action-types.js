@@ -14,6 +14,7 @@ export const BOOK_SAVED = 'BOOK_SAVED';
 export const BOOK_NOT_SAVED = 'BOOK_NOT_SAVED';
 export const BOOK_SEARCH = 'BOOK_SEARCH'
 export const CHANGE_SEARCH = 'CHANGE_SEARCH'
+export const LOAD_SAVED_BOOKS = 'LOAD_SAVED_BOOKS'
 
 export const FETCHED_BOOKS = 'export const'
 export const AUTHOR_BOOL = 'AUTHOR_BOOL'

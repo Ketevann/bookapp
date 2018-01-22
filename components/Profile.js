@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text, Picker, ScrollView } from 'react-native';
-import { Header, Card, CardSection, Button, Input } from './common';
+import { Header, Card, CardSection, Button, Input, Spinner } from './common';
 import { connect } from 'react-redux';
 import firebase from 'firebase';
 import {
@@ -12,30 +12,38 @@ import BookCard from './BookCard'
 class Profile extends Component {
   constructor(props) {
     super(props)
-    this.state = { scrollEnabled:true }
+    this.state = { scrollEnabled: true }
   }
-  disableParentScroll(){
-    this.setState({ scrollEnabled: !this.state.scrollEnabled} )
+  disableParentScroll() {
+    this.setState({ scrollEnabled: !this.state.scrollEnabled })
   }
 
 
   displayBooks() {
     console.log('run this function', this.props.book.savedBooks)
-    if (this.props.book.savedBooks) {
+    const { savedBooks, loading } = this.props.book;
+    console.log(loading, 'loading in display');
+    if (savedBooks && !loading) {
       return this.props.book.savedBooks.map((book, index) => {
+        let modifiedLink;
+        if (book.image.smallThumbnail) {
+          book.image.smallThumbnail = book.image.smallThumbnail.replace(/zoom=[0-9]/, 'zoom=0')
+        }
+
         return (
-            <BookCard
-              key={index}
-              books={book}
-              index={index}
-              disableParentScroll={ this.disableParentScroll.bind(this) }
-            />
+          <BookCard
+            key={index}
+            books={book}
+            index={index}
+            disableParentScroll={this.disableParentScroll.bind(this)}
+            loading={loading}
+          />
 
         )
       });
 
     }
-    else return null
+    return (<Spinner size="large" />)
   }
 
   render() {

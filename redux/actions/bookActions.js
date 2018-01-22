@@ -6,7 +6,8 @@ import {
     AUTHOR_BOOL,
     GET_SAVED_BOOK,
     READ,
-    CLEAR
+    CLEAR,
+    LOAD_SAVED_BOOKS
 } from './action-types'
 import { GOOGLE_API_KEY } from '../../keys'
 import firebase from 'firebase';
@@ -48,68 +49,43 @@ export const saveBook = (book, userID, dispatch) =>
         console.log(book, userID, '*** save')
         const { author, description, imageLinks, title, categories, pageCount } = book;
         const newBook = {
-                            title: title ,
-                            author: author ,
-                            description: description,
-                            image :imageLinks,
-                            read:false,
-                            categories:categories,
-                            pageCount: pageCount
-                        } 
-                        
+            title: title,
+            author: author,
+            description: description,
+            image: imageLinks,
+            read: false,
+            categories: categories,
+            pageCount: pageCount
+        }
+
         firebase.database().ref(`users/${userID}/books`).once('value')
             .then(snapshot => {
                 if (!snapshot.val())//checking if a books branch exists in firebase
                     throw ("Error")
 
-                    const savedBook = Object.values(snapshot.val());
-                    let hasBook = false;
-                    for (var i = 0; i < savedBook.length; i++) {
-                        // if (savedBook[i].title === title) {
-                        //     //alert(savedBook[i].title);
-                        //     hasBook = true;
-                        // };
-                        if ((savedBook[i].title === title) &&
-                            (savedBook[i].author === author) &&
-                            (savedBook[i].description === description)) {
-                            //alert(savedBook[i].title);
-                            hasBook = true;
-                            break;
-                        };
-                        
-                }
-                //added ternary on description, error thrown when discription is undefined
-                hasBook ? alert('already saved') : firebase.database().ref(`users/${userID}/`).child('books').set([...savedBook, newBook ]);
-            })
-            .catch(error => {
-                //starting a books branch in firebase if none exists already
-                firebase.database().ref(`users/${userID}/`).child('books').set([ newBook ])
-
                 const savedBook = Object.values(snapshot.val());
                 let hasBook = false;
                 for (var i = 0; i < savedBook.length; i++) {
-                    if (savedBook[i].title === title) {
+                    // if (savedBook[i].title === title) {
+                    //     //alert(savedBook[i].title);
+                    //     hasBook = true;
+                    // };
+                    if ((savedBook[i].title === title) &&
+                        (savedBook[i].author === author) &&
+                        (savedBook[i].description === description)) {
                         //alert(savedBook[i].title);
                         hasBook = true;
+                        break;
                     };
+
                 }
                 //added ternary on description, error thrown when discription is undefined
-                const book = {
-                    title: title ? title : '',
-                    read: false,
-                    author: author ? author : '',
-                    description: description ? description : '',
-                    image: imageLinks ? imageLinks : ''
-                }
-
-
-                hasBook ? alert('already saved') : firebase.database().ref(`users/${userID}/`).child('books').set([...savedBook, book]);
+                hasBook ? alert('already saved') : firebase.database().ref(`users/${userID}/`).child('books').set([...savedBook, newBook]);
             })
             .catch(error => {
                 //starting a books branch in firebase if none exists already
-                firebase.database().ref(`users/${userID}/`).child('books').set([{ title: title, read: false, author: author, description: description ? description : null, image: imageLinks }])
-
-            })
+                firebase.database().ref(`users/${userID}/`).child('books').set([newBook]);
+            });
     }
 
 export const changeBook = (type, dispatch) =>
@@ -167,12 +143,14 @@ export const findSimilarBooks = (keyword, placeholder, dispatch) =>
 export const getSavedBooks = (user, dispatch) =>
     dispatch => {
         var savedBook = [];
+         dispatch({ type: LOAD_SAVED_BOOKS , payload: true })
         console.log(' in geeet', user)
         firebase.database().ref(`users/${user}/books`).once('value', (snapshot) => {
             if (snapshot.val())
                 savedBook = Object.values(snapshot.val())
             console.log(savedBook, 'savedBook')
             dispatch({ type: GET_SAVED_BOOK, payload: savedBook, user: user })
+            dispatch({ type: LOAD_SAVED_BOOKS , payload: false })
 
         })
 
@@ -193,13 +171,13 @@ export const getSavedBooks = (user, dispatch) =>
 
 
 export const markAsRead = (uid, title, dispatch) =>
-        dispatch => {
+    dispatch => {
 
 
-                firebase.database().ref(`users/${uid}/books`).once('value', (snapshot) => {
-                        const savedBook = Object.values(snapshot.val());
-                        //db books are returned as an object, iterate object and save values (titles) in array
-                        console.log(snapshot.val(), 'SNAPPPP')
+        firebase.database().ref(`users/${uid}/books`).once('value', (snapshot) => {
+            const savedBook = Object.values(snapshot.val());
+            //db books are returned as an object, iterate object and save values (titles) in array
+            console.log(snapshot.val(), 'SNAPPPP')
 
             let bool,
                 savedBooksArray = snapshot.val();
@@ -221,16 +199,16 @@ export const markAsRead = (uid, title, dispatch) =>
                     return dispatch({ type: GET_SAVED_BOOK, payload: savedBooksArray, user: uid })
 
 
-                                        break;
-                                }
-                        }
+                    break;
+                }
+            }
 
-                });
-
-
+        });
 
 
-        }
+
+
+    }
 
 
 

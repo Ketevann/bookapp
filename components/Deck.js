@@ -50,11 +50,11 @@ class Deck extends Component {
       }
     });
 
-    this.state = { panResponder, position, index: 0 , modalVisible: false , description: '', title: ''};
+    this.state = { panResponder, position, index: 0, modalVisible: false, description: '', title: '', page: '', category: '' };
   }
-  componentWillMount(){
-  console.log('this.tate', this.state)
-     this.getDescription()
+  componentWillMount() {
+    console.log('this.tate', this.state)
+    this.getDescription()
   }
   componentWillReceiveProps(nextProps) {
     if (nextProps.data !== this.props.data) {
@@ -67,11 +67,11 @@ class Deck extends Component {
     LayoutAnimation.spring();
   }
   openModal() {
-    this.setState({modalVisible:true});
+    this.setState({ modalVisible: true });
   }
 
   closeModal() {
-    this.setState({modalVisible:false});
+    this.setState({ modalVisible: false });
   }
   forceSwipe(direction) {
     const x = direction === 'right' ? SCREEN_WIDTH : -SCREEN_WIDTH;
@@ -113,17 +113,18 @@ class Deck extends Component {
     if (this.state.index >= this.props.data.length) {
       return this.renderNoMoreCards();
     }
-   // console.log(this.props.data, 'dta', this.state.index)
+    // console.log(this.props.data, 'dta', this.state.index)
     return this.props.data.map((item, i) => {
-     // console.log(i, ' entered loop', item, this.props.data.length)
+      // console.log(i, ' entered loop', item, this.props.data.length)
       if (i < this.state.index) {
-       // console.log('index is null should be the fist card', this.state.index, i)
-        return null; }
+        // console.log('index is null should be the fist card', this.state.index, i)
+        return null;
+      }
 
       if (i === this.state.index) {
         // console.log('index is equal thos should animate', this.state.index, i, item.title,' item')
         return (
-         <Animated.View
+          <Animated.View
             key={i}
             style={[this.getCardStyle(), styles.cardStyle, { zIndex: 99 }]}
             {...this.state.panResponder.panHandlers}
@@ -133,24 +134,25 @@ class Deck extends Component {
         );
       }
 
-      if (i > this.state.index){
-       //  console.log('index is greater', 'state', this.state.index, 'index', i, item.title)
+      if (i > this.state.index) {
+        //  console.log('index is greater', 'state', this.state.index, 'index', i, item.title)
 
-      return (
-        <Animated.View
-          key={i}
-          style={[styles.cardStyle, { top: 10 * (i - this.state.index), zIndex: 5 }]}
-        >
-          {this.renderCard(item, i)}
-        </Animated.View>
-      );}
+        return (
+          <Animated.View
+            key={i}
+            style={[styles.cardStyle, { top: 10 * (i - this.state.index), zIndex: 5 }]}
+          >
+            {this.renderCard(item, i)}
+          </Animated.View>
+        );
+      }
     }).reverse()
   }
 
 
 
   renderCard(item, index) {
- //   console.log('in render Card', item.title, 'title =======>>>')
+    //   console.log('in render Card', item.title, 'title =======>>>')
 
 
 
@@ -164,7 +166,7 @@ class Deck extends Component {
       <Animated.View style={{ backgroundColor: 'white' }}
         key={index}
       >
-       <Text>{item.author}</Text>
+        <Text>{item.author}</Text>
         <Image
           source={{ uri: modifiedLink }} style={{ width: width - 40, height: height - 300 }} />
         {/*<View
@@ -210,23 +212,24 @@ class Deck extends Component {
       </Card>
     );
   }
-   getDescription(){
-    const {index} = this.state
-    
+  getDescription() {
+    const { index } = this.state
+
     console.log(index, 'get descrtiption index state')
-    if ( index >= this.props.data.length) {
-      this.setState({ description: "", title: "" })
+    if (index >= this.props.data.length) {
+      this.setState({ description: "", title: "", page: '', category: '' })
       return null;
     }
 
-    const description = this.props.data.filter((elem, i) =>{
+    const currentCard = this.props.data.filter((elem, i) => {
 
-        if(i === index) {
-           console.log('i and book', i, elem)
-          return elem;}
+      if (i === index) {
+        console.log('i and book', i, elem)
+        return elem;
+      }
     })
-
-    this.setState({ description: description[0].description, title: description[0].title })
+    const details = currentCard[0];
+    this.setState({ description: details.description, title: details.title, page: details.pageCount, category: details.categories[0] })
   }
 
   render() {
@@ -236,26 +239,26 @@ class Deck extends Component {
     return (
       <View>
         {this.renderCards()}<View
-          style={{ flexDirection: 'row', zIndex: 500 , top: height - 275, backgroundColor:'white', justifyContent: 'center', alignItems: 'center'}}
-          //this keeps the buttons from traveling with each card. buttons remain in position as user swioes but functionality is passed to the next card
+          style={{ flexDirection: 'row', zIndex: 500, top: height - 275, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center' }}
+        //this keeps the buttons from traveling with each card. buttons remain in position as user swioes but functionality is passed to the next card
         ><Icon
             raised
             name='close'
             type='Foundation'
             color='#f50'
             size={25}
-           onPress={() => this.forceSwipe('left')}//deletes a "disliked book from users suggestions"
+            onPress={() => this.forceSwipe('left')}//deletes a "disliked book from users suggestions"
           />
           {/*<Button
           icon={{ name: 'code' }}
           backgroundColor="#03A9F4"
           title="View Now!"
         />*/}
-         <Button
-              onPress={() => this.openModal()}
-              title="Description"
+          <Button
+            onPress={() => this.openModal()}
+            title="Description"
           />
-        <Icon
+          <Icon
             raised
             name='heart'
             type='font-awesome'
@@ -265,26 +268,45 @@ class Deck extends Component {
           />
         </View>
         <Modal
-              visible={this.state.modalVisible}
-              animationType={'slide'}
-              transparent={true}
-              onRequestClose={() => this.closeModal()}
-          >
-            <View style={styles.modalContainer}>
-              <View style={styles.innerContainer}>
-                <Text style={{ paddingBottom:20, justifyContent:'center',}}>{this.state.title}</Text>
-                <ScrollView /*centerContent={ true }*/>
-                  <View style={{flex:1, flexDirection: 'column', justifyContent:'center'}}><Text  /*style={{textAlign:"center", textAlignVertical:"center"}}*/>{this.state.description}</Text></View>
-                </ScrollView>
-                <Button
-                    style={{padding: 10,  paddingTop:20}}
-                    onPress={() => this.closeModal()}
-                    title="Close modal"
-                >
-                </Button>
+          visible={this.state.modalVisible}
+          animationType={'slide'}
+          transparent={true}
+          onRequestClose={() => this.closeModal()}
+        >
+          <View style={styles.modalContainer}>
+            <View style={styles.innerContainer}>
+              <Text style={{ paddingBottom: 20, justifyContent: 'center', }}>{this.state.title}</Text>
+
+              <ScrollView /*centerContent={ true }*/>
+
+              <View
+              style={{flexDirection: 'row', flexWrap: 'wrap'}}
+              >
+              <Text>Page Count</Text>
+              <Text>{this.state.page}</Text>
               </View>
+              <View
+               style={{flexDirection: 'row', flexWrap: 'wrap', ustifyContent: 'space-between'}}
+              >
+              <Text>Category</Text>
+              <Text>{this.state.category}</Text>
+              </View>
+
+
+
+                <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'center' }}>
+                  <Text  /*style={{textAlign:"center", textAlignVertical:"center"}}*/>{this.state.description}</Text>
+                </View>
+              </ScrollView>
+              <Button
+                style={{ padding: 10, paddingTop: 20 }}
+                onPress={() => this.closeModal()}
+                title="Close modal"
+              >
+              </Button>
             </View>
-          </Modal>
+          </View>
+        </Modal>
         <Text></Text>
 
       </View>
@@ -302,19 +324,19 @@ const styles = {
     justifyContent: 'center',
   },
   modalContainer: {
-    flex:1,
-    flexDirection:'row',
-    alignItems:'center',
-    justifyContent:'center',
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
     backgroundColor: 'rgba(52, 52, 52, 0.8)'
   },
   innerContainer: {
     // justifyContent: 'center',
     backgroundColor: 'white',
-    padding:10,
+    padding: 10,
     width: 0.75 * SCREEN_WIDTH,
     height: 0.50 * Dimensions.get('window').height,
-    borderRadius:10
+    borderRadius: 10
   },
 };
 
