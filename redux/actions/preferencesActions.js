@@ -103,19 +103,21 @@ export const getBooksFromApi = (books, newList) => {//we get an array of titles 
 
 
 //                 console.log(book.volumeInfo, 'bok ==================> list all bookssss')
-    return bookList.data.items.map(book =>{
-
+    //return bookList.data.items.map(book =>{
+ let book=bookList.data.items[0];
    console.log(book, '666 ==================>')
 
 
                 return {
-                    title: book.volumeInfo.title ?book.volumeInfo.title : null,
-                    author: book.volumeInfo.authors ? book.volumeInfo.authors[0] : null,
+                    title: book.volumeInfo.title ?book.volumeInfo.title : " ",
+                    author: book.volumeInfo.authors ? book.volumeInfo.authors[0] : " ",
                     imageLinks: book.volumeInfo.imageLinks ? book.volumeInfo.imageLinks : { smallThumbnail: defaultBookImg },//we have ternary cuz some books dont have image/descrition
-                    description: book.volumeInfo.description ? book.volumeInfo.description : null//without ternary, code crashes. unresolved promise error
+                    description: book.volumeInfo.description ? book.volumeInfo.description : " ",//without ternary, code crashes. unresolved promise error
+                    categories:book.volumeInfo.categories ? book.volumeInfo.categories : " ",
+                    pageCount:book.volumeInfo.pageCount ? book.volumeInfo.pageCount : " ",
                 }
             })
-            })
+           // })
        // })
             console.log(newList, ' check all books')
             // return newList
@@ -140,7 +142,7 @@ return result
 export const find = (preferences) => {//we get an object of preferences and return an array of titles
     //we return a promise that resolves into an array of all titles to be sent to googleAPI
     let type = Object.keys(preferences)[0];
-    return axios.get(`https://tastedive.com/api/similar?q=${preferences[type]}&k=${TASTE_DIVE_API_KEY}&limit=2&type=${type}`);
+    return axios.get(`https://tastedive.com/api/similar?q=${preferences[type]}&k=${TASTE_DIVE_API_KEY}&limit=10&type=${type}`);
 }
 
 
