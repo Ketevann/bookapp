@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, ScrollView, Image, TouchableOpacity } from 'react-native';
 import { Header, Card, CardSection, Button, Spinner } from './common'
-import { getSuggestions, getDefualt} from '../redux/actions/preferencesActions';
+import { getSuggestions, getDefualt, updateDefaultSuggestions} from '../redux/actions/preferencesActions';
 import { loginDispatch, loginDispatchFalse } from '../redux/actions/authActions'
 import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
@@ -16,6 +16,7 @@ class Home extends Component {
       if (user) {
         this.props.loginDispatch(user.uid);
         this.props.getSuggestions(user.uid);//if logged in, then check for saved preferences, loads either preferred books or defualt(if there are no preferences) to state
+        //this.props.updateDefaultSuggestions();//updating defualt books branch
       }
       else {
         this.props.loginDispatchFalse()
@@ -89,6 +90,7 @@ export default connect(
   {
     loginDispatch, loginDispatchFalse,
     getDefualt,
-    getSuggestions
+    getSuggestions,
+    updateDefaultSuggestions
 
   })(Home)
