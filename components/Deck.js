@@ -266,6 +266,7 @@ class Deck extends Component {
         <Modal
               visible={this.state.modalVisible}
               animationType={'slide'}
+              transparent={true}
               onRequestClose={() => this.closeModal()}
           >
             <View style={styles.modalContainer}>
