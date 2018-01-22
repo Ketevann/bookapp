@@ -58,9 +58,10 @@ export const saveBook = (book, userID, dispatch) =>
                         } 
                         
         firebase.database().ref(`users/${userID}/books`).once('value')
-            .then(snapshot=>{
+            .then(snapshot => {
                 if (!snapshot.val())//checking if a books branch exists in firebase
                     throw ("Error")
+
                     const savedBook = Object.values(snapshot.val());
                     let hasBook = false;
                     for (var i = 0; i < savedBook.length; i++) {
@@ -83,6 +84,31 @@ export const saveBook = (book, userID, dispatch) =>
             .catch(error => {
                 //starting a books branch in firebase if none exists already
                 firebase.database().ref(`users/${userID}/`).child('books').set([ newBook ])
+
+                const savedBook = Object.values(snapshot.val());
+                let hasBook = false;
+                for (var i = 0; i < savedBook.length; i++) {
+                    if (savedBook[i].title === title) {
+                        //alert(savedBook[i].title);
+                        hasBook = true;
+                    };
+                }
+                //added ternary on description, error thrown when discription is undefined
+                const book = {
+                    title: title ? title : '',
+                    read: false,
+                    author: author ? author : '',
+                    description: description ? description : '',
+                    image: imageLinks ? imageLinks : ''
+                }
+
+
+                hasBook ? alert('already saved') : firebase.database().ref(`users/${userID}/`).child('books').set([...savedBook, book]);
+            })
+            .catch(error => {
+                //starting a books branch in firebase if none exists already
+                firebase.database().ref(`users/${userID}/`).child('books').set([{ title: title, read: false, author: author, description: description ? description : null, image: imageLinks }])
+
             })
     }
 
@@ -167,44 +193,44 @@ export const getSavedBooks = (user, dispatch) =>
 
 
 export const markAsRead = (uid, title, dispatch) =>
-    dispatch => {
+        dispatch => {
 
 
-        firebase.database().ref(`users/${uid}/books`).once('value', (snapshot) => {
-            const savedBook = Object.values(snapshot.val());
-            //db books are returned as an object, iterate object and save values (titles) in array
-            console.log(snapshot.val(), 'SNAPPPP')
+                firebase.database().ref(`users/${uid}/books`).once('value', (snapshot) => {
+                        const savedBook = Object.values(snapshot.val());
+                        //db books are returned as an object, iterate object and save values (titles) in array
+                        console.log(snapshot.val(), 'SNAPPPP')
 
             let bool,
-             savedBooksArray = snapshot.val();
-                if (Array.isArray(snapshot.val()) === false) {
-                    console.log('false')
-                    savedBooksArray = Object.values(snapshot.val())
-                    console.log(savedBooksArray, 'ddd');
-                }
+                savedBooksArray = snapshot.val();
+            if (Array.isArray(snapshot.val()) === false) {
+                console.log('false')
+                savedBooksArray = Object.values(snapshot.val())
+                console.log(savedBooksArray, 'ddd');
+            }
             for (var i = 0; i < savedBooksArray.length; i++) {
                 console.log(savedBooksArray[i], ' III')
                 if (savedBooksArray[i] && savedBooksArray[i].title === title) {
                     index = i;
                     if (savedBooksArray[i].read === true)
-                     bool = false
-                     else bool = true
-                        firebase.database().ref(`users/${uid}/books/${index}`).update({  read: bool })
-                        savedBooksArray[i].read = bool;
+                        bool = false
+                    else bool = true
+                    firebase.database().ref(`users/${uid}/books/${index}`).update({ read: bool })
+                    savedBooksArray[i].read = bool;
                     // else firebase.database().ref(`users/${uid}/books/${index}`).update({  read: true })
-                 return dispatch({ type: GET_SAVED_BOOK, payload: savedBooksArray, user: uid })
+                    return dispatch({ type: GET_SAVED_BOOK, payload: savedBooksArray, user: uid })
 
 
-                    break;
-                }
-            }
+                                        break;
+                                }
+                        }
 
-        });
-
-
+                });
 
 
-    }
+
+
+        }
 
 
 
@@ -225,7 +251,7 @@ export const removeBooks = (uid, saved, dispatch) =>
                 if (Array.isArray(snapshot.val()) === false) {
                     console.log('false')
                     savedBooksArray = Object.values(snapshot.val())
-                    console.log(savedBooksArray,'ddd');
+                    console.log(savedBooksArray, 'ddd');
                 }
                 for (var i = 0; i < savedBooksArray.length; i++) {
                     console.log(savedBooksArray[i], ' array')
