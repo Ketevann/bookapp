@@ -266,7 +266,6 @@ class Deck extends Component {
         <Modal
               visible={this.state.modalVisible}
               animationType={'slide'}
-              transparent={'true'}
               onRequestClose={() => this.closeModal()}
           >
             <View style={styles.modalContainer}>
@@ -306,8 +305,7 @@ const styles = {
     backgroundColor: 'rgba(52, 52, 52, 0.8)'
   },
   innerContainer: {
-   // alignItems: 'center',
-    justifyContent: 'center',
+    // justifyContent: 'center',
     backgroundColor: 'white',
     padding:10,
     width: 0.75 * SCREEN_WIDTH,
