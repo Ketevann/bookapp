@@ -16,8 +16,7 @@ class Home extends Component {
       if (user) {
         this.props.loginDispatch(user.uid);
         this.props.getSuggestions(user.uid);//if logged in, then check for saved preferences, loads either preferred books or defualt(if there are no preferences) to state
-        this.props.updateDefaultSuggestions();//updating defualt books branch
-
+        //this.props.updateDefaultSuggestions();//updating defualt books branch
       }
       else {
         this.props.loginDispatchFalse()
