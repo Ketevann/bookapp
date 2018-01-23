@@ -109,7 +109,16 @@ const getBooks = (dispatch, data, author = '') => {
             //collect returned data for each api call in array
             const bookList = args.map((book) => {
                 console.log(book.data.items[0].volumeInfo.title, "title");
-                return book.data.items[0].volumeInfo;
+                let currentBook = book.data.items[0].volumeInfo;
+                const newBook = {
+                    title: currentBook.title,
+                    author: currentBook.authors ? currentBook.authors[0] : '',
+                    description: currentBook.description ? currentBook.description : '',
+                    imageLinks: currentBook.imageLinks ? currentBook.imageLinks : '',
+                    categories: currentBook.categories ? currentBook.categories : '',
+                    pageCount: currentBook.pageCount ? currentBook.pageCount : ''
+                };
+                return newBook;
             })
             return dispatch({ type: BOOK_SEARCH, payload: bookList })
         })).catch((error) => {
@@ -126,6 +135,7 @@ export const findSimilarBooks = (keyword, placeholder, dispatch) =>
                 .then(res => {
                     const data = res.data.Similar.Results
                     console.log(data, ' data2222')
+
                     getBooks(dispatch, data)
 
                 })
@@ -143,14 +153,14 @@ export const findSimilarBooks = (keyword, placeholder, dispatch) =>
 export const getSavedBooks = (user, dispatch) =>
     dispatch => {
         var savedBook = [];
-         dispatch({ type: LOAD_SAVED_BOOKS , payload: true })
+        dispatch({ type: LOAD_SAVED_BOOKS, payload: true })
         console.log(' in geeet', user)
         firebase.database().ref(`users/${user}/books`).once('value', (snapshot) => {
             if (snapshot.val())
                 savedBook = Object.values(snapshot.val())
             console.log(savedBook, 'savedBook')
             dispatch({ type: GET_SAVED_BOOK, payload: savedBook, user: user })
-            dispatch({ type: LOAD_SAVED_BOOKS , payload: false })
+            dispatch({ type: LOAD_SAVED_BOOKS, payload: false })
 
         })
 

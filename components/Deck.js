@@ -157,7 +157,7 @@ class Deck extends Component {
 
 
 
-    let modifiedLink = 'https://vignette.wikia.nocookie.net/fantendo/images/6/6e/Small-mario.png/revision/latest?cb=20120718024112'
+    let modifiedLink = item.imageLinks.smallThumbnail;
     if (item.imageLinks) {
       //   console.log(item.imageLinks.smallThumbnail, ' links')
       modifiedLink = item.imageLinks.smallThumbnail.replace(/zoom=[0-9]/, 'zoom=0')

@@ -15,36 +15,35 @@ class Book extends Component {
 
   onSaveBook(book) {
     const userId = this.props.auth.userId;
-    this.props.removeSuggestion(book.title, userId ); 
+    this.props.removeSuggestion(book.title, userId );
     this.props.saveBook(book, userId )
   }
 
   onRemoveBook(book) {
     const userId = this.props.auth.userId;
     console.log( "dislike ", book, " ",userId)
-    this.props.removeSuggestion(book, userId ) 
+    this.props.removeSuggestion(book, userId )
   }
 
   render(){
     const { loggedIn } = this.props.auth,
-          { preferences , loading } = this.props.preferences;
+          { data, loading } = this.props;
 
     return (
-      (preferences && !loading ) ? //checking if books are in state 
+      (data && !loading ) ? //checking if books are in state
         <Deck
-          data={ preferences }//passing suggested books
+          data={data}//passing suggested books
           onSwipeRight={ this.onSaveBook.bind(this) } //passing save/delete suggestions function as props
           onSwipeLeft={ this.onRemoveBook.bind(this) }
           onEnd={ this.onEnd.bind(this) }
-        /> : <Spinner size='large' />  
+        /> : <Spinner size='large' />
     );
   }
 }
 
 
-export default connect(({ auth , preferences }) => ({ auth: auth , preferences: preferences}), { 
+export default connect(({ auth }) => ({ auth }), {
     clearPreferences,
     removeSuggestion,
     saveBook
-  })(Book)
-
+  })(Book);
