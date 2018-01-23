@@ -147,19 +147,14 @@ class BookCard extends Component {
             />
 
           </Animated.View>
-          <Animated.View style={[this.backCardStyle(), styles.cardStyle, styles.flipCardBack]}
-            //onLayout={(e)=>{ console.log(e.nativeEvent.layout, "l") }}
-            onStartShouldSetResponder={ e => { this.props.disableParentScroll(); return this.state.scrollActive ? true : false } } //disables parent scrollView scroll functionality, allows current view to take control
-            onMoveShouldSetResponder={ e => true }//not sure what this does tbh lol but it makes the scroll more reactive to touch
-          >
+
+          <Animated.View style={[this.backCardStyle(), styles.cardStyle, styles.flipCardBack]} >
               <ScrollView
-                onScroll={ e => {
-                    if (e.nativeEvent.contentSize.height >  e.nativeEvent.layoutMeasurement.height){//checks if content is bigger then the view, then display arrow icon
-                      this.setState({scrollActive:true})
-                    }
-                    //console.log(e.nativeEvent.contentSize, "----------------------e", e.nativeEvent.layoutMeasurement)
-                  }
-                }
+                onTouchStart={(e) => this.props.disableParentScroll(false )}
+                onTouchEnd={(e) => this.props.disableParentScroll(true ) }
+                  //onMomentumScrollBegin={(e) => { this.props.disableParentScroll(false); }}
+									//onMomentumScrollEnd={(e) => { this.props.disableParentScroll(true); }}
+									//onScrollEndDrag={(e) => { this.props.disableParentScroll(true ); }}
               >
               <Text >{book.description}</Text>
             </ScrollView>

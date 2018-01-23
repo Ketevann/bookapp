@@ -12,10 +12,12 @@ import BookCard from './BookCard'
 class Profile extends Component {
   constructor(props) {
     super(props)
-    this.state = { scrollEnabled: true }
+  
+  
+    this.state = { scrollActive:true }
   }
-  disableParentScroll() {
-    this.setState({ scrollEnabled: !this.state.scrollEnabled })
+  disableParentScroll(bool){
+    this.setState({ scrollActive:bool } )
   }
 
 
@@ -50,7 +52,7 @@ class Profile extends Component {
     { console.log(this.props, ' jessica') }
     const { loggedIn } = this.props.auth;
     return (
-      <ScrollView style={styles.container} /*scrollEnabled={false}*/>
+      <ScrollView style={styles.container} scrollEnabled={this.state.scrollActive}>
         <View>
           <Avatar
             containerStyle={{ position: 'absolute', right: 0 }}
