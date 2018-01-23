@@ -8,6 +8,8 @@ import {
   Image,
   TouchableOpacity
 } from 'react-native';
+import { Spinner } from './common';
+
 import { getSavedBooks, removeBooks, markAsRead } from '../redux/actions/bookActions';
 import { connect } from 'react-redux';
 import Dimensions from 'Dimensions'
@@ -23,10 +25,13 @@ const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
 class BookCard extends Component {
   constructor(props) {
     super(props)
-    this.state = { index: 0, value: 0, scrollActive:false }
+    this.state = { index: 0, value: 0, scrollActive:false, loading: true }
   }
 
   componentWillMount() {
+    if(this.props.books.image){
+       this.setState({ loading: false });
+    }
     this.animatedValue = new Animated.Value(0);
     this.value = 0;
     this.currentCard = 0
@@ -59,7 +64,7 @@ class BookCard extends Component {
   }
 
 
-  flipCard(ind) {   
+  flipCard(ind) {
     console.log(ind, ' index in flipCard', this.value)
     if (this.value >= 90) {
       Animated.spring(this.animatedValue, {
@@ -90,6 +95,7 @@ class BookCard extends Component {
 
 
   renderElemets(book) {
+    console.log('LOADING', this.props.loading)
     let color;
     console.log('READ')
     if (book.read === true) {
@@ -100,7 +106,9 @@ class BookCard extends Component {
     if (book.image.smallThumbnail) {
       modifiedLink = book.image.smallThumbnail.replace(/zoom=[0-9]/, 'zoom=0')
     }
-  
+  if (book){
+
+    if (!this.state.loading){
     return (
 
       <View>
@@ -112,16 +120,16 @@ class BookCard extends Component {
 
         >{book.title}</Text>
 
-          <TouchableOpacity 
+          <TouchableOpacity
             onPress={() => {
                 if (this.state.scrollActive===true){
                       this.setState({scrollActive:false})
                     }
                 this.flipCard()
               }
-            } 
+            }
             style={ {display: this.state.scrollActive?'flex':'none', flexDirection: 'row', justifyContent: 'flex-end' } }>
-          <Image 
+          <Image
             style={ { width: 40, height: 40 } }
             source={ require('../img/turn-right-arrow.png') }
           />
@@ -131,14 +139,15 @@ class BookCard extends Component {
         <TouchableOpacity
           onPress={() => this.flipCard()}
         >
-          
+
           <Animated.View>
             <Animated.Image
               style={[this.frontCardStyle(), styles.cardStyle]}
-              source={{ uri: modifiedLink }}
+              source={{ uri: book.image.smallThumbnail }}
             />
 
           </Animated.View>
+
           <Animated.View style={[this.backCardStyle(), styles.cardStyle, styles.flipCardBack]} >
               <ScrollView
                 onTouchStart={(e) => this.props.disableParentScroll(false )}
@@ -178,7 +187,10 @@ class BookCard extends Component {
       </View>
 
 
-    )
+    );
+    }
+  }
+  return <Spinner size="large" />
   }
 
 

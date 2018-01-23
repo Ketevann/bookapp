@@ -8,10 +8,11 @@ import {
   BOOK_BOOL,
   AUTHOR_BOOL,
   GET_SAVED_BOOK,
-  CLEAR
+  CLEAR,
+  LOAD_SAVED_BOOKS
 } from '../actions/action-types'
 
-const INITIAL_STATE = { saved:null, bookSuggestions:null, error:'', searchbooks: '', similarbooks: '', booksbool: true, authors: false, placeholder: 'books', savedBooks: [], user: null, read:false}
+const INITIAL_STATE = { saved:null, bookSuggestions:null, error:'', searchbooks: '', similarbooks: '', booksbool: true, authors: false, placeholder: 'books', savedBooks: [], user: null, read:false, loading: true}
 
 export default (book = INITIAL_STATE, action) => {
   switch (action.type) {
@@ -44,6 +45,8 @@ export default (book = INITIAL_STATE, action) => {
               return {...book, savedBooks: newSavedBooks}
             case CLEAR :
                return {...book, savedBooks: null }
+            case LOAD_SAVED_BOOKS:
+              return {...book, loading: action.payload };
     default:
       return book
   }
