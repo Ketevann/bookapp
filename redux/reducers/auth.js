@@ -36,6 +36,7 @@ export default (auth = INITIAL_STATE, action) => {
       return { ...auth, email: '', error: '' };
       case CLEARFORM:
         return { ...auth, email:'', password: '', passwordConfirm: '', error:'' };
+
     default:
       return auth;
   }

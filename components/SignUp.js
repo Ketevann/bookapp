@@ -68,7 +68,12 @@ class SignUp extends Component {
 
   }
   OnRedirect(){
-    Actions.preferencesForm()
+
+    const { email, password, passwordConfirm } = this.props.auth
+    console.log(email, password, 'EMAIL PASS')
+    this.props.signUpUser(email, password, passwordConfirm)
+    if (this.props.auth.loggedIn)
+    Actions.preferencesForm();
 
   }
 
@@ -77,15 +82,15 @@ class SignUp extends Component {
 
     return (
       <View>
-      {this.props.auth.loggedIn ?
-      <CardSection>
+
+     {/* <CardSection>
 
             <Button onPress={this.onUploadPress.bind(this)}>Upload Avatar</Button>
             {this.props.cameraRoll.showComponent?
               <RNF id={this.props.auth.userId}/>
          :null }
-          </CardSection>
-     :
+          </CardSection> */}
+
         <Card>
           <CardSection>
             <Input
@@ -114,14 +119,13 @@ class SignUp extends Component {
             />
           </CardSection>
           </Card>
-      }
+
           <CardSection>
-          {
-            this.props.auth.loggedIn ?
+
             <Button onPress={(this.OnRedirect.bind(this))}>Next</Button>
-            :
-            <Button onPress={this.OnButtonPress.bind(this)}>Sign Up</Button>
-          }
+
+
+          <Button onPress={() => Actions.login()}>login</Button>
           </CardSection>
 
 

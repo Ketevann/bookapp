@@ -29,7 +29,7 @@ const RouterComponent = () => (
       <Scene key="home" component={Home} initial/>
       <Scene key="forgotpassowrd" component={ForgotPassword} />
       <Scene key="preferencesForm" component={PreferencesForm} />
-      <Scene key="signup" component={SignUp} />
+      <Scene key="signup" component={SignUp} panHandlers={null} hideNavBar  />
       <Scene key="pic" component={Pic}  />
       <Scene key="profile" component={Profile} />
       <Scene key="savedbooks" component={SavedBooks} />
