@@ -7,7 +7,8 @@ import {
     GET_SAVED_BOOK,
     READ,
     CLEAR,
-    LOAD_SAVED_BOOKS
+    LOAD_SAVED_BOOKS,
+    BOOK_SEARCH_CLEAR
 } from './action-types'
 import { GOOGLE_API_KEY } from '../../keys'
 import firebase from 'firebase';
@@ -102,13 +103,13 @@ export const setSearchValue = (book, dispatch) =>
 
 //gets books from a google api
 const getBooks = (dispatch, data, author = '') => {
-    console.log('in GET BOOKS', author)
+    //  console.log('in GET BOOKS', author)
     const bookPromises = data.map((book) => axios.get(`https://www.googleapis.com/books/v1/volumes?q=${author}${book.Name}&key=${GOOGLE_API_KEY}`));
     axios.all(bookPromises)
         .then(axios.spread((...args) => {
             //collect returned data for each api call in array
             const bookList = args.map((book) => {
-                console.log(book.data.items[0].volumeInfo.title, "title");
+                // console.log(book.data.items[0].volumeInfo.title, "title");
                 let currentBook = book.data.items[0].volumeInfo;
                 const newBook = {
                     title: currentBook.title,
@@ -129,12 +130,12 @@ const getBooks = (dispatch, data, author = '') => {
 
 export const findSimilarBooks = (keyword, placeholder, dispatch) =>
     dispatch => {
-        console.log(keyword, 'LEYWORD***', placeholder)
+        //console.log(keyword, 'LEYWORD***', placeholder)
         if (placeholder === 'books') {
             return axios.get(`https://tastedive.com/api/similar?q=${keyword}&k=${TASTE_DIVE_API_KEY}&limit=2&type=books`)
                 .then(res => {
                     const data = res.data.Similar.Results
-                    console.log(data, ' data2222')
+                    // console.log(data, ' data2222')
 
                     getBooks(dispatch, data)
 
@@ -143,7 +144,7 @@ export const findSimilarBooks = (keyword, placeholder, dispatch) =>
         else {
             return axios.get(`https://tastedive.com/api/similar?q=${keyword}&k=${TASTE_DIVE_API_KEY}&limit=2&type=authors`)
                 .then(res => {
-                    console.log(res.data.Similar.Results, 'DATA')
+                    //  console.log(res.data.Similar.Results, 'DATA')
                     const data = res.data.Similar.Results
                     getBooks(dispatch, data, 'inauthor:')
                 })
@@ -263,3 +264,7 @@ export const removeBooks = (uid, saved, dispatch) =>
         });
 
     }
+
+export const clearSearchBooks = dispatch =>
+    dispatch =>
+        dispatch({ type: BOOK_SEARCH_CLEAR })

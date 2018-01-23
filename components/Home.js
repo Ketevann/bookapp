@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, ScrollView, Image, TouchableOpacity } from 'rea
 import { Header, Card, CardSection, Button, Spinner } from './common'
 import { getSuggestions, getDefualt, updateDefaultSuggestions } from '../redux/actions/preferencesActions';
 import { loginDispatch, loginDispatchFalse } from '../redux/actions/authActions'
+import { clearSearchBooks } from '../redux/actions/bookActions'
 import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
 import Dimensions from 'Dimensions'
@@ -11,7 +12,9 @@ import firebase from 'firebase';
 import Book from './Book';
 import Search from './Search'
 class Home extends Component {
+
   componentWillMount() {
+    this.props.clearSearchBooks();
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         this.props.loginDispatch(user.uid);
@@ -75,6 +78,7 @@ export default connect(
     loginDispatch, loginDispatchFalse,
     getDefualt,
     getSuggestions,
-    updateDefaultSuggestions
+    updateDefaultSuggestions,
+    clearSearchBooks
 
   })(Home)
