@@ -12,6 +12,7 @@ import defaultBooks from '../../components/data/defaultBooks';
 import { defaultBookImg } from '../../components/data/defaultBookImg';
 import { Actions } from 'react-native-router-flux';
 import store from '../../store'
+import  * as cloudscraper from 'react-native-cloudscraper'
 
 
 export const updatePrefType = (preference) => {
@@ -39,7 +40,7 @@ export const keyWordDispatch = (keyWord) => {
 }
 
 
-export const clearPreferences = (userID, dispatch) => 
+export const clearPreferences = (userID, dispatch) =>
 dispatch =>{
         //dispatch({ type: UPDATE_SUGGESTIONS, payload: [0] })
         firebase.database().ref(`users/${userID}/`).child('preferences').set(null);
@@ -79,7 +80,8 @@ export const updatePreferences = (newPrefs, userID, dispatch) =>
             })
             .then((similarTitles) => {
                 console.log(similarTitles,' titlessss ------->>>>>>>')
-                return getBooksFromApi(similarTitles.data.Similar.Results)//calling googleAPI
+                const data = JSON.parse(similarTitles._bodyText).Similar.Results;
+                return getBooksFromApi(data)//calling googleAPI
             })
             .then((booksData) => {
                 console.log(booksData,' booksData')
@@ -142,7 +144,7 @@ return result
 export const find = (preferences) => {//we get an object of preferences and return an array of titles
     //we return a promise that resolves into an array of all titles to be sent to googleAPI
     let type = Object.keys(preferences)[0];
-    return axios.get(`https://tastedive.com/api/similar?q=${preferences[type]}&k=${TASTE_DIVE_API_KEY}&limit=10&type=${type}`);
+    return cloudscraper.get(`https://tastedive.com/api/similar?q=${preferences[type]}&k=${TASTE_DIVE_API_KEY}&limit=10&type=${type}`);
 }
 
 
@@ -160,7 +162,8 @@ export const loadPrefBooks = (userID, dispatch) => {// we dont need to call a di
             //we return a promise that resolves into array of titles to be sent to googleAPI
         })
         .then((similarTitles) => {
-            return getBooksFromApi(similarTitles.data.Similar.Results)//calling googleAPI
+            const data = JSON.parse(similarTitles._bodyText).Similar.Results;
+            return getBooksFromApi(data)//calling googleAPI
         })
         .then((booksData) => {
             console.log(booksData,' booksDAta')
@@ -211,7 +214,7 @@ export const updateDefaultSuggestions = (userID, dispatch) =>
 
 export const removeSuggestion = (suggested, uid, dispatch) =>
     dispatch => {
-        //alert(suggested); 
+        //alert(suggested);
         console.log('REMOVEEEE', uid, suggested)
         firebase.database().ref(`users/${uid}`).child('suggestions').once('value', function (snapshot) {
             var index, suggestions;
@@ -229,8 +232,8 @@ export const removeSuggestion = (suggested, uid, dispatch) =>
                 for (var i = 0; i < suggestions.length; i++) {
                     if (suggestions[i] && suggestions[i].title === suggested) {
                        // index = i;
-                     
-                      
+
+
                         // suggestions = snapshot.val().filter(book => {
                         //     if (book.title !== snapshot.val()[i].title)
                         //         return suggested
@@ -241,7 +244,7 @@ export const removeSuggestion = (suggested, uid, dispatch) =>
                         //dispatch({ type: UPDATE_SUGGESTIONS, payload: suggestions })
                         break;
                     }
-                     
+
                 }
                  firebase.database().ref(`users/${uid}/suggestions`).set(suggestions)
             }
