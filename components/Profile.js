@@ -12,8 +12,8 @@ import BookCard from './BookCard'
 class Profile extends Component {
   constructor(props) {
     super(props)
-  
-  
+
+
     this.state = { scrollActive:true }
   }
   disableParentScroll(bool){
@@ -25,7 +25,7 @@ class Profile extends Component {
     console.log('run this function', this.props.book.savedBooks)
     const { savedBooks, loading } = this.props.book;
     console.log(loading, 'loading in display');
-    if (savedBooks && !loading) {
+    if (savedBooks) {
       return this.props.book.savedBooks.map((book, index) => {
         let modifiedLink;
         if (book.image.smallThumbnail) {
