@@ -28,12 +28,12 @@ const RouterComponent = () => (
       <Scene key="login" component={Login} title="Login"  />
       <Scene key="home" component={Home} initial/>
       <Scene key="forgotpassowrd" component={ForgotPassword} />
-      <Scene key="preferencesForm" component={PreferencesForm} />
+      <Scene key="preferencesForm" component={PreferencesForm} panHandlers={null} hideNavBar />
       <Scene key="signup" component={SignUp} panHandlers={null} hideNavBar  />
       <Scene key="pic" component={Pic}  />
-      <Scene key="profile" component={Profile} />
-      <Scene key="savedbooks" component={SavedBooks} />
-      <Scene key="userprofile" component={UserProfile} />
+      <Scene key="profile" component={Profile} panHandlers={null} hideNavBar />
+      <Scene key="savedbooks" component={SavedBooks} panHandlers={null} hideNavBar />
+      <Scene key="userprofile" component={UserProfile} panHandlers={null} hideNavBar />
 
     </Stack>
 

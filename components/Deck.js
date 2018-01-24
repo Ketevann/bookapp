@@ -9,7 +9,8 @@ import {
   Text,
   Image,
   Modal,
-  ScrollView
+  ScrollView,
+
 } from 'react-native';
 import { Card, Button, Icon } from 'react-native-elements'
 import { Actions } from 'react-native-router-flux';
@@ -33,13 +34,17 @@ class Deck extends Component {
 
     const panResponder = PanResponder.create({
       //detects touch
-      onStartShouldSetPanResponder: () => true,
+      onStartShouldSetPanResponder: () => {
+         this.setState({ scrollActive:false } )
+       return true;
+      },
       //detects movement
       onPanResponderMove: (event, gesture) => {
         position.setValue({ x: gesture.dx, y: gesture.dy });
       },
       //detects release
       onPanResponderRelease: (event, gesture) => {
+        this.setState({ scrollActive:true } )
         if (gesture.dx > SWIPE_THRESHOLD) {
           this.forceSwipe('right');
         } else if (gesture.dx < -SWIPE_THRESHOLD) {
@@ -50,7 +55,7 @@ class Deck extends Component {
       }
     });
 
-    this.state = { panResponder, position, index: 0, modalVisible: false, description: '', title: '', page: '', category: '' };
+    this.state = { panResponder, position, index: 0,scrollActive:true,  modalVisible: false, description: '', title: '', page: '', category: '' };
   }
   componentWillMount() {
     console.log('this.tate', this.state)
@@ -72,6 +77,12 @@ class Deck extends Component {
 
   closeModal() {
     this.setState({ modalVisible: false });
+  }
+
+
+  disableParentScroll(bool){
+    console.log(bool, 'boooooool======<')
+    this.setState({ scrollActive:bool } )
   }
   forceSwipe(direction) {
     const x = direction === 'right' ? SCREEN_WIDTH : -SCREEN_WIDTH;
@@ -237,9 +248,12 @@ class Deck extends Component {
     const { imageLinks, title } = this.props.data,
       { book } = this.props
     return (
-      <View>
+      <ScrollView
+      scrollEnabled={this.state.scrollActive}
+
+      >
         {this.renderCards()}<View
-          style={{ flexDirection: 'row', zIndex: 500, top: height - 275, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center' }}
+          style={{zIndex: 500, marginTop:300, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center' }}
         //this keeps the buttons from traveling with each card. buttons remain in position as user swioes but functionality is passed to the next card
         ><Icon
             raised
@@ -249,15 +263,7 @@ class Deck extends Component {
             size={25}
             onPress={() => this.forceSwipe('left')}//deletes a "disliked book from users suggestions"
           />
-          {/*<Button
-          icon={{ name: 'code' }}
-          backgroundColor="#03A9F4"
-          title="View Now!"
-        />*/}
-          <Button
-            onPress={() => this.openModal()}
-            title="Description"
-          />
+
           <Icon
             raised
             name='heart'
@@ -266,50 +272,26 @@ class Deck extends Component {
             size={25}
             onPress={() => this.forceSwipe('right')}//sabes a "liked" book to users branch on swipe right
           />
-        </View>
-        <Modal
-          visible={this.state.modalVisible}
-          animationType={'slide'}
-          transparent={true}
-          onRequestClose={() => this.closeModal()}
-        >
-          <View style={styles.modalContainer}>
-            <View style={styles.innerContainer}>
+
+
               <Text style={{ paddingBottom: 20, justifyContent: 'center', }}>{this.state.title}</Text>
 
-              <ScrollView /*centerContent={ true }*/>
 
-              <View
-              style={{flexDirection: 'row', flexWrap: 'wrap'}}
-              >
+
               <Text>Page Count</Text>
               <Text>{this.state.page}</Text>
-              </View>
-              <View
-               style={{flexDirection: 'row', flexWrap: 'wrap', ustifyContent: 'space-between'}}
-              >
+
               <Text>Category</Text>
               <Text>{this.state.category}</Text>
-              </View>
 
 
 
-                <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'center' }}>
                   <Text  /*style={{textAlign:"center", textAlignVertical:"center"}}*/>{this.state.description}</Text>
-                </View>
-              </ScrollView>
-              <Button
-                style={{ padding: 10, paddingTop: 20 }}
-                onPress={() => this.closeModal()}
-                title="Close modal"
-              >
-              </Button>
-            </View>
-          </View>
-        </Modal>
-        <Text></Text>
 
-      </View>
+        </View>
+
+
+      </ScrollView>
     );
   }
 }
