@@ -136,7 +136,7 @@ export const findSimilarBooks = (keyword, placeholder, dispatch) =>
                 .then(res => {
 
                      console.log(res, ' data2222', JSON.parse(res._bodyText).Similar.Results)
-                      const data = JSON.parse(res._bodyText).Similar.Results;
+                     const data = JSON.parse(res._bodyText).Similar.Results;
 
                     getBooks(dispatch, data)
 
@@ -159,14 +159,12 @@ export const findSimilarBooks = (keyword, placeholder, dispatch) =>
 export const getSavedBooks = (user, dispatch) =>
     dispatch => {
         var savedBook = [];
-        dispatch({ type: LOAD_SAVED_BOOKS, payload: true })
         console.log(' in geeet', user)
         firebase.database().ref(`users/${user}/books`).once('value', (snapshot) => {
             if (snapshot.val())
                 savedBook = Object.values(snapshot.val())
             console.log(savedBook, 'savedBook')
             dispatch({ type: GET_SAVED_BOOK, payload: savedBook, user: user })
-            dispatch({ type: LOAD_SAVED_BOOKS, payload: false })
 
         })
 
@@ -269,6 +267,10 @@ export const removeBooks = (uid, saved, dispatch) =>
         });
 
     }
+
+export const loadingSearchResults = dispatch =>
+    dispatch =>
+        dispatch({ type: LOAD_SAVED_BOOKS })
 
 export const clearSearchBooks = dispatch =>
     dispatch =>

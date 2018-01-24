@@ -51,7 +51,7 @@ handleAuthor(){
        ref={search => this.search = search}
   round
   clearIcon
-  onSubmitEditing={()=> this.handleSubmit()}
+  onSubmitEditing={()=> this.props.handleSubmit()}
   onChangeText={()=> console.log('text')}
   returnKeyType='search'
   onChangeText={this.onSearchChange.bind(this)}

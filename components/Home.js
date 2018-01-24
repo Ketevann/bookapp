@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, ScrollView, Image, TouchableOpacity } from 'rea
 import { Header, Card, CardSection, Button, Spinner } from './common'
 import { getSuggestions, getDefualt, updateDefaultSuggestions } from '../redux/actions/preferencesActions';
 import { loginDispatch, loginDispatchFalse } from '../redux/actions/authActions'
-import { clearSearchBooks } from '../redux/actions/bookActions'
+import { clearSearchBooks, findSimilarBooks, loadingSearchResults } from '../redux/actions/bookActions'
 import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
 import Dimensions from 'Dimensions'
@@ -13,7 +13,13 @@ import Book from './Book';
 import Search from './Search'
 class Home extends Component {
 
+  constructor(){
+    super()
+  }
   componentWillMount() {
+    if(this.props.book && this.props.book.similarbooks ){
+     console.log('got books')
+    }
     this.props.clearSearchBooks();
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
@@ -28,6 +34,31 @@ class Home extends Component {
     })
   }
 
+
+handleSubmit(){
+  console.log(this.props.book.searchbooks)
+  const {searchbooks, placeholder} = this.props.book
+  this.props.loadingSearchResults();
+  this.props.findSimilarBooks(searchbooks, placeholder);
+}
+
+display(){
+      const { loggedIn } = this.props.auth
+    { console.log(this.props, "preferences") }
+    const { preferences, loading } = this.props.preferences;
+    const { similarbooks } = this.props.book;
+
+
+   if(this.props.book && similarbooks ){
+     console.log('got books')
+    // this.setState({loading: false})
+         return  (<Book data={similarbooks} loading={loading} />)
+   }
+             return (<Book data={preferences} loading={loading} />)
+
+
+}
+
   render() {
     const { loggedIn } = this.props.auth
     { console.log(this.props, "preferences") }
@@ -38,19 +69,16 @@ class Home extends Component {
 
       <View style={{ flex: 1 }}>
 
-        <Search />
+        <Search handleSubmit={this.handleSubmit.bind(this)} />
+         { this.props.book.loadingSavedBook ?
 
-        {this.props.book && similarbooks ?
-          <Book data={similarbooks} loading={loading} />
+               <Spinner size="large" />
           :
-          <Card>
-            <Book data={preferences} loading={loading} />
-            {loggedIn ? <CardSection><Button onPress={() => Actions.preferencesForm()}> Preferences </Button></CardSection> : null}
-            <CardSection>
-              {loggedIn ? <Button onPress={() => firebase.auth().signOut()}>Log Out</Button> : <Button onPress={() => Actions.login()}> Sign in </Button>}
-            </CardSection>
-          </Card>
-        }
+
+        this.display()
+         }
+
+
       </View>
 
 
@@ -79,6 +107,8 @@ export default connect(
     getDefualt,
     getSuggestions,
     updateDefaultSuggestions,
-    clearSearchBooks
+    clearSearchBooks,
+    findSimilarBooks,
+    loadingSearchResults
 
   })(Home)

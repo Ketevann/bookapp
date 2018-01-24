@@ -13,7 +13,7 @@ import {
   BOOK_SEARCH_CLEAR
 } from '../actions/action-types'
 
-const INITIAL_STATE = { saved:null, bookSuggestions:null, error:'', searchbooks: '', similarbooks: null, booksbool: true, authors: false, placeholder: 'books', savedBooks: [], user: null, read:false, loading: true}
+const INITIAL_STATE = { saved:null, bookSuggestions:null, error:'', searchbooks: '', similarbooks: null, booksbool: true, authors: false, placeholder: 'books', savedBooks: [], user: null, read:false, loading: true, loadingSavedBook: false}
 
 export default (book = INITIAL_STATE, action) => {
   switch (action.type) {
@@ -26,7 +26,7 @@ export default (book = INITIAL_STATE, action) => {
       case CHANGE_SEARCH:
         return {...book, searchbooks: action.payload }
         case BOOK_SEARCH:
-          return  {...book, similarbooks: action.payload }
+          return  {...book, similarbooks: action.payload, loadingSavedBook: false }
           case BOOK_BOOL:
           return  {...book,booksbool: true, authors:false,placeholder: 'books'}
           case AUTHOR_BOOL:
@@ -49,7 +49,8 @@ export default (book = INITIAL_STATE, action) => {
                case BOOK_SEARCH_CLEAR:
           return  {...book, similarbooks: null }
             case LOAD_SAVED_BOOKS:
-              return {...book, loading: action.payload };
+              return {...book, loadingSavedBook :true, similarbooks: null };
+
 
     default:
       return book
