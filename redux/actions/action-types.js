@@ -38,3 +38,6 @@ export const TOGGLE_CAMERAROLL = 'TOGGLE_CAMERAROLL'
 
 export const READ = 'READ'
 export const LOADING= 'LOADING'
+
+export const UPDATE_TYPE_ERROR= 'UPDATE_TYPE_ERROR'
+export const UPDATE_VALUE_ERROR= 'UPDATE_VALUE_ERROR'

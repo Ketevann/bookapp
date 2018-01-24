@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { View, Text , Picker, ScrollView} from 'react-native';
+import { View, Text , Picker, ScrollView, TouchableOpacity} from 'react-native';
 import { Header, Card, CardSection, Button, Input , RadioInput, RadioButton} from './common';
-import {  updatePrefTypeDispatch, keyWordDispatch, updateTitle, updateAuthor, updateGenre, updatePreferences} from '../redux/actions/preferencesActions';
+import {  updatePrefTypeDispatch, keyWordDispatch, updateTitle, updateAuthor, updateGenre, updatePreferences, updateError} from '../redux/actions/preferencesActions';
 import { connect } from 'react-redux';
 import  PickerGenres from './PickerGenres';
 import { Actions } from 'react-native-router-flux';
@@ -35,17 +35,29 @@ class PreferencesForm extends Component {
     this.props.updatePrefTypeDispatch(preference);
   }
 
+  validate(){//check for empty input fields
+     const { preferenceType, keyWord } = this.props.preferences;
+     //if author/title or value input are empty, sets true to error in state, else sets false to state
+     (preferenceType===null) ? this.props.updateError( 'type', true) : this.props.updateError( 'type', false);
+     (keyWord === "" ) ? this.props.updateError( 'value', true): this.props.updateError( 'value', false);
+  }
+
   handleSubmit(){
-            const userId= this.props.auth.userId
-            // const {title,author}= this.props.preferences;
-            // this.props.updatePreferences({ title, author}, userId);
-            const { preferenceType, keyWord}= this.props.preferences;
-            this.props.updatePreferences({ [preferenceType]: keyWord }, userId);
+            const { preferenceType, keyWord, typeErr, valueErr}= this.props.preferences;
+            this.validate();//checking for input errors
+            //calls api only if there are no input errors
+            if  (typeErr===false && valueErr===false && keyWord !== ""  && preferenceType !==null){
+              this.props.updatePreferences({ [preferenceType]: keyWord }, this.props.auth.userId);
+              //clearing input fields 
+              this.props.keyWordDispatch("");
+              this.props.updatePrefTypeDispatch(null);
+            }
   }
 
   render() {
     {console.log('props in preferencesform', this.props)}
-    const { loggedIn } = this.props.auth;
+    const { loggedIn , loading} = this.props.auth;
+     const { preferenceType, keyWord,  typeErr, valueErr}= this.props.preferences;
     return (
       //  <ScrollView style={styles.container}>
       //   <Header headerText="Preferences" />
@@ -82,8 +94,11 @@ class PreferencesForm extends Component {
              <Input
               placeholder="enter keyword"
               onChangeText={this.onChangeKeyWord.bind(this)}
-              value={this.props.preferences.keyWord}
+              value={keyWord}
             />
+           </CardSection>
+           <CardSection>
+              { valueErr? <Text>Please enter a title or author.</Text>:null }
           </CardSection>
             {/*<CardSection>
             <Button onPress={this.onPreferenceChange.bind(this, "title")} > Title </Button>
@@ -92,7 +107,10 @@ class PreferencesForm extends Component {
             <Button onPress={this.onPreferenceChange.bind(this, "author")} > Author </Button>
           </CardSection>*/}
            <CardSection>
-           <RadioInput onChangeSelection={this.onPreferenceChange.bind(this)}>
+          <TouchableOpacity onPress={()=>{
+            
+            }}>
+           <RadioInput onChangeSelection={this.onPreferenceChange.bind(this)}  preferenceType={preferenceType} >
                 <RadioButton
                     label= {'title'}
                     size={ 12}
@@ -104,8 +122,13 @@ class PreferencesForm extends Component {
                     color={ '#007aff'}
                 />
             </RadioInput>
+            </TouchableOpacity>
            </CardSection>
           <CardSection>
+            { typeErr? <Text>Please select a title or author.</Text>:null}
+            {  this.props.preferences.preferences.length === 0 && typeErr===false && valueErr===false ? <Text>These preferences returned no books.</Text>:null}
+           </CardSection>
+           <CardSection>
             <Button onPress={this.handleSubmit.bind(this)} > update </Button>
           </CardSection>
         </Card>
@@ -130,6 +153,7 @@ export default connect(
       updateTitle,
       updateAuthor,
       updateGenre,
-      updatePreferences
+      updatePreferences,
+      updateError
     },
   )(PreferencesForm)

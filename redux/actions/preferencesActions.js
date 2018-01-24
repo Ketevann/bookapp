@@ -2,6 +2,8 @@ import {
     UPDATE_PREFERENCE_TYPE,
     UPDATE_PREFERENCE_KEYWORD,
     UPDATE_SUGGESTIONS,
+    UPDATE_TYPE_ERROR,
+    UPDATE_VALUE_ERROR,
     LOADING
 } from './action-types'
 import firebase from 'firebase';
@@ -14,6 +16,19 @@ import { Actions } from 'react-native-router-flux';
 import store from '../../store'
 import  * as cloudscraper from 'react-native-cloudscraper'
 
+export const updateError =(err, bool)=>{
+    console.log(err,"errrrr")
+    if (err==='type'){
+        return {
+            type: UPDATE_TYPE_ERROR,
+            payload: bool
+        }
+    }
+     return {
+            type: UPDATE_VALUE_ERROR,
+            payload: bool
+        }
+}
 
 export const updatePrefType = (preference) => {
     return {
@@ -66,7 +81,9 @@ export const updatePreferences = (newPrefs, userID, dispatch) =>
                 if (currentPrefValue !== newPrefValue && newPrefValue !== "" && newPrefType !== null) {
                     suggestionsRef.set(null);
                     preferenceRef.set(null);
-                    preferenceRef.update(newPrefs)
+                    preferenceRef.update(newPrefs);
+                    // dispatch({  type: UPDATE_PREFERENCE_TYPE, payload: "" });
+                    // dispatch({ type:UPDATE_PREFERENCE_KEYWOR, payload: "" });
                 }
 
             })
@@ -85,8 +102,7 @@ export const updatePreferences = (newPrefs, userID, dispatch) =>
             })
             .then((booksData) => {
                 console.log(booksData,' booksData')
-                //saveSuggestions(booksData, userID, dispatch)//saving
-                suggestionsRef.set([...booksData]);
+                if (booksData.length!==0) suggestionsRef.set([...booksData]);//save only if there are results, invalid input will not return results
                 dispatch({ type: UPDATE_SUGGESTIONS, payload: booksData });
             })
     }
