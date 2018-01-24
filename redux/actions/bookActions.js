@@ -14,7 +14,7 @@ import { GOOGLE_API_KEY } from '../../keys'
 import firebase from 'firebase';
 import axios from 'axios';
 import { TASTE_DIVE_API_KEY } from '../../keys'
-
+import  * as cloudscraper from 'react-native-cloudscraper'
 export const getBookSuggestions = (books, dispatch) =>
     dispatch => {
         //sends title in 'books' array to google api and collects promises in array
@@ -130,23 +130,28 @@ const getBooks = (dispatch, data, author = '') => {
 
 export const findSimilarBooks = (keyword, placeholder, dispatch) =>
     dispatch => {
-        //console.log(keyword, 'LEYWORD***', placeholder)
+        console.log(keyword, 'LEYWORD***', placeholder)
         if (placeholder === 'books') {
-            return axios.get(`https://tastedive.com/api/similar?q=${keyword}&k=${TASTE_DIVE_API_KEY}&limit=2&type=books`)
+            return cloudscraper.get(`https://tastedive.com/api/similar?q=${keyword}&k=${TASTE_DIVE_API_KEY}&limit=2&type=books`)
                 .then(res => {
-                    const data = res.data.Similar.Results
-                    // console.log(data, ' data2222')
+
+                     console.log(res, ' data2222', JSON.parse(res._bodyText).Similar.Results)
+                      const data = JSON.parse(res._bodyText).Similar.Results;
 
                     getBooks(dispatch, data)
 
                 })
+                .catch(err=> console.log(err))
         }
         else {
-            return axios.get(`https://tastedive.com/api/similar?q=${keyword}&k=${TASTE_DIVE_API_KEY}&limit=2&type=authors`)
+            return cloudscraper.get(`https://tastedive.com/api/similar?q=${keyword}&k=${TASTE_DIVE_API_KEY}&limit=2&type=authors`)
                 .then(res => {
-                    //  console.log(res.data.Similar.Results, 'DATA')
-                    const data = res.data.Similar.Results
+                  console.log(res, ' data2222', JSON.parse(res._bodyText).Similar.Results)
+                      const data = JSON.parse(res._bodyText).Similar.Results;
+
                     getBooks(dispatch, data, 'inauthor:')
+
+                   // getBooks(dispatch, data, 'inauthor:')
                 })
         }
     }
