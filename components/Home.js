@@ -52,6 +52,8 @@ display(){
    if(this.props.book && similarbooks ){
      console.log('got books')
     // this.setState({loading: false})
+     if (similarbooks.length === 0)
+     return  <Text>Your Search returned no results </Text>
          return  (<Book data={similarbooks} loading={loading} />)
    }
              return (<Book data={preferences} loading={loading} />)
