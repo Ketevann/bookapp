@@ -30,7 +30,7 @@ class Book extends Component {
           { data, loading } = this.props;
 
     return (
-      (data && !loading ) ? //checking if books are in state
+      data ? //checking if books are in state
         <Deck
           data={data}//passing suggested books
           onSwipeRight={ this.onSaveBook.bind(this) } //passing save/delete suggestions function as props

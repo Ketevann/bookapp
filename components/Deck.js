@@ -9,14 +9,16 @@ import {
   Text,
   Image,
   Modal,
-  ScrollView
+  Easing,
+  ScrollView,
+
 } from 'react-native';
 import { Card, Button, Icon } from 'react-native-elements'
 import { Actions } from 'react-native-router-flux';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SWIPE_THRESHOLD = 0.25 * SCREEN_WIDTH;
-const SWIPE_OUT_DURATION = 250;
+const SWIPE_OUT_DURATION = 100;
 var { height, width } = Dimensions.get('window');
 
 class Deck extends Component {
@@ -31,18 +33,65 @@ class Deck extends Component {
     //default is {x:0, y :0}
     const position = new Animated.ValueXY();
 
-    const panResponder = PanResponder.create({
+//  this._opacityAnimation = this._animatedValue.x.interpolate({
+//     inputRange: [0, 150],
+//     outputRange: [1, 0.2]
+// });
+
+
+ const panResponder = PanResponder.create({
+
+      // onPanResponderStart : () => {
+      //     // this.setState({ scrollActive:false } )
+      //       //console.log('touched ', this.state.scrollActive)
+      // },
+
       //detects touch
-      onStartShouldSetPanResponder: () => true,
+
+
+        onStartShouldSetPanResponder: () => true,
+
+
+      onStartShouldSetPanResponderCapture: (evt, gestureState) => true,
+      onMoveShouldSetPanResponder: (evt, gestureState) => true,
+      onMoveShouldSetPanResponderCapture: (evt, gestureState) => true,
+      onPanResponderGrant: () => this.setState({scrollActive: false}),
       //detects movement
       onPanResponderMove: (event, gesture) => {
+        console.log('moving ', gesture.dx, SWIPE_THRESHOLD)
         position.setValue({ x: gesture.dx, y: gesture.dy });
       },
-      //detects release
-      onPanResponderRelease: (event, gesture) => {
+
+
+      onPanResponderEnd: (e, gesture) => {
+this.setState({ scrollActive:true } )
+        console.log('onEnd ', gesture.dx, SWIPE_THRESHOLD, gesture.dx > SWIPE_THRESHOLD, gesture.dx < -SWIPE_THRESHOLD)
         if (gesture.dx > SWIPE_THRESHOLD) {
+           console.log(' gesture greater than swipe', gesture.dx , SWIPE_THRESHOLD )
           this.forceSwipe('right');
         } else if (gesture.dx < -SWIPE_THRESHOLD) {
+          console.log(' gesture less than - swipe', gesture.dx , -SWIPE_THRESHOLD )
+          this.forceSwipe('left');
+        } else {
+          this.resetPosition();
+        }
+},
+
+
+
+
+
+
+      //detects release
+      onPanResponderTerminate: (event, gesture) => {
+        console.log('onTerminate')
+        this.setState({ scrollActive:true } )
+        console.log('realeased ', gesture.dx, SWIPE_THRESHOLD, gesture.dx > SWIPE_THRESHOLD, gesture.dx < -SWIPE_THRESHOLD)
+        if (gesture.dx > SWIPE_THRESHOLD) {
+           console.log(' gesture greater than swipe', gesture.dx , SWIPE_THRESHOLD )
+          this.forceSwipe('right');
+        } else if (gesture.dx < -SWIPE_THRESHOLD) {
+          console.log(' gesture less than - swipe', gesture.dx , -SWIPE_THRESHOLD )
           this.forceSwipe('left');
         } else {
           this.resetPosition();
@@ -50,10 +99,10 @@ class Deck extends Component {
       }
     });
 
-    this.state = { panResponder, position, index: 0, modalVisible: false, description: '', title: '', page: '', category: '' };
+    this.state = { panResponder, position, index: 0, scrollActive:true,  modalVisible: false, description: '', title: '', page: '', category: '' };
   }
   componentWillMount() {
-    console.log('this.tate', this.state)
+   // console.log('this.tate', this.state)
     this.getDescription()
   }
   componentWillReceiveProps(nextProps) {
@@ -73,11 +122,18 @@ class Deck extends Component {
   closeModal() {
     this.setState({ modalVisible: false });
   }
+
+
+  disableParentScroll(bool){
+   // console.log(bool, 'boooooool======<')
+    this.setState({ scrollActive:bool } )
+  }
   forceSwipe(direction) {
     const x = direction === 'right' ? SCREEN_WIDTH : -SCREEN_WIDTH;
     Animated.timing(this.state.position, {
       toValue: { x, y: 0 },
-      duration: SWIPE_OUT_DURATION
+      duration: 250,
+      easing: Easing.linear
     }).start(() => this.onSwipeComplete(direction));
   }
 
@@ -100,16 +156,36 @@ class Deck extends Component {
     const { position } = this.state;
     const rotate = position.x.interpolate({
       inputRange: [-SCREEN_WIDTH, 0, SCREEN_WIDTH],
-      outputRange: ['-120deg', '0deg', '120deg']
+      outputRange: ['-10deg', '0deg', '10deg']
     });
 
-    return {
+    return [{
       ...position.getLayout(),
-      transform: [{ rotate }]
-    };
+      transform: [{ rotate }],
+            opacity: this.state.position.x.interpolate({inputRange: [-SCREEN_WIDTH, 0, SCREEN_WIDTH], outputRange: [0.5, 1, 0.5] })
+
+    }];
   }
 
   renderCards() {
+
+    // const containerStyle = {
+    //   opacity: this.state.position.x.interpolate({
+    //     inputRange: [0, 150],
+    // outputRange: [1, 0.2]
+    //   }),
+    //   transform: [
+    //     {
+    //       scale: this.state.position.x.interpolate({
+    //         inputRange: [0, 150],
+    //       outputRange: [1, 0.2]
+    //       }),
+    //     },
+    //   ],
+    // };
+
+
+
     if (this.state.index >= this.props.data.length) {
       return this.renderNoMoreCards();
     }
@@ -126,7 +202,7 @@ class Deck extends Component {
         return (
           <Animated.View
             key={i}
-            style={[this.getCardStyle(), styles.cardStyle, { zIndex: 99 }]}
+            style={[ styles.cardStyle, { zIndex: 99 }, this.getCardStyle()]}
             {...this.state.panResponder.panHandlers}
           >
             {this.renderCard(item, i)}
@@ -169,29 +245,7 @@ class Deck extends Component {
         <Text>{item.author}</Text>
         <Image
           source={{ uri: modifiedLink }} style={{ width: width - 40, height: height - 300 }} />
-        {/*<View
-          style={{ flexDirection: 'row' }}
-        >
-          <Icon
-            raised
-            name='like'
-            type='font-awesome'
-            color='#f50'
-            size={25}
-          />
-          <Icon
-            raised
-            name='cross'
-            type='cog'
-            color='#f50'
-            size={25}
-          />
-        </View>
-        <Button
-          icon={{ name: 'code' }}
-          backgroundColor="#03A9F4"
-          title="View Now!"
-        />*/}
+          <Text>{item.description}</Text>
       </Animated.View>
     );
   }
@@ -215,7 +269,7 @@ class Deck extends Component {
   getDescription() {
     const { index } = this.state
 
-    console.log(index, 'get descrtiption index state')
+   // console.log(index, 'get descrtiption index state')
     if (index >= this.props.data.length) {
       this.setState({ description: "", title: "", page: '', category: '' })
       return null;
@@ -224,7 +278,7 @@ class Deck extends Component {
     const currentCard = this.props.data.filter((elem, i) => {
 
       if (i === index) {
-        console.log('i and book', i, elem)
+     //   console.log('i and book', i, elem)
         return elem;
       }
     })
@@ -233,12 +287,16 @@ class Deck extends Component {
   }
 
   render() {
-    console.log('this.', this.props)
+   // console.log('this.', this.props, this.state.scrollActive)
     const { imageLinks, title } = this.props.data,
       { book } = this.props
     return (
-      <View>
-        {this.renderCards()}<View
+      <ScrollView
+
+      style={{flex: 1}}
+      >
+        {this.renderCards()}
+        <View
           style={{ flexDirection: 'row', zIndex: 500, top: height - 275, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center' }}
         //this keeps the buttons from traveling with each card. buttons remain in position as user swioes but functionality is passed to the next card
         ><Icon
@@ -267,49 +325,9 @@ class Deck extends Component {
             onPress={() => this.forceSwipe('right')}//sabes a "liked" book to users branch on swipe right
           />
         </View>
-        <Modal
-          visible={this.state.modalVisible}
-          animationType={'slide'}
-          transparent={true}
-          onRequestClose={() => this.closeModal()}
-        >
-          <View style={styles.modalContainer}>
-            <View style={styles.innerContainer}>
-              <Text style={{ paddingBottom: 20, justifyContent: 'center', }}>{this.state.title}</Text>
-
-              <ScrollView /*centerContent={ true }*/>
-
-              <View
-              style={{flexDirection: 'row', flexWrap: 'wrap'}}
-              >
-              <Text>Page Count</Text>
-              <Text>{this.state.page}</Text>
-              </View>
-              <View
-               style={{flexDirection: 'row', flexWrap: 'wrap', ustifyContent: 'space-between'}}
-              >
-              <Text>Category</Text>
-              <Text>{this.state.category}</Text>
-              </View>
 
 
-
-                <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'center' }}>
-                  <Text  /*style={{textAlign:"center", textAlignVertical:"center"}}*/>{this.state.description}</Text>
-                </View>
-              </ScrollView>
-              <Button
-                style={{ padding: 10, paddingTop: 20 }}
-                onPress={() => this.closeModal()}
-                title="Close modal"
-              >
-              </Button>
-            </View>
-          </View>
-        </Modal>
-        <Text></Text>
-
-      </View>
+      </ScrollView>
     );
   }
 }
