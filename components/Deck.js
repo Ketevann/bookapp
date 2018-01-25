@@ -9,6 +9,7 @@ import {
   Text,
   Image,
   Modal,
+  Easing,
   ScrollView,
 
 } from 'react-native';
@@ -17,7 +18,7 @@ import { Actions } from 'react-native-router-flux';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SWIPE_THRESHOLD = 0.25 * SCREEN_WIDTH;
-const SWIPE_OUT_DURATION = 250;
+const SWIPE_OUT_DURATION = 100;
 var { height, width } = Dimensions.get('window');
 
 class Deck extends Component {
@@ -131,7 +132,8 @@ this.setState({ scrollActive:true } )
     const x = direction === 'right' ? SCREEN_WIDTH : -SCREEN_WIDTH;
     Animated.timing(this.state.position, {
       toValue: { x, y: 0 },
-      duration: 100
+      duration: 250,
+      easing: Easing.linear
     }).start(() => this.onSwipeComplete(direction));
   }
 
@@ -160,7 +162,7 @@ this.setState({ scrollActive:true } )
     return [{
       ...position.getLayout(),
       transform: [{ rotate }],
-            opacity: this.state.position.x.interpolate({inputRange: [-200, 0, 200], outputRange: [0.5, 1, 0.5] })
+            opacity: this.state.position.x.interpolate({inputRange: [-SCREEN_WIDTH, 0, SCREEN_WIDTH], outputRange: [0.5, 1, 0.5] })
 
     }];
   }
@@ -294,7 +296,35 @@ this.setState({ scrollActive:true } )
       style={{flex: 1}}
       >
         {this.renderCards()}
-
+        <View
+          style={{ flexDirection: 'row', zIndex: 500, top: height - 275, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center' }}
+        //this keeps the buttons from traveling with each card. buttons remain in position as user swioes but functionality is passed to the next card
+        ><Icon
+            raised
+            name='close'
+            type='Foundation'
+            color='#f50'
+            size={25}
+            onPress={() => this.forceSwipe('left')}//deletes a "disliked book from users suggestions"
+          />
+          {/*<Button
+          icon={{ name: 'code' }}
+          backgroundColor="#03A9F4"
+          title="View Now!"
+        />*/}
+          <Button
+            onPress={() => this.openModal()}
+            title="Description"
+          />
+          <Icon
+            raised
+            name='heart'
+            type='font-awesome'
+            color='#f50'
+            size={25}
+            onPress={() => this.forceSwipe('right')}//sabes a "liked" book to users branch on swipe right
+          />
+        </View>
 
 
       </ScrollView>
