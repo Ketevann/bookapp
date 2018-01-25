@@ -57,7 +57,7 @@ class Deck extends Component {
       onStartShouldSetPanResponderCapture: (evt, gestureState) => true,
       onMoveShouldSetPanResponder: (evt, gestureState) => true,
       onMoveShouldSetPanResponderCapture: (evt, gestureState) => true,
-      onPanResponderGrant: () => this.setState({scrollActive: false}),
+      onPanResponderGrant: () => true,
       //detects movement
       onPanResponderMove: (event, gesture) => {
         console.log('moving ', gesture.dx, SWIPE_THRESHOLD)
@@ -66,7 +66,6 @@ class Deck extends Component {
 
 
       onPanResponderEnd: (e, gesture) => {
-this.setState({ scrollActive:true } )
         console.log('onEnd ', gesture.dx, SWIPE_THRESHOLD, gesture.dx > SWIPE_THRESHOLD, gesture.dx < -SWIPE_THRESHOLD)
         if (gesture.dx > SWIPE_THRESHOLD) {
            console.log(' gesture greater than swipe', gesture.dx , SWIPE_THRESHOLD )
@@ -87,7 +86,6 @@ this.setState({ scrollActive:true } )
       //detects release
       onPanResponderTerminate: (event, gesture) => {
         console.log('onTerminate')
-        this.setState({ scrollActive:true } )
         console.log('realeased ', gesture.dx, SWIPE_THRESHOLD, gesture.dx > SWIPE_THRESHOLD, gesture.dx < -SWIPE_THRESHOLD)
         if (gesture.dx > SWIPE_THRESHOLD) {
            console.log(' gesture greater than swipe', gesture.dx , SWIPE_THRESHOLD )
@@ -104,6 +102,7 @@ this.setState({ scrollActive:true } )
     this.state = { panResponder, position, index: 0, scrollActive:true,  modalVisible: false, description: '', title: '', page: '', category: '', txtheight: SCREEN_HEIGHT };
   }
   componentWillMount() {
+     this.setState({scrollActive: true})
    // console.log('this.tate', this.state)
     this.getDescription()
   }
@@ -140,6 +139,7 @@ this.setState({ scrollActive:true } )
   }
 
   onSwipeComplete(direction) {
+    this.setState({scrollActive: true})
     const { onSwipeLeft, onSwipeRight, data } = this.props;
     const item = data[this.state.index];
     direction === 'right' ? onSwipeRight(item) : onSwipeLeft(item.title);//for dislike on swipe we only need a title to remove from user suggestion in db
@@ -218,7 +218,7 @@ this.setState({ scrollActive:true } )
         return (
           <Animated.View
             key={i}
-            style={[styles.cardStyle, {zIndex: 5}]}
+            style={[styles.cardStyle, { top: 10 * (i - this.state.index), zIndex: 0}]}
           >
             {this.renderCard(item, i)}
           </Animated.View>
@@ -241,7 +241,7 @@ this.setState({ scrollActive:true } )
         }
       }
        return {
-          fontSize: 15
+          fontSize: 20
         }
     }
     let modifiedLink = item.imageLinks.smallThumbnail;
@@ -252,7 +252,7 @@ this.setState({ scrollActive:true } )
      let deckRef= 'deck' + this.state.index;
      console.log(deckRef, ' DECK RECF')
     return (
-      <Animated.View style={{ backgroundColor: 'white' }}
+      <Animated.View style={{ backgroundColor: 'white', height: this.state.txtheight }}
         key={index}
 
       >
@@ -263,8 +263,8 @@ this.setState({ scrollActive:true } )
         ref={'image'+ this.state.index}
           source={{ uri: modifiedLink }} style={{ width: width - 40, height: height - 300 }} />
           <Text
-           ref={this.state.index}
-           style={setStyle()}
+ ref={this.state.index}
+
           >{item.description}</Text>
       </Animated.View>
     );
@@ -330,10 +330,10 @@ this.setState({ scrollActive:true } )
         this.refs[imageRef].measure((ox, oy, width, height) => {
       console.log('height, in IAMGEEEE', height)
       measurement.height += height;
-      if (measurement.heigh < SCREEN_WIDTH){
-
+      if (measurement.height < SCREEN_HEIGHT){
+this.setState({txtheight:  SCREEN_HEIGHT, scrollActive: false })
       }
-    else  this.setState({txtheight:  measurement.height })
+    else  this.setState({txtheight:  measurement.height, scrollActive: true })
 
     })
 
@@ -347,10 +347,10 @@ this.setState({ scrollActive:true } )
    // console.log('this.', this.props, this.state.scrollActive)
     const { imageLinks, title } = this.props.data,
       { book } = this.props
-      console.log('height of scroll in state', this.state.txtheight, SCREEN_HEIGHT)
+      console.log(this.state.scrollActive, 'height of scroll in state', this.state.txtheight, SCREEN_HEIGHT)
     return (
       <ScrollView
-
+      scrollEnabled={this.state.scrollActive}
       style={{flexGrow: 1}}
       endFillColor='white'
       onScroll={ e => {
@@ -358,16 +358,6 @@ this.setState({ scrollActive:true } )
         this.measureHeader()
      // console.log( e.nativeEvent.contentSize.height, 'onScroll')
     }
-  }   onLayout={(event) => {
-  var {x, y, width, height} = event.nativeEvent.layout;
-  console.log(x, y, width, height, 'height and then screen he', SCREEN_HEIGHT, 'on Layout')
-
-  // var H = SCREEN_HEIGHT + (SCREEN_HEIGHT -  height)
-  //     console.log(height ,SCREEN_HEIGHT , SCREEN_HEIGHT/ height, height * (SCREEN_HEIGHT/ height), 'CALC' )
-  //     this.setState({txtheight: H});
-
-   //this.setState({txtheight: height})
-}
   }
       contentContainerStyle={styles.container}
 
