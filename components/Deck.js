@@ -16,7 +16,7 @@ import { Card, Button, Icon } from 'react-native-elements'
 import { Actions } from 'react-native-router-flux';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
-const SWIPE_THRESHOLD = 0.05 * SCREEN_WIDTH;
+const SWIPE_THRESHOLD = 0.25 * SCREEN_WIDTH;
 const SWIPE_OUT_DURATION = 250;
 var { height, width } = Dimensions.get('window');
 
@@ -32,7 +32,10 @@ class Deck extends Component {
     //default is {x:0, y :0}
     const position = new Animated.ValueXY();
 
-
+//  this._opacityAnimation = this._animatedValue.x.interpolate({
+//     inputRange: [0, 150],
+//     outputRange: [1, 0.2]
+// });
 
 
  const panResponder = PanResponder.create({
@@ -128,7 +131,7 @@ this.setState({ scrollActive:true } )
     const x = direction === 'right' ? SCREEN_WIDTH : -SCREEN_WIDTH;
     Animated.timing(this.state.position, {
       toValue: { x, y: 0 },
-      duration: 300
+      duration: 100
     }).start(() => this.onSwipeComplete(direction));
   }
 
@@ -151,16 +154,36 @@ this.setState({ scrollActive:true } )
     const { position } = this.state;
     const rotate = position.x.interpolate({
       inputRange: [-SCREEN_WIDTH, 0, SCREEN_WIDTH],
-      outputRange: ['-120deg', '0deg', '120deg']
+      outputRange: ['-10deg', '0deg', '10deg']
     });
 
-    return {
+    return [{
       ...position.getLayout(),
-      transform: [{ rotate }]
-    };
+      transform: [{ rotate }],
+            opacity: this.state.position.x.interpolate({inputRange: [-200, 0, 200], outputRange: [0.5, 1, 0.5] })
+
+    }];
   }
 
   renderCards() {
+
+    // const containerStyle = {
+    //   opacity: this.state.position.x.interpolate({
+    //     inputRange: [0, 150],
+    // outputRange: [1, 0.2]
+    //   }),
+    //   transform: [
+    //     {
+    //       scale: this.state.position.x.interpolate({
+    //         inputRange: [0, 150],
+    //       outputRange: [1, 0.2]
+    //       }),
+    //     },
+    //   ],
+    // };
+
+
+
     if (this.state.index >= this.props.data.length) {
       return this.renderNoMoreCards();
     }
@@ -177,7 +200,7 @@ this.setState({ scrollActive:true } )
         return (
           <Animated.View
             key={i}
-            style={[this.getCardStyle(), styles.cardStyle, { zIndex: 99 }]}
+            style={[ styles.cardStyle, { zIndex: 99 }, this.getCardStyle()]}
             {...this.state.panResponder.panHandlers}
           >
             {this.renderCard(item, i)}
@@ -220,7 +243,7 @@ this.setState({ scrollActive:true } )
         <Text>{item.author}</Text>
         <Image
           source={{ uri: modifiedLink }} style={{ width: width - 40, height: height - 300 }} />
-
+          <Text>{item.description}</Text>
       </Animated.View>
     );
   }
@@ -267,47 +290,11 @@ this.setState({ scrollActive:true } )
       { book } = this.props
     return (
       <ScrollView
-      scrollEnabled={this.state.scrollActive}
+
       style={{flex: 1}}
       >
         {this.renderCards()}
-        <View
-          style={{zIndex: 500, marginTop:300, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center' }}
-        //this keeps the buttons from traveling with each card. buttons remain in position as user swioes but functionality is passed to the next card
-        ><Icon
-            raised
-            name='close'
-            type='Foundation'
-            color='#f50'
-            size={25}
-            onPress={() => this.forceSwipe('left')}//deletes a "disliked book from users suggestions"
-          />
 
-          <Icon
-            raised
-            name='heart'
-            type='font-awesome'
-            color='#f50'
-            size={25}
-            onPress={() => this.forceSwipe('right')}//sabes a "liked" book to users branch on swipe right
-          />
-
-
-              <Text style={{ paddingBottom: 20, justifyContent: 'center', }}>{this.state.title}</Text>
-
-
-
-              <Text>Page Count</Text>
-              <Text>{this.state.page}</Text>
-
-              <Text>Category</Text>
-              <Text>{this.state.category}</Text>
-
-
-
-                  <Text  /*style={{textAlign:"center", textAlignVertical:"center"}}*/>{this.state.description}</Text>
-
-        </View>
 
 
       </ScrollView>
