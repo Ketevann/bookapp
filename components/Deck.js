@@ -17,6 +17,8 @@ import { Card, Button, Icon } from 'react-native-elements'
 import { Actions } from 'react-native-router-flux';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
+const SCREEN_HEIGHT = Dimensions.get('window').height;
+
 const SWIPE_THRESHOLD = 0.25 * SCREEN_WIDTH;
 const SWIPE_OUT_DURATION = 100;
 var { height, width } = Dimensions.get('window');
@@ -42,7 +44,7 @@ class Deck extends Component {
  const panResponder = PanResponder.create({
 
       // onPanResponderStart : () => {
-      //     // this.setState({ scrollActive:false } )
+      //     // this.texate({ scrollActive:false } )
       //       //console.log('touched ', this.state.scrollActive)
       // },
 
@@ -99,7 +101,7 @@ this.setState({ scrollActive:true } )
       }
     });
 
-    this.state = { panResponder, position, index: 0, scrollActive:true,  modalVisible: false, description: '', title: '', page: '', category: '' };
+    this.state = { panResponder, position, index: 0, scrollActive:true,  modalVisible: false, description: '', title: '', page: '', category: '', txtheight: SCREEN_HEIGHT };
   }
   componentWillMount() {
    // console.log('this.tate', this.state)
@@ -238,14 +240,22 @@ this.setState({ scrollActive:true } )
       //   console.log(item.imageLinks.smallThumbnail, ' links')
       modifiedLink = item.imageLinks.smallThumbnail.replace(/zoom=[0-9]/, 'zoom=0')
     }
+     let deckRef= 'deck' + this.state.index;
+     console.log(deckRef, ' DECK RECF')
     return (
       <Animated.View style={{ backgroundColor: 'white' }}
         key={index}
+
       >
-        <Text>{item.author}</Text>
+        <Text
+        ref={'author'+ this.state.index}
+        >{item.author}</Text>
         <Image
+        ref={'image'+ this.state.index}
           source={{ uri: modifiedLink }} style={{ width: width - 40, height: height - 300 }} />
-          <Text>{item.description}</Text>
+          <Text
+           ref={this.state.index}
+          >{item.description}</Text>
       </Animated.View>
     );
   }
@@ -286,15 +296,73 @@ this.setState({ scrollActive:true } )
     this.setState({ description: details.description, title: details.title, page: details.pageCount, category: details.categories[0] })
   }
 
+  measureHeader() {
+    console.log('measure head!!!!!!!===========>')
+  //  if (this.refs.myInput)
+  let measurement = {}
+    this.refs[this.state.index].measure((ox, oy, width, height) => {
+      console.log('DEEEECCCCC,', height)
+      var calc = SCREEN_HEIGHT - height
+      var H = height * (SCREEN_HEIGHT/ height)
+      console.log(height ,SCREEN_HEIGHT , SCREEN_HEIGHT/ height, height * (SCREEN_HEIGHT/ height), 'CALC', SCREEN_HEIGHT+ height )
+      this.setState({txtheight: SCREEN_HEIGHT + calc});
+      measurement.height = height;
+
+       let deckRef = 'author'+this.state.index;
+      console.log(deckRef, ' iin MESURE')
+      this.refs[deckRef].measure((ox, oy, width, height) => {
+      console.log('height, in AUTHOOOOR', height)
+      measurement.height += height;
+      console.log('measureeeee', measurement, SCREEN_HEIGHT)
+    })
+
+       let imageRef = 'image'+this.state.index;
+        this.refs[imageRef].measure((ox, oy, width, height) => {
+      console.log('height, in IAMGEEEE', height)
+      measurement.height += height;
+
+    })
+
+ console.log(measurement, 'author image height')
+ });
+
+
+
+  }
   render() {
    // console.log('this.', this.props, this.state.scrollActive)
     const { imageLinks, title } = this.props.data,
       { book } = this.props
+      console.log('height of scroll in state', this.state.txtheight, SCREEN_HEIGHT)
     return (
       <ScrollView
 
-      style={{flex: 1}}
+      style={{flexGrow: 1}}
+
+      onScroll={ e => {
+
+        this.measureHeader()
+     // console.log( e.nativeEvent.contentSize.height, 'onScroll')
+    }
+  }   onLayout={(event) => {
+  var {x, y, width, height} = event.nativeEvent.layout;
+  console.log(x, y, width, height, 'height and then screen he', SCREEN_HEIGHT, 'on Layout')
+
+  // var H = SCREEN_HEIGHT + (SCREEN_HEIGHT -  height)
+  //     console.log(height ,SCREEN_HEIGHT , SCREEN_HEIGHT/ height, height * (SCREEN_HEIGHT/ height), 'CALC' )
+  //     this.setState({txtheight: H});
+
+   //this.setState({txtheight: height})
+}
+  }
+      contentContainerStyle={styles.container}
+
       >
+      <View style={{height : SCREEN_HEIGHT}}
+
+      >
+
+
         {this.renderCards()}
         <View
           style={{ flexDirection: 'row', zIndex: 500, top: height - 275, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center' }}
@@ -326,6 +394,7 @@ this.setState({ scrollActive:true } )
           />
         </View>
 
+      </View>
 
       </ScrollView>
     );
@@ -335,10 +404,11 @@ this.setState({ scrollActive:true } )
 const styles = {
   cardStyle: {
     position: 'absolute',
-    width: SCREEN_WIDTH
+    width: SCREEN_WIDTH,
+    flex: 1,
   },
   container: {
-    flex: 1,
+
     justifyContent: 'center',
   },
   modalContainer: {

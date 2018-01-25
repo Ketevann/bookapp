@@ -26,7 +26,7 @@ const RouterComponent = () => (
 
     <Stack key="root">
       <Scene key="login" component={Login} title="Login"  />
-      <Scene key="home" component={Home} initial/>
+      <Scene key="home" component={Home} initial panHandlers={null} hideNavBar/>
       <Scene key="forgotpassowrd" component={ForgotPassword} />
       <Scene key="preferencesForm" component={PreferencesForm} panHandlers={null} hideNavBar />
       <Scene key="signup" component={SignUp} panHandlers={null} hideNavBar  />

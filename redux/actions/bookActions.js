@@ -232,36 +232,36 @@ export const markAsRead = (uid, title, dispatch) =>
 export const removeBooks = (uid, saved, dispatch) =>
     dispatch => {
 
-        console.log('REMOVEEEE', uid, saved)
+       // console.log('REMOVEEEE', uid, saved)
 
         firebase.database().ref(`users/${uid}`).child('books').once('value', function (snapshot) {
             let index, savedBooks, savedBooksArray
 
-            console.log(snapshot.val(), "saved!!!!")
+           // console.log(snapshot.val(), "saved!!!!")
             if (snapshot.val()) {
                 savedBooksArray = snapshot.val();
                 if (Array.isArray(snapshot.val()) === false) {
-                    console.log('false')
+                  //  console.log('false')
                     savedBooksArray = Object.values(snapshot.val())
-                    console.log(savedBooksArray, 'ddd');
+                   // console.log(savedBooksArray, 'ddd');
                 }
-                for (var i = 0; i < savedBooksArray.length; i++) {
-                    console.log(savedBooksArray[i], ' array')
-                    if (savedBooksArray[i] && savedBooksArray[i].title === saved) {
-                        index = i;
+                //for (var i = 0; i < savedBooksArray.length; i++) {
+                  //  console.log(savedBooksArray[i], ' array')
+                    //if (savedBooksArray[i] && savedBooksArray[i].title === saved) {
+                        //index = i;
 
                         savedBooks = savedBooksArray.filter(book => {
-                            if (book.title !== savedBooksArray[i].title)
+                            if (book.title !== saved)
                                 return book
                         })
 
-                        console.log('saved books in remove', savedBooks)
+                      // console.log('saved books in remove', savedBooks)
                         dispatch({ type: GET_SAVED_BOOK, payload: savedBooks, user: uid })
-                        break;
-                    }
-                }
+                        //break;
+                   // }
+                //}
                 firebase.database().ref(`users/${uid}/books`).set(savedBooks)
-                console.log(savedBooks, 'sss')
+               // console.log(savedBooks, 'sss')
             }
 
         });

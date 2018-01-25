@@ -41,7 +41,7 @@ handleAuthor(){
   this.props.changeAuthor(this.props.book.placeholder)
 }
   render(){
-    {console.log('book', this.props)}
+   // {console.log('book', this.props)}
     return(
       <View>
       <Text onPress={() => this.handleBookChange()}>Books</Text>

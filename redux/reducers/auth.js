@@ -12,7 +12,7 @@ import {
 
 
 export default (auth = INITIAL_STATE, action) => {
-  console.log(action, 'ACTIONNN');
+//  console.log(action, 'ACTIONNN');
   switch (action.type) {
     case EMAIL_CHANGED:
       return { ...auth, email: action.payload };

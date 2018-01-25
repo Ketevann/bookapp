@@ -84,6 +84,7 @@ class BookCard extends Component {
 
   onDelete(title) {
     console.log('76l4BsVra7MZrR7NzuPv6XRg5BP2', 'Pan', ' ****')
+
     this.props.removeBooks(this.props.auth.userId, title)
   }
 
@@ -95,9 +96,9 @@ class BookCard extends Component {
 
 
   renderElemets(book) {
-    console.log('LOADING', this.props.loading)
+   // console.log('LOADING', this.props.loading)
     let color;
-    console.log('READ')
+   // console.log('READ')
     if (book.read === true) {
       color = '#f50';
     } else color = 'gray';

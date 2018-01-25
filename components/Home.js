@@ -44,7 +44,7 @@ handleSubmit(){
 
 display(){
       const { loggedIn } = this.props.auth
-    { console.log(this.props, "preferences") }
+ //   { console.log(this.props, "preferences") }
     const { preferences, loading } = this.props.preferences;
     const { similarbooks } = this.props.book;
 
@@ -63,7 +63,7 @@ display(){
 
   render() {
     const { loggedIn } = this.props.auth
-    { console.log(this.props, "preferences") }
+    //{ console.log(this.props, "preferences") }
     const { preferences, loading } = this.props.preferences;
     const { similarbooks } = this.props.book;
 
@@ -71,7 +71,6 @@ display(){
 
       <View style={{ flex: 1 }}>
 
-        <Search handleSubmit={this.handleSubmit.bind(this)} />
          { this.props.book.loadingSavedBook ?
 
                <Spinner size="large" />
@@ -79,10 +78,6 @@ display(){
 
         this.display()
          }
-          {loggedIn ? <CardSection><Button onPress={() => Actions.preferencesForm()}> Preferences </Button></CardSection> : null}
-            <CardSection>
-              {loggedIn ? <Button onPress={() => firebase.auth().signOut()}>Log Out</Button> : <Button onPress={() => Actions.login()}> Sign in </Button>}
-            </CardSection>
 
       </View>
 

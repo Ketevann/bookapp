@@ -12,6 +12,7 @@ import Book from './Book';
 import axios from 'axios';
 import Search from './Search'
 import { getSavedBooks } from '../redux/actions/bookActions';
+
 class Footer extends Component {
 
 
@@ -32,7 +33,7 @@ class Footer extends Component {
 
   }
   render() {
-    {console.log(this.props, ' footer', this.props.auth.userId)}
+   // {console.log(this.props, ' footer', this.props.auth.userId)}
     return (
 
       <View style={{ position: 'absolute', left: 0, right: 0, bottom: 0 }}>
