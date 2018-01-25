@@ -218,7 +218,7 @@ this.setState({ scrollActive:true } )
         return (
           <Animated.View
             key={i}
-            style={[styles.cardStyle, { top: 10 * (i - this.state.index), zIndex: 5 }]}
+            style={[styles.cardStyle, {zIndex: 5}]}
           >
             {this.renderCard(item, i)}
           </Animated.View>
@@ -231,10 +231,19 @@ this.setState({ scrollActive:true } )
 
   renderCard(item, index) {
     //   console.log('in render Card', item.title, 'title =======>>>')
+   const setStyle = () => {
 
-
-
-
+    console.log('in set Styke', index, this.state.index)
+    let visibility = 'flex'
+    if (index > this.state.index) {
+        return {
+          display: 'none'
+        }
+      }
+       return {
+          fontSize: 15
+        }
+    }
     let modifiedLink = item.imageLinks.smallThumbnail;
     if (item.imageLinks) {
       //   console.log(item.imageLinks.smallThumbnail, ' links')
@@ -255,6 +264,7 @@ this.setState({ scrollActive:true } )
           source={{ uri: modifiedLink }} style={{ width: width - 40, height: height - 300 }} />
           <Text
            ref={this.state.index}
+           style={setStyle()}
           >{item.description}</Text>
       </Animated.View>
     );
@@ -304,22 +314,26 @@ this.setState({ scrollActive:true } )
       console.log('DEEEECCCCC,', height)
       var calc = SCREEN_HEIGHT - height
       var H = height * (SCREEN_HEIGHT/ height)
-      console.log(height ,SCREEN_HEIGHT , SCREEN_HEIGHT/ height, height * (SCREEN_HEIGHT/ height), 'CALC', SCREEN_HEIGHT+ height )
-      this.setState({txtheight: SCREEN_HEIGHT + calc});
+
+      //this.setState({txtheight: SCREEN_HEIGHT + calc});
       measurement.height = height;
 
        let deckRef = 'author'+this.state.index;
-      console.log(deckRef, ' iin MESURE')
+      //console.log(deckRef, ' iin MESURE')
       this.refs[deckRef].measure((ox, oy, width, height) => {
       console.log('height, in AUTHOOOOR', height)
       measurement.height += height;
-      console.log('measureeeee', measurement, SCREEN_HEIGHT)
+      //console.log('measureeeee', measurement, SCREEN_HEIGHT)
     })
 
        let imageRef = 'image'+this.state.index;
         this.refs[imageRef].measure((ox, oy, width, height) => {
       console.log('height, in IAMGEEEE', height)
       measurement.height += height;
+      if (measurement.heigh < SCREEN_WIDTH){
+
+      }
+    else  this.setState({txtheight:  measurement.height })
 
     })
 
@@ -338,7 +352,7 @@ this.setState({ scrollActive:true } )
       <ScrollView
 
       style={{flexGrow: 1}}
-
+      endFillColor='white'
       onScroll={ e => {
 
         this.measureHeader()
@@ -358,41 +372,13 @@ this.setState({ scrollActive:true } )
       contentContainerStyle={styles.container}
 
       >
-      <View style={{height : SCREEN_HEIGHT}}
+      <View style={{height : this.state.txtheight}}>
 
-      >
+
 
 
         {this.renderCards()}
-        <View
-          style={{ flexDirection: 'row', zIndex: 500, top: height - 275, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center' }}
-        //this keeps the buttons from traveling with each card. buttons remain in position as user swioes but functionality is passed to the next card
-        ><Icon
-            raised
-            name='close'
-            type='Foundation'
-            color='#f50'
-            size={25}
-            onPress={() => this.forceSwipe('left')}//deletes a "disliked book from users suggestions"
-          />
-          {/*<Button
-          icon={{ name: 'code' }}
-          backgroundColor="#03A9F4"
-          title="View Now!"
-        />*/}
-          <Button
-            onPress={() => this.openModal()}
-            title="Description"
-          />
-          <Icon
-            raised
-            name='heart'
-            type='font-awesome'
-            color='#f50'
-            size={25}
-            onPress={() => this.forceSwipe('right')}//sabes a "liked" book to users branch on swipe right
-          />
-        </View>
+
 
       </View>
 
@@ -410,6 +396,7 @@ const styles = {
   container: {
 
     justifyContent: 'center',
+    backgroundColor: 'white'
   },
   modalContainer: {
     flex: 1,
