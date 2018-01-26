@@ -12,6 +12,7 @@ import {
   Easing,
   ScrollView,
 
+
 } from 'react-native';
 import { Card, Button, Icon } from 'react-native-elements'
 import { Actions } from 'react-native-router-flux';
@@ -62,6 +63,11 @@ class Deck extends Component {
       onPanResponderMove: (event, gesture) => {
         console.log('moving ', gesture.dx, SWIPE_THRESHOLD)
         position.setValue({ x: gesture.dx, y: gesture.dy });
+        console.log('------------- ', gesture.dx, "---",gesture.dy, "0-0-0", 0.1 * SCREEN_WIDTH )
+
+        if (gesture.dx>20 || gesture.dx< (-20) ){
+           position.setValue({ x: gesture.dx, y: gesture.dy });
+        }
       },
 
 
@@ -73,7 +79,15 @@ class Deck extends Component {
         } else if (gesture.dx < -SWIPE_THRESHOLD) {
           console.log(' gesture less than - swipe', gesture.dx , -SWIPE_THRESHOLD )
           this.forceSwipe('left');
-        } else {
+        }
+        else if (gesture.dy < -15 || gesture.dy > 15 ){
+          Animated.spring(this.state.position, {
+      toValue: { x: 0, y: 0 }// there was glitch on rest. card was not returning to original position
+    }).start();
+        }
+
+
+        else {
           this.resetPosition();
         }
 },
@@ -93,13 +107,19 @@ class Deck extends Component {
         } else if (gesture.dx < -SWIPE_THRESHOLD) {
           console.log(' gesture less than - swipe', gesture.dx , -SWIPE_THRESHOLD )
           this.forceSwipe('left');
-        } else {
+        }
+         else if (gesture.dy < -5 || gesture.dy > 5 ){
+          Animated.spring(this.state.position, {
+      toValue: { x: 0, y: 0 }// there was glitch on rest. card was not returning to original position
+    }).start();
+        }
+        else {
           this.resetPosition();
         }
       }
     });
 
-    this.state = { panResponder, position, index: 0, scrollActive:true,  modalVisible: false, description: '', title: '', page: '', category: '', txtheight: SCREEN_HEIGHT };
+    this.state = { panResponder, position, index: 0, scrollActive:false,  modalVisible: false, description: '', title: '', page: '', category: '', txtheight: SCREEN_HEIGHT };
   }
   componentWillMount() {
      this.setState({scrollActive: true})
@@ -202,13 +222,14 @@ class Deck extends Component {
       if (i === this.state.index) {
         // console.log('index is equal thos should animate', this.state.index, i, item.title,' item')
         return (
-          <Animated.View
+          <Animated.ScrollView
             key={i}
             style={[ styles.cardStyle, { zIndex: 99 }, this.getCardStyle()]}
             {...this.state.panResponder.panHandlers}
           >
+
             {this.renderCard(item, i)}
-          </Animated.View>
+          </Animated.ScrollView>
         );
       }
 
@@ -216,12 +237,12 @@ class Deck extends Component {
         //  console.log('index is greater', 'state', this.state.index, 'index', i, item.title)
 
         return (
-          <Animated.View
+          <Animated.ScrollView
             key={i}
             style={[styles.cardStyle, { top: 10 * (i - this.state.index), zIndex: 0}]}
           >
             {this.renderCard(item, i)}
-          </Animated.View>
+          </Animated.ScrollView>
         );
       }
     }).reverse()
@@ -252,7 +273,7 @@ class Deck extends Component {
      let deckRef= 'deck' + this.state.index;
      console.log(deckRef, ' DECK RECF')
     return (
-      <Animated.View style={{ backgroundColor: 'white', height: this.state.txtheight }}
+      <Animated.ScrollView style={{ backgroundColor: 'white', height: this.state.txtheight }}
         key={index}
 
       >
@@ -266,7 +287,7 @@ class Deck extends Component {
  ref={this.state.index}
 
           >{item.description}</Text>
-      </Animated.View>
+      </Animated.ScrollView>
     );
   }
 
@@ -331,13 +352,14 @@ class Deck extends Component {
       console.log('height, in IAMGEEEE', height)
       measurement.height += height;
       if (measurement.height < SCREEN_HEIGHT){
+        this.state.position.setValue({x: 0, y:0})
 this.setState({txtheight:  SCREEN_HEIGHT, scrollActive: false })
       }
     else  this.setState({txtheight:  measurement.height, scrollActive: true })
 
     })
 
- console.log(measurement, 'author image height')
+ console.log(measurement, 'author image height', this.state.position)
  });
 
 
@@ -349,27 +371,14 @@ this.setState({txtheight:  SCREEN_HEIGHT, scrollActive: false })
       { book } = this.props
       console.log(this.state.scrollActive, 'height of scroll in state', this.state.txtheight, SCREEN_HEIGHT)
     return (
-      <ScrollView
-      scrollEnabled={this.state.scrollActive}
-      style={{flexGrow: 1}}
-      endFillColor='white'
-      onScroll={ e => {
-
-        this.measureHeader()
-     // console.log( e.nativeEvent.contentSize.height, 'onScroll')
-    }
-  }
-      contentContainerStyle={styles.container}
-
-      >
 
 
 
-{this.renderCards()}
+
+       this.renderCards()
 
 
 
-      </ScrollView>
     );
   }
 }
