@@ -362,15 +362,12 @@ this.setState({txtheight:  SCREEN_HEIGHT, scrollActive: false })
       contentContainerStyle={styles.container}
 
       >
-      <View style={{height : this.state.txtheight}}>
 
 
 
+{this.renderCards()}
 
-        {this.renderCards()}
 
-
-      </View>
 
       </ScrollView>
     );
