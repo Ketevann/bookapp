@@ -38,7 +38,7 @@ const RouterComponent = () => (
     </Stack>
 
   </Router>
-
+<Footer/>
    </View>
 );
 

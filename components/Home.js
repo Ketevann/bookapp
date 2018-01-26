@@ -70,8 +70,8 @@ display(){
     return (
 
       <View style={{ flex: 1 }}>
-
-         { this.props.book.loadingSavedBook ?
+        <Search handleSubmit={this.handleSubmit.bind(this)} />
+         { (this.props.book.loadingSavedBook   || loading)?
 
                <Spinner size="large" />
           :

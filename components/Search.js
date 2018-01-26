@@ -43,7 +43,7 @@ handleAuthor(){
   render(){
    // {console.log('book', this.props)}
     return(
-      <View>
+      <View style={{ zIndex:1000}}>
       <Text onPress={() => this.handleBookChange()}>Books</Text>
       <Text onPress={() => this.handleAuthor()}>Authors</Text>
       <SearchBar
