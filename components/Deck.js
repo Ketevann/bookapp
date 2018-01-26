@@ -61,7 +61,11 @@ class Deck extends Component {
       //detects movement
       onPanResponderMove: (event, gesture) => {
         console.log('moving ', gesture.dx, SWIPE_THRESHOLD)
-        position.setValue({ x: gesture.dx, y: gesture.dy });
+        console.log('------------- ', gesture.dx, "---",gesture.dy, "0-0-0", 0.1 * SCREEN_WIDTH )
+       
+        if (gesture.dx>20 || gesture.dx< (-20) ){
+           position.setValue({ x: gesture.dx, y: gesture.dy });
+        }
       },
 
 
@@ -204,10 +208,23 @@ class Deck extends Component {
         return (
           <Animated.View
             key={i}
-            style={[ styles.cardStyle, { zIndex: 99 }, this.getCardStyle()]}
+            style={[ styles.cardStyle, { zIndex: 99 }, this.getCardStyle(),{ height:height}]}
             {...this.state.panResponder.panHandlers}
-          >
+          ><ScrollView
+  
+     style={{flexGrow: 1}}
+       endFillColor='white'
+       onScroll={ e => {
+
+        this.measureHeader()
+   console.log( e.nativeEvent.contentSize.height, 'onScroll')
+   }
+   }
+     contentContainerStyle={styles.container}
+
+      >
             {this.renderCard(item, i)}
+             </ScrollView>
           </Animated.View>
         );
       }
@@ -349,19 +366,19 @@ this.setState({txtheight:  SCREEN_HEIGHT, scrollActive: false })
       { book } = this.props
       console.log(this.state.scrollActive, 'height of scroll in state', this.state.txtheight, SCREEN_HEIGHT)
     return (
-      <ScrollView
-      scrollEnabled={this.state.scrollActive}
-      style={{flexGrow: 1}}
-      endFillColor='white'
-      onScroll={ e => {
+  //     <ScrollView
+  //     scrollEnabled={this.state.scrollActive}
+  //     style={{flexGrow: 1}}
+  //     endFillColor='white'
+  //     onScroll={ e => {
 
-        this.measureHeader()
-     // console.log( e.nativeEvent.contentSize.height, 'onScroll')
-    }
-  }
-      contentContainerStyle={styles.container}
+  //       this.measureHeader()
+  //    // console.log( e.nativeEvent.contentSize.height, 'onScroll')
+  //   }
+  // }
+  //     contentContainerStyle={styles.container}
 
-      >
+  //     >
       <View style={{height : this.state.txtheight}}>
 
 
@@ -372,7 +389,7 @@ this.setState({txtheight:  SCREEN_HEIGHT, scrollActive: false })
 
       </View>
 
-      </ScrollView>
+      // </ScrollView>
     );
   }
 }
