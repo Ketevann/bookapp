@@ -312,8 +312,8 @@ class Deck extends Component {
 
         <Button
           backgroundColor="#03A9F4"
-          title="Update Preferences"
-          onPress={() => Actions.preferencesForm()}
+          //title="Update Preferences"
+          //onPress={() => Actions.preferencesForm()}
         />
       </Card>
     );

@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, ScrollView, Image, TouchableOpacity } from 'react-native';
 import { Header, Card, CardSection, Button, Spinner } from './common'
-import { getSuggestions, getDefualt, updateDefaultSuggestions } from '../redux/actions/preferencesActions';
+//import { getSuggestions,getDefualt, updateDefaultSuggestions } from '../redux/actions/preferencesActions';
 import { loginDispatch, loginDispatchFalse } from '../redux/actions/authActions'
-import { clearSearchBooks, findSimilarBooks, loadingSearchResults } from '../redux/actions/bookActions'
+import { updateDefaultSuggestions, getDefualt, getSuggestions, clearSearchBooks, findSimilarBooks, loadingSearchResults } from '../redux/actions/bookActions'
 import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
 import Dimensions from 'Dimensions'
@@ -39,7 +39,8 @@ handleSubmit(){
   console.log(this.props.book.searchbooks)
   const {searchbooks, placeholder} = this.props.book
   this.props.loadingSearchResults();
-  this.props.findSimilarBooks(searchbooks, placeholder);
+  const userId = this.props.auth.userId;
+  this.props.findSimilarBooks(searchbooks, placeholder,userId);
 }
 
 display(){
@@ -63,6 +64,8 @@ display(){
 
   render() {
     const { loggedIn } = this.props.auth
+    const userId = this.props.auth.userId;
+
     //{ console.log(this.props, "preferences") }
     const { preferences, loading } = this.props.preferences;
     const { similarbooks } = this.props.book;
@@ -70,8 +73,8 @@ display(){
     return (
 
       <View style={{ flex: 1 }}>
-        <Search handleSubmit={this.handleSubmit.bind(this)} />
-         { (this.props.book.loadingSavedBook   || loading)?
+        <Search handleSubmit={this.handleSubmit.bind(this)} userId={userId} />
+         { (this.props.book.loadingSavedBook   /*|| loading*/)?
 
                <Spinner size="large" />
           :
