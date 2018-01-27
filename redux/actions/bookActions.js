@@ -8,7 +8,9 @@ import {
     READ,
     CLEAR,
     LOAD_SAVED_BOOKS,
-    BOOK_SEARCH_CLEAR
+    BOOK_SEARCH_CLEAR,
+    LOADING,
+    UPDATE_SUGGESTIONS,
 } from './action-types'
 import { GOOGLE_API_KEY } from '../../keys'
 import firebase from 'firebase';
@@ -102,14 +104,13 @@ export const setSearchValue = (book, dispatch) =>
         dispatch({ type: CHANGE_SEARCH, payload: book })
 
 //gets books from a google api
-const getBooks = (dispatch, data, author = '') => {
+const getBooks = (dispatch, data, userId, author = '', ) => {//added user id
     //  console.log('in GET BOOKS', author)
     const bookPromises = data.map((book) => axios.get(`https://www.googleapis.com/books/v1/volumes?q=${author}${book.Name}&key=${GOOGLE_API_KEY}`));
     axios.all(bookPromises)
         .then(axios.spread((...args) => {
             //collect returned data for each api call in array
             const bookList = args.map((book) => {
-                // console.log(book.data.items[0].volumeInfo.title, "title");
                 let currentBook = book.data.items[0].volumeInfo;
                 const newBook = {
                     title: currentBook.title,
@@ -121,6 +122,7 @@ const getBooks = (dispatch, data, author = '') => {
                 };
                 return newBook;
             })
+            if (bookList.length!==0) firebase.database().ref(`users/${userId}/suggestions`).set([...bookList]);//save suggested books to db, only if there are results, invalid input will not return results
             return dispatch({ type: BOOK_SEARCH, payload: bookList })
         })).catch((error) => {
             console.error(error);
@@ -128,9 +130,17 @@ const getBooks = (dispatch, data, author = '') => {
 }
 
 
-export const findSimilarBooks = (keyword, placeholder, dispatch) =>
+export const findSimilarBooks = (keyword, placeholder, userId, dispatch) =>
     dispatch => {
         console.log(keyword, 'LEYWORD***', placeholder)
+        const suggestionsRef = firebase.database().ref(`users/${userId}/suggestions`);
+        suggestionsRef.once('value')//deletes previous suggested books
+            .then(snapshot => {
+                if (snapshot.val()){
+                    suggestionsRef.set(null);
+                }
+            })
+
         if (placeholder === 'books') {
             return cloudscraper.get(`https://tastedive.com/api/similar?q=${keyword}&k=${TASTE_DIVE_API_KEY}&limit=2&type=books`)
                 .then(res => {
@@ -138,7 +148,7 @@ export const findSimilarBooks = (keyword, placeholder, dispatch) =>
                      console.log(res, ' data2222', JSON.parse(res._bodyText).Similar.Results)
                      const data = JSON.parse(res._bodyText).Similar.Results;
 
-                    getBooks(dispatch, data)
+                    getBooks(dispatch, data, userId)//added user id
 
                 })
                 .catch(err=> console.log(err))
@@ -149,7 +159,7 @@ export const findSimilarBooks = (keyword, placeholder, dispatch) =>
                   console.log(res, ' data2222', JSON.parse(res._bodyText).Similar.Results)
                       const data = JSON.parse(res._bodyText).Similar.Results;
 
-                    getBooks(dispatch, data, 'inauthor:')
+                    getBooks(dispatch, data,userId, 'inauthor:')//added user id
 
                    // getBooks(dispatch, data, 'inauthor:')
                 })
@@ -232,36 +242,36 @@ export const markAsRead = (uid, title, dispatch) =>
 export const removeBooks = (uid, saved, dispatch) =>
     dispatch => {
 
-        console.log('REMOVEEEE', uid, saved)
+       // console.log('REMOVEEEE', uid, saved)
 
         firebase.database().ref(`users/${uid}`).child('books').once('value', function (snapshot) {
             let index, savedBooks, savedBooksArray
 
-            console.log(snapshot.val(), "saved!!!!")
+           // console.log(snapshot.val(), "saved!!!!")
             if (snapshot.val()) {
                 savedBooksArray = snapshot.val();
                 if (Array.isArray(snapshot.val()) === false) {
-                    console.log('false')
+                  //  console.log('false')
                     savedBooksArray = Object.values(snapshot.val())
-                    console.log(savedBooksArray, 'ddd');
+                   // console.log(savedBooksArray, 'ddd');
                 }
-                for (var i = 0; i < savedBooksArray.length; i++) {
-                    console.log(savedBooksArray[i], ' array')
-                    if (savedBooksArray[i] && savedBooksArray[i].title === saved) {
-                        index = i;
+                //for (var i = 0; i < savedBooksArray.length; i++) {
+                  //  console.log(savedBooksArray[i], ' array')
+                    //if (savedBooksArray[i] && savedBooksArray[i].title === saved) {
+                        //index = i;
 
                         savedBooks = savedBooksArray.filter(book => {
-                            if (book.title !== savedBooksArray[i].title)
+                            if (book.title !== saved)
                                 return book
                         })
 
-                        console.log('saved books in remove', savedBooks)
+                      // console.log('saved books in remove', savedBooks)
                         dispatch({ type: GET_SAVED_BOOK, payload: savedBooks, user: uid })
-                        break;
-                    }
-                }
+                        //break;
+                   // }
+                //}
                 firebase.database().ref(`users/${uid}/books`).set(savedBooks)
-                console.log(savedBooks, 'sss')
+               // console.log(savedBooks, 'sss')
             }
 
         });
@@ -275,3 +285,103 @@ export const loadingSearchResults = dispatch =>
 export const clearSearchBooks = dispatch =>
     dispatch =>
         dispatch({ type: BOOK_SEARCH_CLEAR })
+
+
+export const loadPrefBooks = (userID, dispatch) => {// we dont need to call a display function
+    const suggestionsRef = firebase.database().ref(`users/${userID}/suggestions`);
+    firebase.database().ref(`users/${userID}/`).child('preferences').once('value')
+
+        .then(snapshot => {
+            const preferences = snapshot.val();//this is the  preferences object
+            if (!snapshot.val())
+                throw ("Error")
+
+
+            return find(preferences);//calling TasteDive
+            //we return a promise that resolves into array of titles to be sent to googleAPI
+        })
+        .then((similarTitles) => {
+            const data = JSON.parse(similarTitles._bodyText).Similar.Results;
+            return getBooks(data)//calling googleAPI
+        })
+        .then((booksData) => {
+            console.log(booksData,' booksDAta')
+            suggestionsRef.set([...booksData]);
+            dispatch({ type: BOOK_SEARCH, payload: booksData });
+        })
+        .catch(error => {
+            console.log("no prefs, loading defualt suggestions");
+            //we have a defualt branch in firebase,
+            firebase.database().ref(`default`).once('value', (snapshot) => {
+                const defaultBooks = snapshot.val();
+                suggestionsRef.set([...defaultBooks]);//setting defualt books to suggestions branch
+                dispatch({ type:BOOK_SEARCH, payload: defaultBooks });
+            })
+        })
+
+}
+
+//gets books from suggestions
+export const getSuggestions = (userID, dispatch) =>//we call this function in componentWillMount, so we dont need to call a display function
+    dispatch =>{
+        dispatch({ type: LOADING , payload: true })
+        firebase.database().ref(`users/${userID}/suggestions`).once('value')//if there are suggestions we load those to state
+            .then(function (snapshot) {
+                if (!snapshot.val())
+                    throw ("Error")
+
+                const suggestions = Object.values(snapshot.val());
+                dispatch({ type: BOOK_SEARCH, payload: suggestions })
+                dispatch({ type: LOADING , payload: false })
+
+            })
+            .catch((error) => loadPrefBooks(userID, dispatch))//else check for preferences, if none, load default
+    }
+    
+    //when no suggested books are saved, we load defualt books
+    export const getDefualt = (dispatch) =>//setting defualt books to suggestions state
+    dispatch => firebase.database().ref(`default`).once('value', (snapshot) => {
+        const defaultBooks = snapshot.val();
+        dispatch({ type: BOOK_SEARCH, payload: defaultBooks });
+    })
+    
+    //used when we need to update the defualt books branch
+    export const updateDefaultSuggestions = (userID, dispatch) =>
+        dispatch => getBooksFromApi(defaultBooks.list).then((defaultSuggestions) => {
+        console.log(defaultSuggestions, 'defaultSgugest')
+        firebase.database().ref(`default`).set([...defaultSuggestions]);
+    })
+
+
+
+export const removeSuggestion = (suggested, uid, dispatch) =>
+    dispatch => {
+        //alert(suggested);
+        console.log('REMOVEEEE', uid, suggested)
+        firebase.database().ref(`users/${uid}`).child('suggestions').once('value', function (snapshot) {
+            var index, suggestions;
+           // console.log(snapshot.val(), "removing!!!!")
+            if (snapshot.val()) {
+                suggestions=snapshot.val();
+
+                // console.log(snapshot.val(), "removing!!!!")
+                  if (Array.isArray(snapshot.val()) === false) {
+                    console.log('false')
+                    suggestions = Object.values(snapshot.val())
+                    console.log(suggestions,'ddd');
+                }
+
+                for (var i = 0; i < suggestions.length; i++) {
+                    if (suggestions[i] && suggestions[i].title === suggested) {
+                        suggestions.splice(i, 1);
+                        console.log(' removed ' + suggested, suggestions)
+                        break;
+                    }
+
+                }
+                 firebase.database().ref(`users/${uid}/suggestions`).set(suggestions)
+            }
+
+        });
+
+    }

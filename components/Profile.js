@@ -20,20 +20,32 @@ class Profile extends Component {
     this.setState({ scrollActive:bool } )
   }
 
+  onDelete(title) {
+    console.log('76l4BsVra7MZrR7NzuPv6XRg5BP2', 'Pan', ' ****da', title )
+    var arr = this.props.book.savedBooks.filter(eachbook =>{
+      if (title !== eachbook.title) {
 
-  displayBooks() {
-    console.log('run this function', this.props.book.savedBooks)
+        console.log(title, eachbook.title)
+        return eachbook;}
+    })
+    this.displayBooks(arr)
+   // this.props.removeBooks(this.props.auth.userId, title)
+  }
+  displayBooks(arr) {
+   // console.log('run this function', this.props.book.savedBooks)
     const { savedBooks, loading } = this.props.book;
-    console.log(loading, 'loading in display');
-    if (savedBooks) {
-      return this.props.book.savedBooks.map((book, index) => {
+    //console.log(loading, 'loading in display');
+
+      return arr.map((book, index) => {
         let modifiedLink;
         if (book.image.smallThumbnail) {
           book.image.smallThumbnail = book.image.smallThumbnail.replace(/zoom=[0-9]/, 'zoom=0')
         }
 
+
         return (
           <BookCard
+            onDelete={this.onDelete.bind(this)}
             key={index}
             books={book}
             index={index}
@@ -44,12 +56,12 @@ class Profile extends Component {
         )
       });
 
-    }
-    return (<Spinner size="large" />)
+
+
   }
 
   render() {
-    { console.log(this.props, ' jessica') }
+  //  { console.log(this.props, ' jessica') }
     const { loggedIn } = this.props.auth;
     return (
       <ScrollView style={styles.container} scrollEnabled={this.state.scrollActive}>
@@ -66,8 +78,12 @@ class Profile extends Component {
         <View
           style={{ alignItems: 'center' }}
         >
-          {this.displayBooks()}
+          {
+            this.props.book.savedBooks?
+            this.displayBooks(this.props.book.savedBooks)
 
+        :   <Spinner size="large" />
+          }
         </View>
       </ScrollView>
     )

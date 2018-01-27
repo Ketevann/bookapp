@@ -2,15 +2,15 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, View, Dimensions } from 'react-native';
 import { Button, Spinner} from './common';
 import { connect } from 'react-redux';
-import { clearPreferences , removeSuggestion} from '../redux/actions/preferencesActions';
-import { saveBook } from '../redux/actions/bookActions';
+//import { clearPreferences , removeSuggestion} from '../redux/actions/preferencesActions';
+import { saveBook , removeSuggestion} from '../redux/actions/bookActions';
 import Deck from './Deck';
 
 class Book extends Component {
 
   onEnd(){
     const userId = this.props.auth.userId;
-    this.props.clearPreferences(userId)
+    //this.props.clearPreferences(userId)
   }
 
   onSaveBook(book) {
@@ -43,7 +43,7 @@ class Book extends Component {
 
 
 export default connect(({ auth }) => ({ auth }), {
-    clearPreferences,
+    //clearPreferences,
     removeSuggestion,
     saveBook
   })(Book);

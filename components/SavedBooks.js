@@ -30,14 +30,14 @@ class SavedBooks extends Component {
 
   render() {
     return (
- null
+ <Text>SOME</Text>
     )
   }
 }
 
 // render() {
 //     return (
-    
+
 //          this.props.book.savedBooks.map((book,index)=>{
 //             return (
 //               <View key={index}>
@@ -47,8 +47,8 @@ class SavedBooks extends Component {
 //                 index={index}
 //               />
 //         </View>
-       
-      
+
+
 //       )
 //     })
 //   )}

@@ -27,7 +27,8 @@ bla(){
 handleSubmit(){
   console.log(this.props.book.searchbooks)
   const {searchbooks, placeholder} = this.props.book
-  this.props.findSimilarBooks(searchbooks, placeholder)
+
+  this.props.findSimilarBooks(searchbooks, placeholder, this.props.userId)
 }
 
 onSearchChange(searchbooks){
@@ -41,9 +42,9 @@ handleAuthor(){
   this.props.changeAuthor(this.props.book.placeholder)
 }
   render(){
-    {console.log('book', this.props)}
+   // {console.log('book', this.props)}
     return(
-      <View>
+      <View style={{ zIndex:1000}}>
       <Text onPress={() => this.handleBookChange()}>Books</Text>
       <Text onPress={() => this.handleAuthor()}>Authors</Text>
       <SearchBar

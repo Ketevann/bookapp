@@ -8,6 +8,5 @@ import preferences from './preferences';
 export default combineReducers({
   auth: auth,
   book:book,
-  preferences: preferences,
   cameraRoll : cameraRoll
 });

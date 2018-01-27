@@ -11,12 +11,14 @@ import {
   Modal,
   Easing,
   ScrollView,
-
 } from 'react-native';
 import { Card, Button, Icon } from 'react-native-elements'
 import { Actions } from 'react-native-router-flux';
+import {  Spinner } from './common'
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
+const SCREEN_HEIGHT = Dimensions.get('window').height;
+
 const SWIPE_THRESHOLD = 0.25 * SCREEN_WIDTH;
 const SWIPE_OUT_DURATION = 100;
 var { height, width } = Dimensions.get('window');
@@ -42,7 +44,7 @@ class Deck extends Component {
  const panResponder = PanResponder.create({
 
       // onPanResponderStart : () => {
-      //     // this.setState({ scrollActive:false } )
+      //     // this.texate({ scrollActive:false } )
       //       //console.log('touched ', this.state.scrollActive)
       // },
 
@@ -55,27 +57,40 @@ class Deck extends Component {
       onStartShouldSetPanResponderCapture: (evt, gestureState) => true,
       onMoveShouldSetPanResponder: (evt, gestureState) => true,
       onMoveShouldSetPanResponderCapture: (evt, gestureState) => true,
-      onPanResponderGrant: () => this.setState({scrollActive: false}),
+      onPanResponderGrant: () => true,
       //detects movement
       onPanResponderMove: (event, gesture) => {
         console.log('moving ', gesture.dx, SWIPE_THRESHOLD)
-        position.setValue({ x: gesture.dx, y: gesture.dy });
-      },
+        console.log('------------- ', gesture.dx, "---",gesture.dy, "0-0-0", 0.1 * SCREEN_WIDTH )
+        if (Math.abs(gesture.dx)<Math.abs(gesture.dy)){
+             position.setValue({ x: 0, y: 0});
+        } else  if ( Math.abs(gesture.dx) > (15) ){
+            this.state. position.setValue({ x: gesture.dx, y: 0});
+        } 
+      },
 
 
-      onPanResponderEnd: (e, gesture) => {
-this.setState({ scrollActive:true } )
-        console.log('onEnd ', gesture.dx, SWIPE_THRESHOLD, gesture.dx > SWIPE_THRESHOLD, gesture.dx < -SWIPE_THRESHOLD)
-        if (gesture.dx > SWIPE_THRESHOLD) {
-           console.log(' gesture greater than swipe', gesture.dx , SWIPE_THRESHOLD )
-          this.forceSwipe('right');
-        } else if (gesture.dx < -SWIPE_THRESHOLD) {
-          console.log(' gesture less than - swipe', gesture.dx , -SWIPE_THRESHOLD )
-          this.forceSwipe('left');
-        } else {
-          this.resetPosition();
-        }
-},
+
+//       onPanResponderEnd: (e, gesture) => {
+//         console.log('onEnd ', gesture.dx, gesture.dy, SWIPE_THRESHOLD, gesture.dx > SWIPE_THRESHOLD, gesture.dx < -SWIPE_THRESHOLD)
+//         if (gesture.dx > SWIPE_THRESHOLD) {
+//            console.log(' gesture greater than swipe', gesture.dx , SWIPE_THRESHOLD )
+//           this.forceSwipe('right');
+//         } else if (gesture.dx < -SWIPE_THRESHOLD) {
+//           console.log(' gesture less than - swipe', gesture.dx , -SWIPE_THRESHOLD )
+//           this.forceSwipe('left');
+//         }
+//         else if (gesture.dy < -15 || gesture.dy > 15 ){
+//           Animated.spring(this.state.position, {
+//       toValue: { x: 0, y: 0 }// there was glitch on rest. card was not returning to original position
+//     }).start();
+//         }
+
+
+//         else {
+//           this.resetPosition();
+//         }
+// },
 
 
 
@@ -83,25 +98,31 @@ this.setState({ scrollActive:true } )
 
 
       //detects release
-      onPanResponderTerminate: (event, gesture) => {
+      onPanResponderRelease: (event, gesture) => {
         console.log('onTerminate')
-        this.setState({ scrollActive:true } )
-        console.log('realeased ', gesture.dx, SWIPE_THRESHOLD, gesture.dx > SWIPE_THRESHOLD, gesture.dx < -SWIPE_THRESHOLD)
-        if (gesture.dx > SWIPE_THRESHOLD) {
+        console.log('realeased ', gesture.dx, gesture.dy,  SWIPE_THRESHOLD, gesture.dx > SWIPE_THRESHOLD, gesture.dx < -SWIPE_THRESHOLD)
+        if (gesture.dx > SWIPE_THRESHOLD && (gesture.dy >= -150 && gesture.dy <= 150 )) {
            console.log(' gesture greater than swipe', gesture.dx , SWIPE_THRESHOLD )
           this.forceSwipe('right');
-        } else if (gesture.dx < -SWIPE_THRESHOLD) {
+        } else if (gesture.dx < -SWIPE_THRESHOLD &&(gesture.dy >= -150 && gesture.dy <= 150 )) {
           console.log(' gesture less than - swipe', gesture.dx , -SWIPE_THRESHOLD )
           this.forceSwipe('left');
-        } else {
+        }
+    //      else if (gesture.dy < -5 || gesture.dy > 5 ){
+    //       Animated.spring(this.state.position, {
+    //   toValue: { x: 0, y: 0 }// there was glitch on rest. card was not returning to original position
+    // }).start();
+    //     }
+        else {
           this.resetPosition();
         }
       }
     });
 
-    this.state = { panResponder, position, index: 0, scrollActive:true,  modalVisible: false, description: '', title: '', page: '', category: '' };
+    this.state = { panResponder, position, index: 0, scrollActive:false,  modalVisible: false, description: '', title: '', page: '', category: '', txtheight: SCREEN_HEIGHT , loadingImage:true};
   }
   componentWillMount() {
+     this.setState({scrollActive: true})
    // console.log('this.tate', this.state)
     this.getDescription()
   }
@@ -138,6 +159,7 @@ this.setState({ scrollActive:true } )
   }
 
   onSwipeComplete(direction) {
+    this.setState({scrollActive: true})
     const { onSwipeLeft, onSwipeRight, data } = this.props;
     const item = data[this.state.index];
     direction === 'right' ? onSwipeRight(item) : onSwipeLeft(item.title);//for dislike on swipe we only need a title to remove from user suggestion in db
@@ -200,13 +222,14 @@ this.setState({ scrollActive:true } )
       if (i === this.state.index) {
         // console.log('index is equal thos should animate', this.state.index, i, item.title,' item')
         return (
-          <Animated.View
+          <Animated.ScrollView
             key={i}
-            style={[ styles.cardStyle, { zIndex: 99 }, this.getCardStyle()]}
+            style={[ styles.cardStyle, { zIndex: 99 }, this.getCardStyle(),{ height:height}]}
             {...this.state.panResponder.panHandlers}
           >
+
             {this.renderCard(item, i)}
-          </Animated.View>
+          </Animated.ScrollView>
         );
       }
 
@@ -214,12 +237,12 @@ this.setState({ scrollActive:true } )
         //  console.log('index is greater', 'state', this.state.index, 'index', i, item.title)
 
         return (
-          <Animated.View
+          <Animated.ScrollView
             key={i}
-            style={[styles.cardStyle, { top: 10 * (i - this.state.index), zIndex: 5 }]}
+            style={[styles.cardStyle, { top: 10 * (i - this.state.index), zIndex: 0}]}
           >
             {this.renderCard(item, i)}
-          </Animated.View>
+          </Animated.ScrollView>
         );
       }
     }).reverse()
@@ -229,24 +252,53 @@ this.setState({ scrollActive:true } )
 
   renderCard(item, index) {
     //   console.log('in render Card', item.title, 'title =======>>>')
+   const setStyle = () => {
 
-
-
-
+    console.log('in set Styke', index, this.state.index)
+    let visibility = 'flex'
+    if (index > this.state.index) {
+        return {
+          display: 'none'
+        }
+      }
+       return {
+          fontSize: 20
+        }
+    }
     let modifiedLink = item.imageLinks.smallThumbnail;
     if (item.imageLinks) {
       //   console.log(item.imageLinks.smallThumbnail, ' links')
       modifiedLink = item.imageLinks.smallThumbnail.replace(/zoom=[0-9]/, 'zoom=0')
     }
+     let deckRef= 'deck' + this.state.index;
+     console.log(deckRef, ' DECK RECF')
     return (
-      <Animated.View style={{ backgroundColor: 'white' }}
+      <Animated.ScrollView style={{ backgroundColor: 'white', height: this.state.txtheight }}
         key={index}
+
       >
-        <Text>{item.author}</Text>
-        <Image
-          source={{ uri: modifiedLink }} style={{ width: width - 40, height: height - 300 }} />
-          <Text>{item.description}</Text>
-      </Animated.View>
+        <Text
+        ref={'author'+ this.state.index}
+        >{item.author}</Text>
+        {/*<Image
+        ref={'image'+ this.state.index}
+          source={{ uri: modifiedLink }} style={{ width: width - 40, height: height - 300 }} />*/}
+           <Image
+              ref={'image'+ this.state.index}
+              source={{ uri: modifiedLink }} 
+              style={{ width: width - 40, height: height - 300 }}
+              onLoadStart={(e) => this.setState({loadingImage: true})}
+              onLoad={() => this.setState({loadingImage: false, error: false})}/>
+
+       { this.state.loadingImage === true ? <View style={styles.imageContainer}>
+                                              <Spinner/>
+                                            </View> : null }
+
+          <Text
+ ref={this.state.index}
+
+          >{item.description}</Text>
+      </Animated.ScrollView>
     );
   }
 
@@ -260,8 +312,8 @@ this.setState({ scrollActive:true } )
 
         <Button
           backgroundColor="#03A9F4"
-          title="Update Preferences"
-          onPress={() => Actions.preferencesForm()}
+          //title="Update Preferences"
+          //onPress={() => Actions.preferencesForm()}
         />
       </Card>
     );
@@ -286,48 +338,58 @@ this.setState({ scrollActive:true } )
     this.setState({ description: details.description, title: details.title, page: details.pageCount, category: details.categories[0] })
   }
 
+  measureHeader() {
+    console.log('measure head!!!!!!!===========>')
+  //  if (this.refs.myInput)
+  let measurement = {}
+    this.refs[this.state.index].measure((ox, oy, width, height) => {
+      console.log('DEEEECCCCC,', height)
+      var calc = SCREEN_HEIGHT - height
+      var H = height * (SCREEN_HEIGHT/ height)
+
+      //this.setState({txtheight: SCREEN_HEIGHT + calc});
+      measurement.height = height;
+
+       let deckRef = 'author'+this.state.index;
+      //console.log(deckRef, ' iin MESURE')
+      this.refs[deckRef].measure((ox, oy, width, height) => {
+      console.log('height, in AUTHOOOOR', height)
+      measurement.height += height;
+      //console.log('measureeeee', measurement, SCREEN_HEIGHT)
+    })
+
+       let imageRef = 'image'+this.state.index;
+        this.refs[imageRef].measure((ox, oy, width, height) => {
+      console.log('height, in IAMGEEEE', height)
+      measurement.height += height;
+      if (measurement.height < SCREEN_HEIGHT){
+        this.state.position.setValue({x: 0, y:0})
+this.setState({txtheight:  SCREEN_HEIGHT, scrollActive: false })
+      }
+    else  this.setState({txtheight:  measurement.height, scrollActive: true })
+
+    })
+
+ console.log(measurement, 'author image height', this.state.position)
+ });
+
+
+
+  }
   render() {
    // console.log('this.', this.props, this.state.scrollActive)
     const { imageLinks, title } = this.props.data,
       { book } = this.props
+      console.log(this.state.scrollActive, 'height of scroll in state', this.state.txtheight, SCREEN_HEIGHT)
     return (
-      <ScrollView
-
-      style={{flex: 1}}
-      >
-        {this.renderCards()}
-        <View
-          style={{ flexDirection: 'row', zIndex: 500, top: height - 275, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center' }}
-        //this keeps the buttons from traveling with each card. buttons remain in position as user swioes but functionality is passed to the next card
-        ><Icon
-            raised
-            name='close'
-            type='Foundation'
-            color='#f50'
-            size={25}
-            onPress={() => this.forceSwipe('left')}//deletes a "disliked book from users suggestions"
-          />
-          {/*<Button
-          icon={{ name: 'code' }}
-          backgroundColor="#03A9F4"
-          title="View Now!"
-        />*/}
-          <Button
-            onPress={() => this.openModal()}
-            title="Description"
-          />
-          <Icon
-            raised
-            name='heart'
-            type='font-awesome'
-            color='#f50'
-            size={25}
-            onPress={() => this.forceSwipe('right')}//sabes a "liked" book to users branch on swipe right
-          />
-        </View>
 
 
-      </ScrollView>
+
+
+       this.renderCards()
+
+
+
     );
   }
 }
@@ -335,11 +397,13 @@ this.setState({ scrollActive:true } )
 const styles = {
   cardStyle: {
     position: 'absolute',
-    width: SCREEN_WIDTH
+    width: SCREEN_WIDTH,
+    flex: 1,
   },
   container: {
-    flex: 1,
+
     justifyContent: 'center',
+    backgroundColor: 'white'
   },
   modalContainer: {
     flex: 1,
@@ -356,6 +420,16 @@ const styles = {
     height: 0.50 * Dimensions.get('window').height,
     borderRadius: 10
   },
+   imageContainer:{
+     width: width - 40, 
+     height: height - 250, 
+     backgroundColor:'white' , 
+     position:'absolute', 
+     flex:1, 
+     flexDirection:'row', 
+     alignItems:'center',
+     justifyContent:'center'
+   }
 };
 
 export default Deck;

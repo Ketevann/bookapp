@@ -10,7 +10,8 @@ import {
   GET_SAVED_BOOK,
   CLEAR,
   LOAD_SAVED_BOOKS,
-  BOOK_SEARCH_CLEAR
+  BOOK_SEARCH_CLEAR,
+  LOADING
 } from '../actions/action-types'
 
 const INITIAL_STATE = { saved:null, bookSuggestions:null, error:'', searchbooks: '', similarbooks: null, booksbool: true, authors: false, placeholder: 'books', savedBooks: [], user: null, read:false, loading: true, loadingSavedBook: false}
@@ -50,6 +51,8 @@ export default (book = INITIAL_STATE, action) => {
           return  {...book, similarbooks: null }
             case LOAD_SAVED_BOOKS:
               return {...book, loadingSavedBook :true, similarbooks: null };
+            case LOADING:
+                return {...book, loading: action.payload };
 
 
     default:
