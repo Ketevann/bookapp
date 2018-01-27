@@ -10,37 +10,22 @@ import {
   passwordConfirmChange,
   signUpUser
 } from '../redux/actions/authActions'
-import {dispatchCamera} from '../redux/actions/cameraActions'
-import {clearForm} from '../redux/actions/authActions';
+import { clearForm } from '../redux/actions/authActions';
 
-import RNF from './Pic'
+//import RNF from './Pic'
 import { Actions } from 'react-native-router-flux';
 
 class SignUp extends Component {
 
 
-  //   forgotPassword(){
-  //  var auth = firebase.auth();
-  // var emailAddress = "user@example.com";
-
-  // auth.sendPasswordResetEmail(emailAddress).then(function() {
-  //   // Email sent.
-  // }).catch(function(error) {
-  //   // An error happened.
-  // });
-  //   }
-  componentWillMount(){
+    componentWillMount(){
     this.props.clearForm();
 
   }
 
   OnButtonPress() {
-
-
-    const { email, password, passwordConfirm } = this.props.auth
-    console.log(email, password, 'EMAIL PASS')
-    this.props.signUpUser(email, password, passwordConfirm)
-
+    const { email, password, passwordConfirm } = this.props.auth;
+    this.props.signUpUser(email, password, passwordConfirm);
   }
 
   onForgotPassword(email) {
@@ -48,29 +33,22 @@ class SignUp extends Component {
   }
 
   onEmailChange(text) {
-    console.log('hh', this.props.auth, text)
     this.props.emailDispatch(text)
   }
   onPasswordChange(text) {
-    console.log('text')
     this.props.passwordDispatch(text)
   }
 
   onPasswordConfirm(text) {
-    console.log('text')
     this.props.passwordConfirmChange(text)
   }
 
-  onUploadPress() {
-    console.log('ww');
-    this.props.dispatchCamera(true)
-   // this.setState({shoComponent:true})
+  // onUploadPress() {
+  //   this.props.dispatchCamera(true)
 
-  }
+  // }
   OnRedirect(){
-
     const { email, password, passwordConfirm } = this.props.auth
-    console.log(email, password, 'EMAIL PASS')
     this.props.signUpUser(email, password, passwordConfirm)
     if (this.props.auth.loggedIn)
     Actions.preferencesForm();
@@ -164,6 +142,5 @@ export default connect(({ auth, cameraRoll }) => ({ auth, cameraRoll }), {
   passwordDispatch,
   passwordConfirmChange,
   signUpUser,
-  dispatchCamera,
   clearForm
 })(SignUp);
