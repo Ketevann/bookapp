@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { View, ScrollView } from 'react-native';
-import { Spinner } from './common';
 import { connect } from 'react-redux';
+import { Spinner } from './common';
 import {
   getSavedBooks
 } from '../redux/actions/bookActions';
-import BookCard from './BookCard'
+import BookCard from './BookCard';
 
 class Profile extends Component {
   constructor(props) {

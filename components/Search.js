@@ -1,17 +1,14 @@
 import { SearchBar } from 'react-native-elements'
 import React, { Component } from 'react';
 import { Text, View, TextInput, Keyboard } from 'react-native';
-import firebase from 'firebase';
-import { Header, Button, Spinner } from './common';
-import LoginForm from './common/LoginForm'
+import { connect } from 'react-redux';
+import { Button } from './common';
 import {
   setSearchValue,
   findSimilarBooks,
-  changeBook,
   changeSearchBookQuery
-} from '../redux/actions/bookActions'
-import { connect } from 'react-redux'
-import { Actions } from 'react-native-router-flux';
+} from '../redux/actions/bookActions';
+
 
 class Search extends Component {
 

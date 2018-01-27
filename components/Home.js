@@ -1,18 +1,18 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { Spinner } from './common'
+import firebase from 'firebase';
+import { connect } from 'react-redux';
+import { Spinner } from './common';
 import {
   loginDispatch,
   loginDispatchFalse
-} from '../redux/actions/authActions'
+} from '../redux/actions/authActions';
 import {
   updateDefaultSuggestions,
   getDefualt, getSuggestions,
   clearSearchBooks, findSimilarBooks,
   loadingSearchResults
-} from '../redux/actions/bookActions'
-import { connect } from 'react-redux';
-import firebase from 'firebase';
+} from '../redux/actions/bookActions';
 import Book from './Book';
 import Search from './Search';
 

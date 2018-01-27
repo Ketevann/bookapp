@@ -8,20 +8,17 @@ import {
   UIManager,
   Text,
   Image,
-  Modal,
   Easing,
-  ScrollView,
 } from 'react-native';
-import { Card, Button, Icon } from 'react-native-elements'
-import { Actions } from 'react-native-router-flux';
-import { Spinner } from './common'
+import { Card, Button, Icon } from 'react-native-elements';
+import { Spinner } from './common';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 const SWIPE_THRESHOLD = 0.25 * SCREEN_WIDTH;
-const SWIPE_OUT_DURATION = 100;
-var { height, width } = Dimensions.get('window');
+const SWIPE_OUT_DURATION = 250;
+const { height, width } = Dimensions.get('window');
 
 class Deck extends Component {
   static defaultProps = {
@@ -61,11 +58,9 @@ class Deck extends Component {
       }
     });
 
-    this.state = { panResponder, position, index: 0, scrollActive: false, txtheight: SCREEN_HEIGHT, loadingImage: true };
+    this.state = { panResponder, position, index: 0, loadingImage: true };
   }
-  componentWillMount() {
-    this.setState({ scrollActive: true })
-  }
+
   componentWillReceiveProps(nextProps) {
     if (nextProps.data !== this.props.data) {
       this.setState({ index: 0 });
@@ -77,28 +72,14 @@ class Deck extends Component {
     LayoutAnimation.spring();
   }
 
-  forceSwipe(direction) {
-    const x = direction === 'right' ? SCREEN_WIDTH : -SCREEN_WIDTH;
-    Animated.timing(this.state.position, {
-      toValue: { x, y: 0 },
-      duration: 250,
-      easing: Easing.linear
-    }).start(() => this.onSwipeComplete(direction));
-  }
+
 
   onSwipeComplete(direction) {
-    this.setState({ scrollActive: true })
     const { onSwipeLeft, onSwipeRight, data } = this.props;
     const item = data[this.state.index];
     direction === 'right' ? onSwipeRight(item) : onSwipeLeft(item.title);//for dislike on swipe we only need a title to remove from user suggestion in db
     this.state.position.setValue({ x: 0, y: 0 });
     this.setState({ index: this.state.index + 1 });
-  }
-
-  resetPosition() {
-    Animated.spring(this.state.position, {
-      toValue: { x: 0, y: 0 }// there was glitch on rest. card was not returning to original position
-    }).start();
   }
 
   getCardStyle() {
@@ -111,12 +92,24 @@ class Deck extends Component {
       ...position.getLayout(),
       transform: [{ rotate }],
       opacity: this.state.position.x.interpolate({ inputRange: [-SCREEN_WIDTH, 0, SCREEN_WIDTH], outputRange: [0.5, 1, 0.5] })
-
     }];
   }
 
-  renderCards() {
+  forceSwipe(direction) {
+    const x = direction === 'right' ? SCREEN_WIDTH : -SCREEN_WIDTH;
+    Animated.timing(this.state.position, {
+      toValue: { x, y: 0 },
+      duration: SWIPE_OUT_DURATION,
+      easing: Easing.linear
+    }).start(() => this.onSwipeComplete(direction));
+  }
+  resetPosition() {
+    Animated.spring(this.state.position, {
+      toValue: { x: 0, y: 0 }// there was glitch on rest. card was not returning to original position
+    }).start();
+  }
 
+  renderCards() {
     if (this.state.index >= this.props.data.length) {
       return this.renderNoMoreCards();
     }
@@ -128,7 +121,8 @@ class Deck extends Component {
         return (
           <Animated.ScrollView
             key={i}
-            style={[styles.cardStyle, { zIndex: 99 }, this.getCardStyle(), { height: height }]}
+            style={[styles.cardStyle, { zIndex: 99 }, this.getCardStyle(),
+            { height }]}
             {...this.state.panResponder.panHandlers}
           >
             {this.renderCard(item, i)}
@@ -152,26 +146,31 @@ class Deck extends Component {
     if (item.imageLinks) {
       modifiedLink = item.imageLinks.smallThumbnail.replace(/zoom=[0-9]/, 'zoom=0')
     }
-    let deckRef = 'deck' + this.state.index;
     return (
-      <Animated.ScrollView style={{ backgroundColor: 'white', height: this.state.txtheight }}
+      <Animated.ScrollView
+        style={{
+          backgroundColor: 'white',
+          height: SCREEN_HEIGHT
+        }}
         key={index}
       >
         <Text
           ref={'author' + this.state.index}
         >{item.author}</Text>
         <Image
-          ref={'image' + this.state.index}
           source={{ uri: modifiedLink }}
           style={{ width: width - 40, height: height - 300 }}
           onLoadStart={(e) => this.setState({ loadingImage: true })}
           onLoad={() => this.setState({ loadingImage: false, error: false })} />
-        {this.state.loadingImage === true ? <View style={styles.imageContainer}>
-          <Spinner />
-        </View> : null}
-        <Text
-          ref={this.state.index}
-        >{item.description}</Text>
+        {
+          this.state.loadingImage ?
+            <View style={styles.imageContainer}>
+              <Spinner />
+            </View>
+            :
+            null
+        }
+        <Text>{item.description}</Text>
       </Animated.ScrollView>
     );
   }
@@ -191,30 +190,7 @@ class Deck extends Component {
     );
   }
 
-
-  measureHeader() {
-    let measurement = {}
-    this.refs[this.state.index].measure((ox, oy, width, height) => {
-      ;
-      measurement.height = height;
-      let deckRef = 'author' + this.state.index;
-      this.refs[deckRef].measure((ox, oy, width, height) => {
-        measurement.height += height;
-      });
-      let imageRef = 'image' + this.state.index;
-      this.refs[imageRef].measure((ox, oy, width, height) => {
-        measurement.height += height;
-        if (measurement.height < SCREEN_HEIGHT) {
-          this.state.position.setValue({ x: 0, y: 0 })
-          this.setState({ txtheight: SCREEN_HEIGHT, scrollActive: false })
-        } else this.setState({ txtheight: measurement.height, scrollActive: true });
-      });
-    });
-  }
-
   render() {
-    const { imageLinks, title } = this.props.data,
-      { book } = this.props;
     return (
       this.renderCards()
     );
