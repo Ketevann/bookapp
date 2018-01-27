@@ -314,6 +314,7 @@ export const loadPrefBooks = (userID, dispatch) => {// we dont need to call a di
 
 }
 
+//gets books from suggestions
 export const getSuggestions = (userID, dispatch) =>//we call this function in componentWillMount, so we dont need to call a display function
     dispatch =>{
         dispatch({ type: LOADING , payload: true })
@@ -329,13 +330,15 @@ export const getSuggestions = (userID, dispatch) =>//we call this function in co
             })
             .catch((error) => loadPrefBooks(userID, dispatch))//else check for preferences, if none, load default
     }
-
+    
+    //when no suggested books are saved, we load defualt books
     export const getDefualt = (dispatch) =>//setting defualt books to suggestions state
     dispatch => firebase.database().ref(`default`).once('value', (snapshot) => {
         const defaultBooks = snapshot.val();
         dispatch({ type: UPDATE_SUGGESTIONS, payload: defaultBooks });
     })
-
+    
+    //used when we need to update the defualt books branch
     export const updateDefaultSuggestions = (userID, dispatch) =>
         dispatch => getBooksFromApi(defaultBooks.list).then((defaultSuggestions) => {
         console.log(defaultSuggestions, 'defaultSgugest')
