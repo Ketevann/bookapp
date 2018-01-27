@@ -74,7 +74,7 @@ display(){
 
       <View style={{ flex: 1 }}>
         <Search handleSubmit={this.handleSubmit.bind(this)} userId={userId} />
-         { (this.props.book.loadingSavedBook   /*|| loading*/)?
+         { (this.props.book.loadingSavedBook   || loading )?
 
                <Spinner size="large" />
           :

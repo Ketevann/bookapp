@@ -133,6 +133,14 @@ const getBooks = (dispatch, data, userId, author = '', ) => {//added user id
 export const findSimilarBooks = (keyword, placeholder, userId, dispatch) =>
     dispatch => {
         console.log(keyword, 'LEYWORD***', placeholder)
+        const suggestionsRef = firebase.database().ref(`users/${userId}/suggestions`);
+        suggestionsRef.once('value')//deletes previous suggested books
+            .then(snapshot => {
+                if (snapshot.val()){
+                    suggestionsRef.set(null);
+                }
+            })
+
         if (placeholder === 'books') {
             return cloudscraper.get(`https://tastedive.com/api/similar?q=${keyword}&k=${TASTE_DIVE_API_KEY}&limit=2&type=books`)
                 .then(res => {
