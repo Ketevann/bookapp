@@ -10,7 +10,7 @@ import {
     LOAD_SAVED_BOOKS,
     BOOK_SEARCH_CLEAR,
     LOADING,
-    UPDATE_SUGGESTIONS
+    UPDATE_SUGGESTIONS,
 } from './action-types'
 import { GOOGLE_API_KEY } from '../../keys'
 import firebase from 'firebase';
@@ -307,7 +307,7 @@ export const loadPrefBooks = (userID, dispatch) => {// we dont need to call a di
         .then((booksData) => {
             console.log(booksData,' booksDAta')
             suggestionsRef.set([...booksData]);
-            dispatch({ type: UPDATE_SUGGESTIONS, payload: booksData });
+            dispatch({ type: BOOK_SEARCH, payload: booksData });
         })
         .catch(error => {
             console.log("no prefs, loading defualt suggestions");
@@ -315,7 +315,7 @@ export const loadPrefBooks = (userID, dispatch) => {// we dont need to call a di
             firebase.database().ref(`default`).once('value', (snapshot) => {
                 const defaultBooks = snapshot.val();
                 suggestionsRef.set([...defaultBooks]);//setting defualt books to suggestions branch
-                dispatch({ type: UPDATE_SUGGESTIONS, payload: defaultBooks });
+                dispatch({ type:BOOK_SEARCH, payload: defaultBooks });
             })
         })
 
@@ -331,7 +331,7 @@ export const getSuggestions = (userID, dispatch) =>//we call this function in co
                     throw ("Error")
 
                 const suggestions = Object.values(snapshot.val());
-                dispatch({ type: UPDATE_SUGGESTIONS, payload: suggestions })
+                dispatch({ type: BOOK_SEARCH, payload: suggestions })
                 dispatch({ type: LOADING , payload: false })
 
             })
@@ -342,7 +342,7 @@ export const getSuggestions = (userID, dispatch) =>//we call this function in co
     export const getDefualt = (dispatch) =>//setting defualt books to suggestions state
     dispatch => firebase.database().ref(`default`).once('value', (snapshot) => {
         const defaultBooks = snapshot.val();
-        dispatch({ type: UPDATE_SUGGESTIONS, payload: defaultBooks });
+        dispatch({ type: BOOK_SEARCH, payload: defaultBooks });
     })
     
     //used when we need to update the defualt books branch
