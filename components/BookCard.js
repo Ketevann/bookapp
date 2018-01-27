@@ -23,12 +23,12 @@ const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
 class BookCard extends Component {
   constructor(props) {
     super(props)
-    this.state = { index: 0, value: 0, scrollActive: false, loading: true , loadingImage: true }
+    this.state = { index: 0, value: 0, loading: true , loadingImage: true }
   }
 
   componentWillMount() {
-    if (this.props.books.image) {
-      this.setState({ loading: false });
+     if (this.props.books.image) {
+       this.setState({ loading: false });
     }
     this.animatedValue = new Animated.Value(0);
     this.value = 0;
@@ -102,21 +102,6 @@ class BookCard extends Component {
                 fontFamily: 'Helvetica'
               }}
             >{book.title}</Text>
-            <TouchableOpacity
-              onPress={() => {
-                if (this.state.scrollActive === true) {
-                  this.setState({ scrollActive: false });
-                }
-                this.flipCard();
-              }
-              }
-              style={{ display: this.state.scrollActive ? 'flex' : 'none', flexDirection: 'row', justifyContent: 'flex-end' }}>
-              <Image
-                style={{ width: 40, height: 40 }}
-                source={require('../img/turn-right-arrow.png')}
-              />
-              <Text >Flip</Text>
-            </TouchableOpacity>
             <TouchableOpacity
               onPress={() => this.flipCard()}
             >
