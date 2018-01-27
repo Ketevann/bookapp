@@ -18,8 +18,7 @@ export const LOAD_SAVED_BOOKS = 'LOAD_SAVED_BOOKS'
 export const BOOK_SEARCH_CLEAR = 'BOOK_SEARCH_CLEAR'
 
 export const FETCHED_BOOKS = 'export const'
-export const AUTHOR_BOOL = 'AUTHOR_BOOL'
-export const BOOK_BOOL = 'BOOK_BOOL'
+export const SEARCH_TYPE = ' SEARCH_TYPE'
 export const GET_SAVED_BOOK = 'GET_SAVED_BOOK'
 export const CLEAR_BOOKS = 'ClEAR_BOOKS'
 

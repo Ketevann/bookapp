@@ -1,4 +1,4 @@
-const INITIAL_STATE = { email: '', password: '', passwordConfirm: '', error: '', loading: false, loggedIn: null, userId:''}
+const INITIAL_STATE = { email: '', password: '', passwordConfirm: '', error: '', loading: false, loggedIn: null, userId: '' };
 import {
   EMAIL_CHANGED, PASSWORD_CHANGED, LOGIN_USER_SUCESS, LOGIN_USER_FAIL,
   LOGIN_USER,
@@ -7,12 +7,9 @@ import {
   FORGOT,
   PASSWORD_CONFIRM,
   CLEARFORM
-} from '../actions/action-types'
-
-
+} from '../actions/action-types';
 
 export default (auth = INITIAL_STATE, action) => {
-//  console.log(action, 'ACTIONNN');
   switch (action.type) {
     case EMAIL_CHANGED:
       return { ...auth, email: action.payload };
@@ -28,8 +25,7 @@ export default (auth = INITIAL_STATE, action) => {
     case LOGIN_USER:
       return { ...auth, loading: true, error: '' };
     case LOGGEDIN:
-    console.log(action, 'action in LOGGED')
-      return { loggedIn: true, userId:action.payload, image:action.image };
+      return { loggedIn: true, userId: action.payload };
     case NOTLOGGEDIN:
       return { ...auth, loggedIn: false };
     case FORGOT:

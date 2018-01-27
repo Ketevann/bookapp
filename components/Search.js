@@ -1,74 +1,57 @@
 import { SearchBar } from 'react-native-elements'
 import React, { Component } from 'react';
 import { Text, View, TextInput, Keyboard } from 'react-native';
-import firebase from 'firebase';
-import { Header, Button, Spinner } from './common';
-import LoginForm  from './common/LoginForm'
+import { connect } from 'react-redux';
+import { Button } from './common';
 import {
   setSearchValue,
-findSimilarBooks,
-changeBook,
-changeAuthor} from '../redux/actions/bookActions'
-import { connect } from 'react-redux'
-import {Actions} from 'react-native-router-flux';
+  findSimilarBooks,
+  changeSearchBookQuery
+} from '../redux/actions/bookActions';
+
 
 class Search extends Component {
 
-// componentDidMount() {
-//   this.search.focus()
-// }
+  onSearchChange(searchbooks) {
+    this.props.setSearchValue(searchbooks);
+  }
 
+  onSetSearchQuery(query) {
+    this.props.changeSearchBookQuery(query);
+  }
+  cancelSearch() {
+    this.search.blur();
+  }
 
-bla(){
-  console.log('cancel')
-  this.search.blur()
-}
-
-handleSubmit(){
-  console.log(this.props.book.searchbooks)
-  const {searchbooks, placeholder} = this.props.book
-
-  this.props.findSimilarBooks(searchbooks, placeholder, this.props.userId)
-}
-
-onSearchChange(searchbooks){
-console.log(searchbooks,' search')
-  this.props.setSearchValue(searchbooks)
-}
-handleBookChange(){
-  this.props.changeBook(this.props.book.placeholder)
-}
-handleAuthor(){
-  this.props.changeAuthor(this.props.book.placeholder)
-}
-  render(){
-   // {console.log('book', this.props)}
-    return(
-      <View style={{ zIndex:1000}}>
-      <Text onPress={() => this.handleBookChange()}>Books</Text>
-      <Text onPress={() => this.handleAuthor()}>Authors</Text>
-      <SearchBar
-      onPress={()=> this.search.focus()}
-       ref={search => this.search = search}
-  round
-  clearIcon
-  onSubmitEditing={()=> this.props.handleSubmit()}
-  onChangeText={()=> console.log('text')}
-  returnKeyType='search'
-  onChangeText={this.onSearchChange.bind(this)}
-  value={this.props.book.searchbooks}
-  placeholder={this.props.book.placeholder}/>
-  <Button onPress={() => this.bla()}>cancel</Button>
-   <TextInput
-        onSubmitEditing={Keyboard.dismiss}
-      />
-  </View>
+  render() {
+    // {console.log('book', this.props)}
+    return (
+      <View style={{ zIndex: 1000 }}>
+        <Text onPress={() => this.onSetSearchQuery('book')}>Books</Text>
+        <Text onPress={() => this.onSetSearchQuery('author')}>Authors</Text>
+        <SearchBar
+          onPress={() => this.search.focus()}
+          ref={search => this.search = search}
+          round
+          clearIcon
+          onSubmitEditing={() => this.props.handleSubmit()}
+          onChangeText={() => console.log('text')}
+          returnKeyType='search'
+          onChangeText={this.onSearchChange.bind(this)}
+          value={this.props.book.searchbooks}
+          placeholder={this.props.book.placeholder} />
+        <Button onPress={() => this.cancelSearch()}>cancel</Button>
+        <TextInput
+          onSubmitEditing={Keyboard.dismiss}
+        />
+      </View>
     )
   }
 
 }
 export default connect(({ book }) =>
-({ book: book }), {setSearchValue,
-  findSimilarBooks,
-changeBook,
-changeAuthor})(Search)
+  ({ book }), {
+    setSearchValue,
+    findSimilarBooks,
+    changeSearchBookQuery
+  })(Search)

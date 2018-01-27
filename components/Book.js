@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, View, Dimensions } from 'react-native';
 import { Button, Spinner} from './common';
 import { connect } from 'react-redux';
-//import { clearPreferences , removeSuggestion} from '../redux/actions/preferencesActions';
 import { saveBook , removeSuggestion} from '../redux/actions/bookActions';
 import Deck from './Deck';
 
@@ -10,9 +9,7 @@ class Book extends Component {
 
   onEnd(){
     const userId = this.props.auth.userId;
-    //this.props.clearPreferences(userId)
   }
-
   onSaveBook(book) {
     const userId = this.props.auth.userId;
     this.props.removeSuggestion(book.title, userId );
@@ -21,13 +18,11 @@ class Book extends Component {
 
   onRemoveBook(book) {
     const userId = this.props.auth.userId;
-    console.log( "dislike ", book, " ",userId)
     this.props.removeSuggestion(book, userId )
   }
 
-  render(){
-    const { loggedIn } = this.props.auth,
-          { data, loading } = this.props;
+  render() {
+   const { data } = this.props;
 
     return (
       data ? //checking if books are in state
