@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, ScrollView, Image, TouchableOpacity } from 'react-native';
 import { Header, Card, CardSection, Button, Spinner } from './common'
-//import { getSuggestions,getDefualt, updateDefaultSuggestions } from '../redux/actions/preferencesActions';
 import { loginDispatch, loginDispatchFalse } from '../redux/actions/authActions'
 import { updateDefaultSuggestions, getDefualt, getSuggestions, clearSearchBooks, findSimilarBooks, loadingSearchResults } from '../redux/actions/bookActions'
 import { Actions } from 'react-native-router-flux';
@@ -45,9 +44,7 @@ handleSubmit(){
 
 display(){
       const { loggedIn } = this.props.auth
- //   { console.log(this.props, "preferences") }
-    const { preferences, loading } = this.props.preferences;
-    const { similarbooks } = this.props.book;
+    const { similarbooks,loading } = this.props.book;
 
 
    if(this.props.book && similarbooks ){
@@ -57,7 +54,6 @@ display(){
      return  <Text>Your Search returned no results </Text>
          return  (<Book data={similarbooks} loading={loading} />)
    }
-             return (<Book data={preferences} loading={loading} />)
 
 
 }
@@ -66,9 +62,7 @@ display(){
     const { loggedIn } = this.props.auth
     const userId = this.props.auth.userId;
 
-    //{ console.log(this.props, "preferences") }
-    const { preferences, loading } = this.props.preferences;
-    const { similarbooks } = this.props.book;
+    const { similarbooks, loading } = this.props.book;
 
     return (
 
@@ -104,7 +98,7 @@ const styles = StyleSheet.create({
 
 export default connect(
 
-  ({ book, auth, preferences }) => ({ book: book, auth: auth, preferences: preferences }),
+  ({ book, auth }) => ({ book: book, auth: auth }),
   {
     loginDispatch, loginDispatchFalse,
     getDefualt,
