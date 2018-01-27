@@ -134,7 +134,7 @@ export const findSimilarBooks = (keyword, placeholder, userId, dispatch) =>
     dispatch => {
         console.log(keyword, 'LEYWORD***', placeholder)
         if (placeholder === 'books') {
-            return cloudscraper.get(`https://tastedive.com/api/similar?q=${keyword}&k=${TASTE_DIVE_API_KEY}&limit=10&type=books`)
+            return cloudscraper.get(`https://tastedive.com/api/similar?q=${keyword}&k=${TASTE_DIVE_API_KEY}&limit=2&type=books`)
                 .then(res => {
 
                      console.log(res, ' data2222', JSON.parse(res._bodyText).Similar.Results)
@@ -146,7 +146,7 @@ export const findSimilarBooks = (keyword, placeholder, userId, dispatch) =>
                 .catch(err=> console.log(err))
         }
         else {
-            return cloudscraper.get(`https://tastedive.com/api/similar?q=${keyword}&k=${TASTE_DIVE_API_KEY}&limit=10&type=authors`)
+            return cloudscraper.get(`https://tastedive.com/api/similar?q=${keyword}&k=${TASTE_DIVE_API_KEY}&limit=2&type=authors`)
                 .then(res => {
                   console.log(res, ' data2222', JSON.parse(res._bodyText).Similar.Results)
                       const data = JSON.parse(res._bodyText).Similar.Results;
