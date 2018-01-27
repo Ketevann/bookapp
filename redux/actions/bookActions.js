@@ -129,6 +129,7 @@ export const findSimilarBooks = (keyword, placeholder, userId, dispatch) =>
 
 export const getSavedBooks = (user, dispatch) =>
     dispatch => {
+        dispatch({ type: LOADING });//updates loading in saved books to true
         var savedBook = [];
         console.log(' in geeet', user)
         firebase.database().ref(`users/${user}/books`).once('value', (snapshot) => {
@@ -222,14 +223,13 @@ export const loadPrefBooks = (userID, dispatch) => {// we dont need to call a di
 //gets books from suggestions
 export const getSuggestions = (userID, dispatch) =>//we call this function in componentWillMount, so we dont need to call a display function
     dispatch => {
-        dispatch({ type: LOADING, payload: true })
+        dispatch({ type: LOAD_SAVED_BOOKS })
         firebase.database().ref(`users/${userID}/suggestions`).once('value')//if there are suggestions we load those to state
             .then(function (snapshot) {
                 if (!snapshot.val())
                     throw ("Error");
                 const suggestions = Object.values(snapshot.val());
                 dispatch({ type: BOOK_SEARCH, payload: suggestions })
-                dispatch({ type: LOADING, payload: false })
             })
             .catch((error) => loadPrefBooks(userID, dispatch))//else check for references, if none, load default
     };
