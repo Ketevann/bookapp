@@ -105,7 +105,6 @@ const getBooks = (dispatch, data, userId, author = '', ) => {//added user id
             console.error(error);
         });
 }
-
 export const findSimilarBooks = (keyword, placeholder, userId, dispatch) =>
     dispatch => {
         const suggestionsRef = firebase.database().ref(`users/${userId}/suggestions`);
@@ -115,18 +114,15 @@ export const findSimilarBooks = (keyword, placeholder, userId, dispatch) =>
                     suggestionsRef.set(null);
                 }
             });
-        if (placeholder === 'books') {
             return cloudscraper.get(`https://tastedive.com/api/similar?q=${keyword}&k=${TASTE_DIVE_API_KEY}&limit=2&type=${placeholder}`)
                 .then(res => {
                     const data = JSON.parse(res._bodyText).Similar.Results;
                     let query = '';
                     if (placeholder === 'author')
                         query = 'inauthor:';
-                    getBooks(dispatch, data, userId, query)
+                    getBooks(dispatch, data, userId, query);
                 })
                 .catch(err => console.log(err));
-        }
-
     }
 
 export const getSavedBooks = (user, dispatch) =>
