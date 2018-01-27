@@ -23,7 +23,7 @@ const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
 class BookCard extends Component {
   constructor(props) {
     super(props)
-    this.state = { index: 0, value: 0, scrollActive: false, loading: true }
+    this.state = { index: 0, value: 0, scrollActive: false, loading: true , loadingImage: true }
   }
 
   componentWillMount() {
@@ -121,10 +121,20 @@ class BookCard extends Component {
               onPress={() => this.flipCard()}
             >
               <Animated.View>
-                <Animated.Image
+                {/*<Animated.Image
                   style={[this.frontCardStyle(), styles.cardStyle]}
                   source={{ uri: book.image.smallThumbnail }}
+                />*/}
+                <Animated.Image
+                  source={{ uri: book.image.smallThumbnail }}
+                  style={[this.frontCardStyle(), styles.cardStyle]}
+                  onLoadStart={(e) => this.setState({loadingImage: true})}
+                  onLoad={() => this.setState({loadingImage: false, error: false})}
                 />
+
+                { this.state.loadingImage === true ? <View style={styles.imageContainer}>
+                                                        <Spinner/>
+                                                      </View> : null }
               </Animated.View>
               <Animated.View style={[this.backCardStyle(), styles.cardStyle, styles.flipCardBack]} >
                 <ScrollView
@@ -204,7 +214,16 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 0,
   },
-
+  imageContainer:{//styling for image spinner
+     height: 425, 
+     width: 250,
+     backgroundColor:'#E5EAEF' , 
+     position:'absolute', 
+     flex:1, 
+     flexDirection:'row', 
+     alignItems:'center',
+     justifyContent:'center'
+   }
 });
 
 export default connect(
