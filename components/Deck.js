@@ -166,11 +166,11 @@ class Deck extends Component {
           this.state.loadingImage ?
             <View style={styles.imageContainer}>
               <Spinner />
-            </View>
-            :
-            null
+            </View>: 
+            <Text ref={this.state.index}>
+              {item.description}
+            </Text> 
         }
-        <Text>{item.description}</Text>
       </Animated.ScrollView>
     );
   }

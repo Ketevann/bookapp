@@ -32,7 +32,7 @@ export default (book = INITIAL_STATE, action) => {
       return { ...book, booksbool: true, authors: false, placeholder: action.query };
 
     case GET_SAVED_BOOK:
-      return { ...book, savedBooks: action.payload, user: action.user };
+      return { ...book, loading: false, savedBooks: action.payload, user: action.user };//when saved books are loaded, loading = false 
     case READ:
       let newBook = { ...book };
       let newSavedBooks = newBook.savedBooks.map(element => {
@@ -49,7 +49,7 @@ export default (book = INITIAL_STATE, action) => {
     case LOAD_SAVED_BOOKS:
       return { ...book, loadingSavedBook: true, similarbooks: null };
     case LOADING:
-      return { ...book, loading: action.payload };
+      return { ...book, loading: true };//upates to true when user is reloading saved books
     default:
       return book;
   }

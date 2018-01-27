@@ -26,6 +26,7 @@ class Profile extends Component {
   }
   displayBooks(arr) {
     const { loading } = this.props.book;
+    //console.log(loading, 'loading in display');
     return arr.map((book, index) => {
       return (
         <BookCard
@@ -34,15 +35,15 @@ class Profile extends Component {
           books={book}
           index={index}
           disableParentScroll={this.disableParentScroll.bind(this)}
-          loading={loading}
         />
       )
     });
   }
 
   render() {
+    const { savedBooks, loading } = this.props.book;
     return (
-      <ScrollView style={styles.container} scrollEnabled={this.state.scrollActive}>
+      <ScrollView style={styles.container} contentContainerStyle={{flexGrow: 1}} scrollEnabled={this.state.scrollActive}>
         {/*<View>
           <Avatar
             containerStyle={{ position: 'absolute', right: 0 }}
@@ -53,15 +54,8 @@ class Profile extends Component {
             activeOpacity={0.7}
           />
         </View>*/}
-        <View
-          style={{ alignItems: 'center' }}
-        >
-          {
-            this.props.book.savedBooks ?
-              this.displayBooks(this.props.book.savedBooks)
-
-              : <Spinner size="large" />
-          }
+        <View style={{ alignItems: 'center', flex:1 }} >
+          { savedBooks && !loading ? this.displayBooks(this.props.book.savedBooks) : <Spinner size="large" /> }
         </View>
       </ScrollView>
     );

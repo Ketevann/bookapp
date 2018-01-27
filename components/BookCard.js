@@ -23,12 +23,12 @@ const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
 class BookCard extends Component {
   constructor(props) {
     super(props)
-    this.state = { index: 0, value: 0, scrollActive: false, loading: true }
+    this.state = { index: 0, value: 0, loading: true , loadingImage: true }
   }
 
   componentWillMount() {
-    if (this.props.books.image) {
-      this.setState({ loading: false });
+     if (this.props.books.image) {
+       this.setState({ loading: false });
     }
     this.animatedValue = new Animated.Value(0);
     this.value = 0;
@@ -103,28 +103,23 @@ class BookCard extends Component {
               }}
             >{book.title}</Text>
             <TouchableOpacity
-              onPress={() => {
-                if (this.state.scrollActive === true) {
-                  this.setState({ scrollActive: false });
-                }
-                this.flipCard();
-              }
-              }
-              style={{ display: this.state.scrollActive ? 'flex' : 'none', flexDirection: 'row', justifyContent: 'flex-end' }}>
-              <Image
-                style={{ width: 40, height: 40 }}
-                source={require('../img/turn-right-arrow.png')}
-              />
-              <Text >Flip</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
               onPress={() => this.flipCard()}
             >
               <Animated.View>
-                <Animated.Image
+                {/*<Animated.Image
                   style={[this.frontCardStyle(), styles.cardStyle]}
                   source={{ uri: book.image.smallThumbnail }}
+                />*/}
+                <Animated.Image
+                  source={{ uri: book.image.smallThumbnail }}
+                  style={[this.frontCardStyle(), styles.cardStyle]}
+                  onLoadStart={(e) => this.setState({loadingImage: true})}
+                  onLoad={() => this.setState({loadingImage: false, error: false})}
                 />
+
+                { this.state.loadingImage === true ? <View style={styles.imageContainer}>
+                                                        <Spinner/>
+                                                      </View> : null }
               </Animated.View>
               <Animated.View style={[this.backCardStyle(), styles.cardStyle, styles.flipCardBack]} >
                 <ScrollView
@@ -204,7 +199,16 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 0,
   },
-
+  imageContainer:{//styling for image spinner
+     height: 425, 
+     width: 250,
+     backgroundColor:'#E5EAEF' , 
+     position:'absolute', 
+     flex:1, 
+     flexDirection:'row', 
+     alignItems:'center',
+     justifyContent:'center'
+   }
 });
 
 export default connect(

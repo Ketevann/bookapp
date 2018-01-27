@@ -53,16 +53,11 @@ class Home extends Component {
 
   render() {
     const userId = this.props.auth.userId;
-    const { loading } = this.props.book;
+    const { similarbooks, loadingSavedBook } = this.props.book;
     return (
       <View style={{ flex: 1 }}>
         <Search handleSubmit={this.handleSubmit.bind(this)} userId={userId} />
-        {
-          this.props.book.loadingSavedBook || loading ?
-            <Spinner size="large" />
-            :
-            this.display()
-        }
+        { loadingSavedBook ? <Spinner size="large" /> : this.display() }
       </View>
     );
   }

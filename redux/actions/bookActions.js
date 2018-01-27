@@ -11,6 +11,8 @@ import { GOOGLE_API_KEY } from '../../keys'
 import firebase from 'firebase';
 import axios from 'axios';
 import { TASTE_DIVE_API_KEY } from '../../keys'
+import { defaultBookImg } from '../../components/data/defaultBookImg';
+import defaultBooks from '../../components/data/defaultBooks';
 import * as cloudscraper from 'react-native-cloudscraper'
 export const getBookSuggestions = (books, dispatch) =>
     dispatch => {
@@ -91,7 +93,7 @@ const getBooks = (dispatch, data, userId, author = '', ) => {//added user id
                     title: currentBook.title,
                     author: currentBook.authors ? currentBook.authors[0] : '',
                     description: currentBook.description ? currentBook.description : '',
-                    imageLinks: currentBook.imageLinks ? currentBook.imageLinks : '',
+                    imageLinks: currentBook.imageLinks ? currentBook.imageLinks : { smallThumbnail: defaultBookImg },//if no image link, add a default image
                     categories: currentBook.categories ? currentBook.categories : '',
                     pageCount: currentBook.pageCount ? currentBook.pageCount : ''
                 };
@@ -129,6 +131,7 @@ export const findSimilarBooks = (keyword, placeholder, userId, dispatch) =>
 
 export const getSavedBooks = (user, dispatch) =>
     dispatch => {
+        dispatch({ type: LOADING });//updates loading in saved books to true
         var savedBook = [];
         console.log(' in geeet', user)
         firebase.database().ref(`users/${user}/books`).once('value', (snapshot) => {
@@ -191,61 +194,39 @@ export const clearSearchBooks = dispatch =>
         dispatch({ type: BOOK_SEARCH_CLEAR })
 
 
-export const loadPrefBooks = (userID, dispatch) => {// we dont need to call a display function
-    const suggestionsRef = firebase.database().ref(`users/${userID}/suggestions`);
-    firebase.database().ref(`users/${userID}/`).child('preferences').once('value')
-        .then(snapshot => {
-            const preferences = snapshot.val();//this is the  preferences object
-            if (!snapshot.val())
-                throw ("Error")
-            return find(preferences);//calling TasteDive
-            //we return a promise that resolves into array of titles to be sent to googleAPI
-        })
-        .then((similarTitles) => {
-            const data = JSON.parse(similarTitles._bodyText).Similar.Results;
-            return getBooks(data)//calling googleAPI
-        })
-        .then((booksData) => {
-            suggestionsRef.set([...booksData]);
-            dispatch({ type: BOOK_SEARCH, payload: booksData });
-        })
-        .catch(error => {
-            //we have a defualt branch in firebase,
-            firebase.database().ref(`default`).once('value', (snapshot) => {
-                const defaultBooks = snapshot.val();
-                suggestionsRef.set([...defaultBooks]);//setting defualt books to suggestions branch
-                dispatch({ type: BOOK_SEARCH, payload: defaultBooks });
-            });
-        });
-};
 
 //gets books from suggestions
 export const getSuggestions = (userID, dispatch) =>//we call this function in componentWillMount, so we dont need to call a display function
     dispatch => {
-        dispatch({ type: LOADING, payload: true })
-        firebase.database().ref(`users/${userID}/suggestions`).once('value')//if there are suggestions we load those to state
+        dispatch({ type: LOAD_SAVED_BOOKS })
+        const suggestionsRef = firebase.database().ref(`users/${userID}/suggestions`);
+        suggestionsRef.once('value')//if there are suggestions we load those to state
             .then(function (snapshot) {
                 if (!snapshot.val())
                     throw ("Error");
                 const suggestions = Object.values(snapshot.val());
                 dispatch({ type: BOOK_SEARCH, payload: suggestions })
-                dispatch({ type: LOADING, payload: false })
             })
-            .catch((error) => loadPrefBooks(userID, dispatch))//else check for references, if none, load default
+            .catch((error) =>  firebase.database().ref(`default`).once('value', (snapshot) => {//setting defualt books to suggestions branch
+                                    const defaultBooks = snapshot.val();
+                                    suggestionsRef.set([...defaultBooks]);
+                                    dispatch({ type: BOOK_SEARCH, payload: defaultBooks });
+                                })
+            )
     };
 
-//when no suggested books are saved, we load defualt books
-export const getDefualt = dispatch =>//setting defualt books to suggestions state
-    dispatch =>
-        firebase.database().ref(`default`).once('value', (snapshot) => {
-            const defaultBooks = snapshot.val();
-            dispatch({ type: BOOK_SEARCH, payload: defaultBooks });
-        });
+// //when no suggested books are saved, we load defualt books
+// export const getDefualt = dispatch =>//setting defualt books to suggestions state
+//     dispatch =>
+//         firebase.database().ref(`default`).once('value', (snapshot) => {
+//             const defaultBooks = snapshot.val();
+//             dispatch({ type: BOOK_SEARCH, payload: defaultBooks });
+//         });
 
 //used when we need to update the defualt books branch
 export const updateDefaultSuggestions = (userID, dispatch) =>
     dispatch =>
-        getBooksFromApi(defaultBooks.list)
+        getBooks(defaultBooks.list)
             .then((defaultSuggestions) => {
                 firebase.database().ref(`default`).set([...defaultSuggestions]);
             });
