@@ -35,7 +35,11 @@ class Deck extends Component {
       onStartShouldSetPanResponderCapture: (evt, gestureState) => true,
       onMoveShouldSetPanResponder: (evt, gestureState) => true,
       onMoveShouldSetPanResponderCapture: (evt, gestureState) => true,
-      onPanResponderGrant: () => true,
+      onPanResponderGrant: /*() => true*/ () => {this.setState({scroll: false}); //changing state as they had in the article 
+      //if (this.state.scroll) return false 
+      //else  return true
+      return true// I read in the docs that we should always return a boolean 
+    },
       //detects movement
       onPanResponderMove: (event, gesture) => {
         if (Math.abs(gesture.dx) < Math.abs(gesture.dy)) {
@@ -46,6 +50,7 @@ class Deck extends Component {
       },
       //detects release
       onPanResponderRelease: (event, gesture) => {
+        this.setState({scroll: true}); //changing state as they had in the article 
         if (gesture.dx > SWIPE_THRESHOLD
           && (gesture.dy >= -150 && gesture.dy <= 150)) {
           this.forceSwipe('right');
@@ -58,7 +63,7 @@ class Deck extends Component {
       }
     });
 
-    this.state = { panResponder, position, index: 0, loadingImage: true };
+    this.state = { panResponder, position, index: 0, loadingImage: true ,  scroll: true };
   }
 
   componentWillReceiveProps(nextProps) {
@@ -121,6 +126,7 @@ class Deck extends Component {
         return (
           <Animated.ScrollView
             key={i}
+            scrollEnabled={this.state.scroll}//added Scroll enables
             style={[styles.cardStyle, { zIndex: 99 }, this.getCardStyle(),
             { height }]}
             {...this.state.panResponder.panHandlers}
@@ -153,6 +159,7 @@ class Deck extends Component {
           height: SCREEN_HEIGHT
         }}
         key={index}
+        scrollEnabled={this.state.scroll}//added Scroll enables
       >
         <Text
           ref={'author' + this.state.index}

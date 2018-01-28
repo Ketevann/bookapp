@@ -114,7 +114,7 @@ export const findSimilarBooks = (keyword, placeholder, userId, dispatch) =>
                     suggestionsRef.set(null);
                 }
             });
-            return cloudscraper.get(`https://tastedive.com/api/similar?q=${keyword}&k=${TASTE_DIVE_API_KEY}&limit=2&type=${placeholder}`)
+            return cloudscraper.get(`https://tastedive.com/api/similar?q=${keyword}&k=${TASTE_DIVE_API_KEY}&limit=20&type=${placeholder}`)
                 .then(res => {
                     const data = JSON.parse(res._bodyText).Similar.Results;
                     let query = '';
