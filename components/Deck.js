@@ -203,8 +203,16 @@ class Deck extends Component {
           style={{ width: width - 40, height: height - 300 }}
           onLoadStart={(e) => this.setState({ loadingImage: true })}
           onLoad={() => this.setState({ loadingImage: false, error: false })} />
-
-
+        {
+          this.state.loadingImage ?
+            <View style={styles.imageContainer}>
+              <Spinner />
+            </View>: 
+            <Text ref={this.state.index}>
+              {item.description}
+            </Text> 
+        }
+        
         <Button
           onPress={() => {
             this.setState({ scroll: !this.state.scroll, panResponderEnabled: !this.state.panResponderEnabled })
