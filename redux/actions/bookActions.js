@@ -212,12 +212,12 @@ export const getSuggestions = (userID, dispatch) =>//we call this function in co
     };
 
 // //when no suggested books are saved, we load defualt books
-// export const getDefualt = dispatch =>//setting defualt books to suggestions state
-//     dispatch =>
-//         firebase.database().ref(`default`).once('value', (snapshot) => {
-//             const defaultBooks = snapshot.val();
-//             dispatch({ type: BOOK_SEARCH, payload: defaultBooks });
-//         });
+export const getDefualt = dispatch =>//setting defualt books to suggestions state
+    dispatch =>
+        firebase.database().ref(`default`).once('value', (snapshot) => {
+            const defaultBooks = snapshot.val();
+            dispatch({ type: BOOK_SEARCH, payload: defaultBooks });
+        });
 
 //used when we need to update the defualt books branch
 export const updateDefaultSuggestions = (userID, dispatch) =>

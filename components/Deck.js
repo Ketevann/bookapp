@@ -31,34 +31,66 @@ class Deck extends Component {
 
     const position = new Animated.ValueXY();
     const panResponder = PanResponder.create({
-      onStartShouldSetPanResponder: () => true,
-      onStartShouldSetPanResponderCapture: (evt, gestureState) => true,
+      onStartShouldSetPanResponder: () => this.state.panResponderEnabled,
       onMoveShouldSetPanResponder: (evt, gestureState) => true,
-      onMoveShouldSetPanResponderCapture: (evt, gestureState) => true,
-      onPanResponderGrant: () => true,
+
       //detects movement
       onPanResponderMove: (event, gesture) => {
-        if (Math.abs(gesture.dx) < Math.abs(gesture.dy)) {
-          position.setValue({ x: 0, y: 0 });
-        } else if (Math.abs(gesture.dx) > (15)) {
-          this.state.position.setValue({ x: gesture.dx, y: 0 });
+        console.log(gesture.dy, gesture.dx, this.state.scroll, this.state.panResponderEnabled)
+        // if (Math.abs(gesture.dx) < Math.abs(gesture.dy)) {
+        //   position.setValue({ x: 0, y: 0 });
+        // } else if (Math.abs(gesture.dx) > (15)) {
+
+        if (this.state.panResponderEnabled) {
+          // if (gesture.dy >= 10 && gesture.dy <= 50)
+            this.state.position.setValue({ x: gesture.dx, y: gesture.dy });
         }
+        // }
+
+        //    else if (gesture.dy < 10 || gesture.dy >50 )
+        //      {
+        //        console.log('less repositioning')
+        //       Animated.spring(this.state.position, {
+        //   toValue: { x: 0, y: 0 }// there was glitch on rest. card was not returning to original position
+        // }).start();
+        // }
       },
       //detects release
+
+      onPanResponderEnd: (event, gesture) => {
+        console.log('ended')
+        //   if (gesture.dy < -10 || gesture.dy >50 )
+        //  {
+        //    console.log('less repositioning')
+        //    this.state.position.setValue({ x: 0, y: 0 });}
+
+
+      },
+
       onPanResponderRelease: (event, gesture) => {
+        console.log('released', this.state.position.x, this.state.position.y)
+        //   if (gesture.dy < -10 || gesture.dy >50 )
+        //  {
+        //    console.log('less repositioning')
+        //    this.state.position.setValue({ x: 0, y: 0 });}
+
+        //this.setState({scroll: true}); //changing state as they had in the article
+
+//      if (this.state.panResponderEnabled) {
         if (gesture.dx > SWIPE_THRESHOLD
-          && (gesture.dy >= -150 && gesture.dy <= 150)) {
+        ) {
           this.forceSwipe('right');
         } else if (gesture.dx < -SWIPE_THRESHOLD
-          && (gesture.dy >= -150 && gesture.dy <= 150)) {
+        ) {
           this.forceSwipe('left');
         } else {
           this.resetPosition();
         }
+     // }
       }
     });
 
-    this.state = { panResponder, position, index: 0, loadingImage: true };
+    this.state = { panResponder, position, index: 0, loadingImage: true, scroll: false, panResponderEnabled: true };
   }
 
   componentWillReceiveProps(nextProps) {
@@ -104,9 +136,16 @@ class Deck extends Component {
     }).start(() => this.onSwipeComplete(direction));
   }
   resetPosition() {
+    console.log('rsetting')
     Animated.spring(this.state.position, {
       toValue: { x: 0, y: 0 }// there was glitch on rest. card was not returning to original position
     }).start();
+
+
+    //    Animated.spring(this.state.position, {
+    //   toValue: { x: 0, y: 0 }// there was glitch on rest. card was not returning to original position
+    // }).start();
+
   }
 
   renderCards() {
@@ -121,8 +160,9 @@ class Deck extends Component {
         return (
           <Animated.ScrollView
             key={i}
-            style={[styles.cardStyle, { zIndex: 99 }, this.getCardStyle(),
-            { height }]}
+            scrollEnabled={this.state.scroll}//added Scroll enables
+            style={[styles.cardStyle, { zIndex: 99 }, this.getCardStyle()
+            ]}
             {...this.state.panResponder.panHandlers}
           >
             {this.renderCard(item, i)}
@@ -133,7 +173,7 @@ class Deck extends Component {
         return (
           <Animated.ScrollView
             key={i}
-            style={[styles.cardStyle, { top: 10 * (i - this.state.index), zIndex: 0 }]}
+            style={[styles.cardStyle, { zIndex: 0 }]}
           >
             {this.renderCard(item, i)}
           </Animated.ScrollView>
@@ -153,6 +193,7 @@ class Deck extends Component {
           height: SCREEN_HEIGHT
         }}
         key={index}
+        scrollEnabled={this.state.scroll}//added Scroll enables
       >
         <Text
           ref={'author' + this.state.index}
@@ -162,15 +203,25 @@ class Deck extends Component {
           style={{ width: width - 40, height: height - 300 }}
           onLoadStart={(e) => this.setState({ loadingImage: true })}
           onLoad={() => this.setState({ loadingImage: false, error: false })} />
-        {
-          this.state.loadingImage ?
-            <View style={styles.imageContainer}>
-              <Spinner />
-            </View>: 
-            <Text ref={this.state.index}>
-              {item.description}
-            </Text> 
-        }
+
+
+        <Button
+          onPress={() => {
+            this.setState({ scroll: !this.state.scroll, panResponderEnabled: !this.state.panResponderEnabled })
+
+
+          }
+          }
+          style={{ marginTop: 50 }}
+
+
+        >Scroll</Button>
+        {this.state.scroll ?
+
+          <Text ref={this.state.index}>
+            {item.description}
+          </Text> : null}
+
       </Animated.ScrollView>
     );
   }
@@ -191,6 +242,7 @@ class Deck extends Component {
   }
 
   render() {
+    console.log(this.state.scroll, 'panResponder', this.state.panResponderEnabled)
     return (
       this.renderCards()
     );
@@ -200,8 +252,8 @@ class Deck extends Component {
 const styles = {
   cardStyle: {
     position: 'absolute',
-    width: SCREEN_WIDTH,
-    flex: 1,
+    width: SCREEN_WIDTH
+
   },
   container: {
 

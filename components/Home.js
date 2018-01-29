@@ -56,7 +56,6 @@ class Home extends Component {
     const { similarbooks, loadingSavedBook } = this.props.book;
     return (
       <View style={{ flex: 1 }}>
-        <Search handleSubmit={this.handleSubmit.bind(this)} userId={userId} />
         { loadingSavedBook ? <Spinner size="large" /> : this.display() }
       </View>
     );
