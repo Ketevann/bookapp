@@ -1,44 +1,67 @@
 import React from 'react';
-import { Text, View, TextInput } from 'react-native';
+import { Text, View, TextInput, Dimensions, PixelRatio } from 'react-native';
+const { height, width } = Dimensions.get('window');
+import { LinearGradient } from 'expo';
+
+let SCREEN_WIDTH = PixelRatio.getPixelSizeForLayoutSize(width);
+let SCREEN_HEIGHT = PixelRatio.getPixelSizeForLayoutSize(height);
+
+
+
+
+
 
 const Input = ({ label, value, onChangeText, placeholder, secureTextEntry }) => {
- const {inputStyle, labelStyle, containerStyle} = styles;
+  const { inputStyle, labelStyle, containerStyle,ViewStyle, placeholderStyle } = styles;
 
   return (
-    <View style={containerStyle}>
-      <Text style={labelStyle}>{label}</Text>
-      <TextInput
-      secureTextEntry={secureTextEntry}
-      placeholder={placeholder}
-      autoCorrect={false}
-     style={inputStyle}
-      value={value}
-      onChangeText={onChangeText}
-      />
+    <View
+      style={ViewStyle}   >
 
+
+      <Text >{label}</Text>
+      <TextInput
+        placeholderTextColor="#9B9B9"
+        style={containerStyle}
+        secureTextEntry={secureTextEntry}
+        placeholder={placeholder}
+        autoCorrect={false}
+
+        value={value}
+        onChangeText={onChangeText}
+      />
+      <LinearGradient
+        colors={['#9E81C6', '#3F529C']}
+        style={{alignItems: 'center', height: 1, width: (width / 1.5) }}
+
+      >
+
+      </LinearGradient>
     </View>
   );
 };
 
 const styles = {
-  inputStyle: {
-    color: '#000',
-    paddingRight: 5,
-    paddingLeft: 5,
-    fontSize: 18,
-    lineHeight: 23,
-    flex: 2
+  ViewStyle: {
+  marginLeft: SCREEN_WIDTH * (50 / SCREEN_WIDTH) ,
+  backgroundColor: 'white'
   },
   labelStyle: {
-    fontSize: 18,
-    paddingLeft: 20,
-    flex: 1
+    fontSize: SCREEN_WIDTH * (14 / SCREEN_WIDTH),
+
+  },
+  border: {
+    borderWidth: 1
   },
   containerStyle: {
-    height: 40,
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center'
+    backgroundColor: 'white',
+    paddingBottom: SCREEN_WIDTH * (15 / SCREEN_WIDTH),
+    fontFamily: 'Avenir-Book'
+  },
+  placeholderStyle: {
+    fontSize: SCREEN_WIDTH * (14 / SCREEN_WIDTH),
+    fontFamily: 'Avenir-Book',
+    color: 'green'
   }
 };
 export { Input };
