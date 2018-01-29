@@ -203,32 +203,22 @@ class Deck extends Component {
           style={{ width: width - 40, height: height - 300 }}
           onLoadStart={(e) => this.setState({ loadingImage: true })}
           onLoad={() => this.setState({ loadingImage: false, error: false })} />
-        {
-          this.state.loadingImage ?
-            <View style={styles.imageContainer}>
-              <Spinner />
-            </View>: 
+         { 
+           this.state.loadingImage ?
+             <View style={styles.imageContainer}>
+               <Spinner />
+             </View> : <Button onPress={() => this.setState({ scroll: !this.state.scroll, panResponderEnabled: !this.state.panResponderEnabled }) } style={{ marginTop: 50 }} > Scroll</Button>
+         }
+        { 
+          this.state.scroll ?
+          <View>
             <Text ref={this.state.index}>
               {item.description}
             </Text> 
+          </View> : null
         }
-        
-        <Button
-          onPress={() => {
-            this.setState({ scroll: !this.state.scroll, panResponderEnabled: !this.state.panResponderEnabled })
 
-
-          }
-          }
-          style={{ marginTop: 50 }}
-
-
-        >Scroll</Button>
-        {this.state.scroll ?
-
-          <Text ref={this.state.index}>
-            {item.description}
-          </Text> : null}
+       
 
       </Animated.ScrollView>
     );
