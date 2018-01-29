@@ -91,11 +91,11 @@ const getBooks = (dispatch, data, userId, author = '', ) => {//added user id
                 let currentBook = book.data.items[0].volumeInfo;
                 const newBook = {
                     title: currentBook.title,
-                    author: currentBook.authors ? currentBook.authors[0] : '',
-                    description: currentBook.description ? currentBook.description : '',
+                    author: currentBook.authors ? currentBook.authors[0] : 'No authors available',
+                    description: currentBook.description ? currentBook.description : 'No description available',
                     imageLinks: currentBook.imageLinks ? currentBook.imageLinks : { smallThumbnail: defaultBookImg },//if no image link, add a default image
-                    categories: currentBook.categories ? currentBook.categories : '',
-                    pageCount: currentBook.pageCount ? currentBook.pageCount : ''
+                    categories: currentBook.categories ? currentBook.categories : 'No categories available',
+                    pageCount: currentBook.pageCount ? currentBook.pageCount : 'No page count available'
                 };
                 return newBook;
             })
@@ -220,12 +220,31 @@ export const getDefualt = dispatch =>//setting defualt books to suggestions stat
         });
 
 //used when we need to update the defualt books branch
-export const updateDefaultSuggestions = (userID, dispatch) =>
-    dispatch =>
-        getBooks(defaultBooks.list)
-            .then((defaultSuggestions) => {
-                firebase.database().ref(`default`).set([...defaultSuggestions]);
-            });
+export const updateDefaultSuggestions = (userID,author='', dispatch) =>
+    dispatch =>{
+        const bookPromises = defaultBooks.list.map((book) => axios.get(`https://www.googleapis.com/books/v1/volumes?q=${author}${book.Name}&key=${GOOGLE_API_KEY}`));
+        axios.all(bookPromises)
+        .then(axios.spread((...args) => {
+            //collect returned data for each api call in array
+            const bookList = args.map((book) => {
+                let currentBook = book.data.items[0].volumeInfo;
+                const newBook = {
+                    title: currentBook.title,
+                    author: currentBook.authors ? currentBook.authors[0] : 'No authors available',
+                    description: currentBook.description ? currentBook.description : 'No description available',
+                    imageLinks: currentBook.imageLinks ? currentBook.imageLinks : { smallThumbnail: defaultBookImg },//if no image link, add a default image
+                    categories: currentBook.categories ? currentBook.categories : 'No categories available',
+                    pageCount: currentBook.pageCount ? currentBook.pageCount : 'No page count available'
+                };
+                return newBook;
+            })
+            if (bookList.length !== 0)  firebase.database().ref(`default`).set([...bookList]); //save suggested books to db, only if there are results, invalid input will not return results
+        })).catch((error) => {
+            console.error(error);
+        });
+      
+           
+    }
 
 
 
