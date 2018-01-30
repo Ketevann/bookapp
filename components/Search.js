@@ -11,6 +11,9 @@ import {
 
 
 class Search extends Component {
+  static defaultProps = {
+    clearBooks: () => { },//defualt function
+  }
 
   onSearchChange(searchbooks) {
     this.props.setSearchValue(searchbooks);
@@ -21,6 +24,7 @@ class Search extends Component {
   }
   cancelSearch() {
     this.search.blur();
+    this.props.clearBooks() //if props are passed, call that function, else nothing happens
   }
 
   render() {
