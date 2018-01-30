@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import firebase from 'firebase';
 import { connect } from 'react-redux';
-import { Spinner } from './common';
+import { Spinner, Button } from './common';
 import {
   loginDispatch,
   loginDispatchFalse
@@ -15,7 +15,7 @@ import {
 } from '../redux/actions/bookActions';
 import Book from './Book';
 import Search from './Search';
-
+import Login from './Login';
 class Home extends Component {
 
   componentWillMount() {
@@ -51,12 +51,32 @@ class Home extends Component {
     }
   }
 
+  // render() {
+  //   const userId = this.props.auth.userId;
+  //   const { similarbooks, loadingSavedBook } = this.props.book;
+  //   return (
+  //     <View style={{ flex: 1 }}>
+  //     {/*<Search handleSubmit={this.handleSubmit.bind(this)} userId={ userId } />*/}
+  //       { loadingSavedBook ? <Spinner size="large" /> : this.display() }
+  //     </View>
+  //   );
+  // }
+
   render() {
-    const userId = this.props.auth.userId;
+    const { loadingCreditionals, userId }= this.props.auth;
+    // const { loggedIn } = this.props.auth;
     const { similarbooks, loadingSavedBook } = this.props.book;
-    return (
+    
+    if ( loadingCreditionals || loadingSavedBook){//loadingCreditionals is boolean, display as spinner cuz otherwise when user is loggedin, the sign in form flashes briefly.
+      return <Spinner size="large" />
+    }
+    else if ( !this.props.auth.loggedIn ) { //display login form if not signed. 
+      return <Login/>;
+    }else return (
       <View style={{ flex: 1 }}>
-        { loadingSavedBook ? <Spinner size="large" /> : this.display() }
+        <Search handleSubmit={this.handleSubmit.bind(this)} userId={ userId } />
+         <Text style={{ zIndex: 1000 }} onPress={() =>{firebase.auth().signOut() }}>Log Out</Text>
+        { this.display() }
       </View>
     );
   }
