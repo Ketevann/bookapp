@@ -75,13 +75,18 @@ class BookCard extends Component {
       }).start();
     }
   }
-
+  onUpdateBook( title ,type){
+     this.props.updateFilteredBooks  ?  this.props.updateFilteredBooks(title, type) : null;//checks if filterUpdate function exists then call it, else do nothing 
+  }                                                                             //if we are displaying searched books, then the filterUpdated functuion exists
+                                                                                //if we are displaying saved books then filterUpdated functuion does not exist 
   onDelete(title) {
-    this.props.removeBooks(this.props.auth.userId, title)
+    this.props.removeBooks(this.props.auth.userId, title);//updating the db
+    this.onUpdateBook( title, 'delete');//updating the display of searched books 
   }
 
   onRead(title) {
-    this.props.markAsRead(this.props.auth.userId, title)
+    this.props.markAsRead(this.props.auth.userId, title ); //updating the db
+    this.onUpdateBook( title, 'read');//updating the display of searched books 
   }
 
   renderElemets(book) {

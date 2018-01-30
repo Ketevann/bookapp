@@ -193,7 +193,25 @@ export const markAsRead = (uid, title, dispatch) =>
         });
     };
 
-
+export const reRenderSearch = ( books, title, updateType, dispatch) =>//takes current array of searched books, deletes/updates read, then sets that updated array to state (our searchQuery variable)
+    dispatch => {                                                     //thus forcing a re-render of searched books ans we see changes in icon or the deleted book goes away 
+            if (updateType==='read'){
+                for (let i = 0; i < books.length; i++) {
+                    let book = books[i];
+                    
+                    if (book && book.title === title) {
+                       book.read = !book.read; //updating read
+                    }
+                }
+            } else {
+                books = books.filter(book => {
+                    if (book.title !== title) //filtering out the deleted book
+                        return book;
+                });
+            }
+            return dispatch({ type: SEARCH_QUERY_SUCCESS, payload: books }); //setting updated books to state
+    };
+    
 export const removeBooks = (uid, saved, dispatch) =>
     dispatch => {
         firebase.database().ref(`users/${uid}`).child('books').once('value', function (snapshot) {

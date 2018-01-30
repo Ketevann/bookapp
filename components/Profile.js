@@ -3,7 +3,7 @@ import { View, ScrollView, Text } from 'react-native';
 import { connect } from 'react-redux';
 import { Spinner } from './common';
 import {
-  getSavedBooks, searchSavedBooks, clearSearchedBooks
+  getSavedBooks, searchSavedBooks, clearSearchedBooks, reRenderSearch
 } from '../redux/actions/bookActions';
 import BookCard from './BookCard';
 import Search from './Search'
@@ -32,10 +32,13 @@ class Profile extends Component {
     this.props.searchSavedBooks(searchbooks, placeholder, this.props.auth.userId); //checks the user's book for the query keyword
   }
 
-  displayBooks(arr) {
+  updateFilteredBooks( title, updateType ){//sending the searched books array, a title and what is to be done to that book (updateType = read || delete )
+    this.props.reRenderSearch( this.props.book.searchQuery, title, updateType)
+  }
+
+  displayBooks(books, filter = false ) {
     const { loading } = this.props.book;
-    //console.log(loading, 'loading in display');
-    return arr.map((book, index) => {
+    return books.map((book, index) => {
       return (
         <BookCard
           onDelete={this.onDelete.bind(this)}
@@ -43,6 +46,7 @@ class Profile extends Component {
           books={book}
           index={index}
           disableParentScroll={this.disableParentScroll.bind(this)}
+          updateFilteredBooks={ filter ? this.updateFilteredBooks.bind(this) : null }//if filter is true, set filterUpdate function to props (we use this to update read/delete searched books display)
         />
       )
     });
@@ -50,19 +54,19 @@ class Profile extends Component {
 
   displayPage(){// handles rendering of books 
     const { savedBooks, searchQuery, loading } = this.props.book;
-    if ( searchQuery  && !loading){                             //display searched books 
-      return this.displayBooks( searchQuery );     
-    }else if (savedBooks  && !loading ){             //display saved books
-      return  (
+    if ( searchQuery  && !loading){                            
+      return this.displayBooks( searchQuery, true ); //display searched books, filter paratmeter is true 
+    }else if ( savedBooks  && !loading ){             
+      return  ( 
                 <View style={ styles.booksContainer }>
                   { this.displayBooks( savedBooks ) }
-                </View>
+                </View>//display saved books, no filter bool 
               )
-    } return  <Spinner size="large" />;              //display spinner in between
+    } return  <Spinner size="large" />;              //display spinner in when switching between saved and searched
   }
 
   render() {
-    const {userId} = this.props.auth.userId;
+    const { userId } = this.props.auth.userId;
     return (
       <ScrollView style={styles.container} contentContainerStyle={{flexGrow: 1}} scrollEnabled={this.state.scrollActive}>
         {/*<View>
@@ -97,6 +101,7 @@ export default connect(
   {
     getSavedBooks,
     searchSavedBooks,
-    clearSearchedBooks
+    clearSearchedBooks,
+    reRenderSearch
   },
 )(Profile)
