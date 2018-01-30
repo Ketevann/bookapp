@@ -38,7 +38,7 @@ class Login extends Component {
   }
 
   render() {
-    console.log(SCREEN_WIDTH * (20 / SCREEN_WIDTH), SCREEN_WIDTH * (2 / SCREEN_WIDTH), width, PixelRatio.getPixelSizeForLayoutSize(width), SCREEN_WIDTH * (SCREEN_WIDTH / 2), SCREEN_WIDTH * (20 / SCREEN_WIDTH))
+    console.log(SCREEN_HEIGHT, SCREEN_WIDTH)
     return (
       <View style={{ flex: 1, backgroundColor: 'white'}}>
         <Text

@@ -8,7 +8,7 @@ let SCREEN_HEIGHT = PixelRatio.getPixelSizeForLayoutSize(height);
 
 
 
-
+import {scale, verticalScale, moderateScale } from '../../functions'
 
 
 const Input = ({ label, value, onChangeText, placeholder, secureTextEntry }) => {
@@ -43,11 +43,11 @@ const Input = ({ label, value, onChangeText, placeholder, secureTextEntry }) => 
 
 const styles = {
   ViewStyle: {
-  marginLeft: SCREEN_WIDTH * (50 / SCREEN_WIDTH) ,
+  marginLeft: scale(50) ,
   backgroundColor: 'white'
   },
   labelStyle: {
-    fontSize: SCREEN_WIDTH * (14 / SCREEN_WIDTH),
+    fontSize: scale(14),
 
   },
   border: {
@@ -55,11 +55,11 @@ const styles = {
   },
   containerStyle: {
     backgroundColor: 'white',
-    paddingBottom: SCREEN_WIDTH * (15 / SCREEN_WIDTH),
+    paddingBottom: scale(15),
     fontFamily: 'Avenir-Book'
   },
   placeholderStyle: {
-    fontSize: SCREEN_WIDTH * (14 / SCREEN_WIDTH),
+    fontSize: scale(14),
     fontFamily: 'Avenir-Book',
     color: 'green'
   }

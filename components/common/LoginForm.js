@@ -8,6 +8,7 @@ import { Header, Card, CardSection, Button, Input, Spinner } from './'
 import firebase from 'firebase'
 
 const { height, width } = Dimensions.get('window');
+import {scale, verticalScale, moderateScale } from '../../functions'
 
 let SCREEN_WIDTH = PixelRatio.getPixelSizeForLayoutSize(width);
 let SCREEN_HEIGHT = PixelRatio.getPixelSizeForLayoutSize(height);
@@ -100,21 +101,20 @@ class LoginForm extends Component {
     },
     forgotpassowrdStyle: {
       fontFamily: 'Avenir-Book',
-      fontSize: SCREEN_WIDTH * (14 / SCREEN_WIDTH),
+      fontSize: scale(12),
       color: '#4A4A4A',
-      marginTop: SCREEN_HEIGHT * (10 / SCREEN_HEIGHT),
+      marginTop: verticalScale(10),
       letterSpacing: 0.4,
-      marginLeft: SCREEN_WIDTH * (193 / SCREEN_WIDTH),
-      paddingBottom: 15
+      marginLeft: scale(140),
     },
     errorViewStyle: {
       backgroundColor: '#F38D8D',
-      height: SCREEN_HEIGHT * (42 / SCREEN_HEIGHT),
-      marginTop: SCREEN_HEIGHT * (40 / SCREEN_HEIGHT)
+      height: verticalScale(42),
+      marginTop: verticalScale(25)
     },
     errorTextStyle: {
      color: '#FFFFFF',
-      fontSize: SCREEN_WIDTH * (14 / SCREEN_WIDTH),
+      fontSize: scale(14),
       textAlign: 'center',
       padding: 10,
       fontFamily: 'Avenir-Book'

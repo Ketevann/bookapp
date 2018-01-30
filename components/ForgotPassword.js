@@ -3,59 +3,90 @@ import { View, Text } from 'react-native';
 import { Card, CardSection, Button, Input } from './common';
 import { connect } from 'react-redux';
 import { forgotPassword, emailDispatch } from '../redux/actions/authActions';
+import { scale, verticalScale, moderateScale } from '../functions'
 
 class ForgotPassword extends Component {
 
 
-onForgotPassword(email) {
-  this.props.forgotPassword(email);
-}
+  onForgotPassword(email) {
+    this.props.forgotPassword(email);
+  }
 
- onEmailChange(text) {
-  this.props.emailDispatch(text);
+  onEmailChange(text) {
+    this.props.emailDispatch(text);
   }
   render() {
+    const { viewStyle, errorViewStyle, errorTextStyle, textSyle } = styles;
     return (
-      <View>
-        <Card>
-          <CardSection>
-            <Input
-              placeholder="user@gmail.com"
-              label="Email"
-              value={this.props.auth.email}
-              onChangeText={this.onEmailChange.bind(this)}
-            />
-          </CardSection>
-          <CardSection>
-            <Button onPress={this.onForgotPassword.bind(this)}>Submit</Button>
-          </CardSection>
-          <CardSection>
-            <Text>{this.props.auth.error}</Text>
-          </CardSection>
-        </Card>
+      <View
+        style={{ flex: 1, backgroundColor: 'white' }}
+      >
+
+        <Text
+          style={styles.header}
+        >Forgot your Password ?</Text>
+        <View
+          style={{ paddingBottom: verticalScale(10),     marginTop: scale(10),
+ }}
+        >
+          <Text
+            style={textSyle}
+          >Enter your email and we will send</Text>
+          <Text
+            style={textSyle}>
+            your instructions...</Text>
+        </View>
+        {this.props.auth.error ?
+          <View
+            style={errorViewStyle}
+          >
+            <Text
+              style={errorTextStyle}
+            >{this.props.auth.error}</Text>
+          </View>
+          : null}
+        <Input
+          placeholder="Email"
+          value={this.props.auth.email}
+          onChangeText={this.onEmailChange.bind(this)}
+        />
+        <Button onPress={this.onForgotPassword.bind(this)}>Submit</Button>
       </View>
     )
   }
 }
 
-styles = {
-  passwordStyle: {
-    marginTop: 20,
-    marginLeft: 50,
-    width: 250,
-    padding: 20,
-    borderWidth: 1,
-    borderRadius: 3,
-    borderColor: 'red'
+const styles = {
+  viewStyle: {
+    flex: 1
   },
-  nameStyle: {
-    marginTop: 20,
-    marginLeft: 50,
-    width: 250,
-    padding: 20,
-    borderWidth: 1,
-    borderRadius: 3,
-    borderColor: 'red'
+
+  header: {
+    textAlign: 'center',
+    fontSize: scale(17),
+    fontFamily: 'Avenir-Book',
+    marginTop: scale(20)
+  },
+  textSyle: {
+    textAlign: 'center',
+    fontFamily: 'Avenir-Book',
+    color: '#9B9B9B',
+    fontSize: scale(14),
+    lineHeight: scale(15)
+  },
+
+  errorViewStyle: {
+    backgroundColor: '#F38D8D',
+    height: verticalScale(60),
+    marginTop: verticalScale(25)
+  },
+  errorTextStyle: {
+    color: '#FFFFFF',
+    fontSize: scale(14),
+    textAlign: 'center',
+    padding: 10,
+    fontFamily: 'Avenir-Book'
+
   }
 };
 
