@@ -1,6 +1,6 @@
 import { SearchBar } from 'react-native-elements'
 import React, { Component } from 'react';
-import { Text, View, TextInput, Keyboard } from 'react-native';
+import { Text, View, TextInput, Keyboard, Dimensions, PixelRatio } from 'react-native';
 import { connect } from 'react-redux';
 import { Button } from './common';
 import {
@@ -8,43 +8,108 @@ import {
   findSimilarBooks,
   changeSearchBookQuery
 } from '../redux/actions/bookActions';
+const { height, width } = Dimensions.get('window');
+import Search from 'react-native-search-box';
+
+import { scale, verticalScale, moderateScale } from '../functions'
+
+let SCREEN_WIDTH = PixelRatio.getPixelSizeForLayoutSize(width);
+let SCREEN_HEIGHT = PixelRatio.getPixelSizeForLayoutSize(height);
+import { LinearGradient } from 'expo';
 
 
-class Search extends Component {
+class SearchComponent extends Component {
   static defaultProps = {
     clearBooks: () => { },//defualt function
   }
+  constructor() {
+    super()
 
+    this.state = { book: { textDecorationLine: 'underline' }, author: { textDecorationLine: 'none' } }
+  }
   onSearchChange(searchbooks) {
     this.props.setSearchValue(searchbooks);
   }
 
   onSetSearchQuery(query) {
+    console.log('set query', query)
+    if (query === 'book') this.setState({
+      book: { textDecorationLine: 'underline' },
+
+      author: { textDecorationLine: 'none' }
+    })
+    else if (query === 'author') this.setState({ author: { textDecorationLine: 'underline' }, book: { textDecorationLine: 'none' } })
     this.props.changeSearchBookQuery(query);
   }
   cancelSearch() {
-    this.search.blur();
+    //this.search.blur();
     this.props.clearBooks() //if props are passed, call that function, else nothing happens
   }
+  // Important: You must return a Promise
+  beforeFocus = () => {
+    return new Promise((resolve, reject) => {
+      console.log('beforeFocus');
+      resolve();
+    });
+  }
 
+  // Important: You must return a Promise
+  onFocus = (text) => {
+    return new Promise((resolve, reject) => {
+      console.log('onFocus', text);
+      resolve();
+    });
+  }
+
+  // Important: You must return a Promise
+  afterFocus = () => {
+    return new Promise((resolve, reject) => {
+      console.log('afterFocus');
+      resolve();
+    });
+  }
   render() {
-    // {console.log('book', this.props)}
+    { console.log('book', this.props.book.placeholder) }
+    const { headerTextStyle, authorTextStyle, bookTextStyle, viewStyle } = styles;
     return (
       <View style={{ zIndex: 1000 }}>
-        <Text onPress={() => this.onSetSearchQuery('book')}>Books</Text>
-        <Text onPress={() => this.onSetSearchQuery('author')}>Authors</Text>
-        <SearchBar
-          onPress={() => this.search.focus()}
-          ref={search => this.search = search}
-          round
-          clearIcon
-          onSubmitEditing={() => this.props.handleSubmit()}
-          onChangeText={() => console.log('text')}
+
+        <LinearGradient
+          colors={['#B88FD2', '#3C509B']}
+          start={[1, 0]} end={[0, 0]}
+
+        >
+          <View
+            style={viewStyle}
+          >
+            <Text
+              style={[headerTextStyle, this.state.book, bookTextStyle]}
+              onPress={() => this.onSetSearchQuery('book')}>Books</Text>
+            <Text
+              style={[headerTextStyle, this.state.author, authorTextStyle]}
+              onPress={() => this.onSetSearchQuery('author')}>Authors</Text>
+          </View>
+        </LinearGradient>
+        <Search
+          ref="search_box"
+          placeholder={this.props.book.placeholder}
+          autoCapitalize='words'
+          blurOnSubmit={true}
+          keyboardDismissOnSubmit
           returnKeyType='search'
+          onSearch={() => this.props.handleSubmit()}
           onChangeText={this.onSearchChange.bind(this)}
           value={this.props.book.searchbooks}
-          placeholder={this.props.book.placeholder} />
-        <Button onPress={() => this.cancelSearch()}>cancel</Button>
+          placeholder='Search'
+          backgroundColor='rgba(142, 142, 147, 0.5)'
+          tintColorSearch='rgba(142, 142, 147, 0.5)'
+          onCancel={() => this.cancelSearch()}
+        /**
+        * There many props that can customizable
+        * Please scroll down to Props section
+        */
+        />
+
         <TextInput
           onSubmitEditing={Keyboard.dismiss}
         />
@@ -53,9 +118,29 @@ class Search extends Component {
   }
 
 }
+
+const styles = {
+  viewStyle: {
+    flexDirection: 'row',
+    height: verticalScale(36),
+    marginTop: verticalScale(15)
+  },
+  headerTextStyle: {
+    fontSize: scale(16),
+    fontFamily: 'Avenir-Book',
+    backgroundColor: 'transparent',
+    color: '#FAFAFA'
+  },
+  authorTextStyle: {
+    marginLeft: 40
+  },
+  bookTextStyle: {
+    marginLeft: 30,
+  }
+}
 export default connect(({ book }) =>
   ({ book }), {
     setSearchValue,
     findSimilarBooks,
     changeSearchBookQuery
-  })(Search)
+  })(SearchComponent)

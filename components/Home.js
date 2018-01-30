@@ -14,6 +14,7 @@ import {
   loadingSearchResults
 } from '../redux/actions/bookActions';
 import Book from './Book';
+// import Search from './Search';
 import Search from './Search';
 import Login from './Login';
 class Home extends Component {
@@ -74,7 +75,7 @@ class Home extends Component {
       return <Login/>;
     }else return (
       <View style={{ flex: 1 }}>
-        <Search handleSubmit={this.handleSubmit.bind(this)} userId={ userId } />
+         <Search handleSubmit={this.handleSubmit.bind(this) } />
          <Text style={{ zIndex: 1000 }} onPress={() =>{firebase.auth().signOut() }}>Log Out</Text>
         { this.display() }
       </View>

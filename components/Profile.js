@@ -6,6 +6,7 @@ import {
   getSavedBooks, searchSavedBooks, clearSearchedBooks, reRenderSearch
 } from '../redux/actions/bookActions';
 import BookCard from './BookCard';
+// import Search from './Search'
 import Search from './Search'
 
 class Profile extends Component {
