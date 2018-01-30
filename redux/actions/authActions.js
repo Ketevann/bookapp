@@ -2,7 +2,8 @@ import {
   EMAIL_CHANGED, PASSWORD_CHANGED, PASSWORD_CONFIRM,
   LOGIN_USER_SUCESS, LOGIN_USER_FAIL,
   LOGIN_USER, NOTLOGGEDIN, LOGGEDIN, FORGOT,
-  CLEARFORM
+  CLEARFORM,
+  FORGOT_FAIL
 } from './action-types'
 
 import firebase from 'firebase';
@@ -47,9 +48,17 @@ export const forgotPassword = () =>
       console.log('Email sent')
     })
     .catch(error => {
-      loginUserFail(dispatch, error.message);
+      ForgotPasswordFail(dispatch, error.message);
     });
   };
+
+
+const ForgotPasswordFail = (dispatch, error) => {
+  dispatch({
+    type: FORGOT_FAIL,
+    error
+  });
+};
 
 const loginUserFail = (dispatch, error) => {
   dispatch({

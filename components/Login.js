@@ -8,6 +8,7 @@ import firebase from 'firebase';
 import { Header, Button, Spinner } from './common';
 import LoginForm from './common/LoginForm';
 import { loginDispatch, loginDispatchFalse, clearForm } from '../redux/actions/authActions';
+import { scale, verticalScale, moderateScale } from '../functions'
 
 let SCREEN_WIDTH = PixelRatio.getPixelSizeForLayoutSize(width);
 let SCREEN_HEIGHT = PixelRatio.getPixelSizeForLayoutSize(height);
@@ -26,6 +27,7 @@ class Login extends Component {
 
   renderContent() {
     const { loggedIn } = this.props.auth;
+
     if (loggedIn) {
       return (
         <Button
@@ -38,15 +40,28 @@ class Login extends Component {
   }
 
   render() {
+    const { textStyle, signUpLinkStyle } = styles;
     console.log(SCREEN_HEIGHT, SCREEN_WIDTH)
     return (
       <View style={{ flex: 1, backgroundColor: 'white'}}>
         <Text
         style={styles.header}
         >Log In</Text>
+        <View
+        style={{flexDirection: 'row', justifyContent: 'center', marginTop: scale(8)}}
+        >
+        <Text
+        style={textStyle}
+        >
+          Don't have an account? sign up
+        </Text>
+        <Text
+        onPress={() => Actions.signup()}
+        style={[textStyle, signUpLinkStyle]}
+        > here</Text>
+        </View>
         {this.renderContent()}
-        <Text>Already a User? </Text>
-        <Text onPress={() => Actions.signup()}>Sign Up</Text>
+
       </View>
     );
   }
@@ -55,10 +70,23 @@ class Login extends Component {
 const styles = {
   header: {
    textAlign: 'center',
-    fontSize: SCREEN_WIDTH * (20 / SCREEN_WIDTH),
+    fontSize: scale(20),
     fontFamily: 'Avenir-Book',
-    marginTop: SCREEN_WIDTH * (20 / SCREEN_WIDTH)
+    marginTop: scale(20)
+  },
+
+    textStyle: {
+    textAlign: 'center',
+    fontFamily: 'Avenir-Book',
+    color: '#9B9B9B',
+    fontSize: scale(14),
+    lineHeight: scale(15)
+  },
+  signUpLinkStyle:{
+    textDecorationLine: 'underline',
+    color: 'navy'
   }
+
 }
 
 export default connect(({ auth }) => ({ auth }),

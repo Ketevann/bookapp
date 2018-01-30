@@ -16,7 +16,7 @@ class ForgotPassword extends Component {
     this.props.emailDispatch(text);
   }
   render() {
-    const { viewStyle, errorViewStyle, errorTextStyle, textSyle } = styles;
+    const { viewStyle, errorViewStyle, errorTextStyle, textStyle } = styles;
     return (
       <View
         style={{ flex: 1, backgroundColor: 'white' }}
@@ -30,19 +30,19 @@ class ForgotPassword extends Component {
  }}
         >
           <Text
-            style={textSyle}
+            style={textStyle}
           >Enter your email and we will send</Text>
           <Text
-            style={textSyle}>
+            style={textStyle}>
             your instructions...</Text>
         </View>
-        {this.props.auth.error ?
+        {this.props.auth.forgotError ?
           <View
             style={errorViewStyle}
           >
             <Text
               style={errorTextStyle}
-            >{this.props.auth.error}</Text>
+            >{this.props.auth.forgotError}</Text>
           </View>
           : null}
         <Input
@@ -67,7 +67,7 @@ const styles = {
     fontFamily: 'Avenir-Book',
     marginTop: scale(20)
   },
-  textSyle: {
+  textStyle: {
     textAlign: 'center',
     fontFamily: 'Avenir-Book',
     color: '#9B9B9B',
