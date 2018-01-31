@@ -71,14 +71,14 @@ class Home extends Component {
     // const { loggedIn } = this.props.auth;
     const { similarbooks, loadingSavedBook } = this.props.book;
 
-    // if (loadingCreditionals || loadingSavedBook) {//loadingCreditionals is boolean, display as spinner cuz otherwise when user is loggedin, the sign in form flashes briefly.
-    //   return <Spinner size="large" />
-    // }
-     if (!this.props.auth.loggedIn) { //display login form if not signed.
+
+    if (loadingCreditionals || loadingSavedBook) {//loadingCreditionals is boolean, display as spinner cuz otherwise when user is loggedin, the sign in form flashes briefly.
+      return <Spinner size="large" />
+    }
+    else  if (!this.props.auth.loggedIn) { //display login form if not signed.
       return <Login />;
     } else return (
       <View style={{ flex: 1 }}>
-
         <SearchComponent handleSubmit={this.handleSubmit.bind(this)} />
         <Text style={{ zIndex: 1000 }} onPress={() => { firebase.auth().signOut() }}>Log Out</Text>
         {this.display()}

@@ -140,9 +140,7 @@ export const searchSavedBooks = (keyword, placeholder, userId, dispatch) =>
     dispatch => {
         dispatch({ type: LOADING });//updates loading in saved books to true
         firebase.database().ref(`users/${userId}/books`).once('value', (snapshot) => {
-            
-            dispatch({ type: SEARCH_PARAMS_CLEAR })//clears search form
-
+            //dispatch({ type: SEARCH_PARAMS_CLEAR })//clears search form
             if (snapshot.val()){  //if books branch exists
                 let savedBooksArray = snapshot.val();
                 if (Array.isArray(snapshot.val()) === false) {
