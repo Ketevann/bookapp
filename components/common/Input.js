@@ -21,7 +21,6 @@ const Input = ({ label, value, onChangeText, placeholder, secureTextEntry }) => 
 
       <Text >{label}</Text>
       <TextInput
-        placeholderTextColor="#9B9B9"
         style={containerStyle}
         secureTextEntry={secureTextEntry}
         placeholder={placeholder}

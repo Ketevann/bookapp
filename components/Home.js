@@ -14,7 +14,7 @@ import {
   loadingSearchResults
 } from '../redux/actions/bookActions';
 import Book from './Book';
-import Search from './Search';
+import SearchComponent from './Search';
 
 class Home extends Component {
 
@@ -36,6 +36,7 @@ class Home extends Component {
 
 
   handleSubmit() {
+    console.log('in o hanlr', this.props)
     const { searchbooks, placeholder } = this.props.book;
     this.props.loadingSearchResults();
     const userId = this.props.auth.userId;
@@ -52,10 +53,12 @@ class Home extends Component {
   }
 
   render() {
+    console.log(this.props)
     const userId = this.props.auth.userId;
     const { similarbooks, loadingSavedBook } = this.props.book;
     return (
       <View style={{ flex: 1 }}>
+      <SearchComponent handleSubmit={this.handleSubmit.bind(this)} />
         { loadingSavedBook ? <Spinner size="large" /> : this.display() }
       </View>
     );

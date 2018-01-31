@@ -11,7 +11,7 @@ let SCREEN_HEIGHT = PixelRatio.getPixelSizeForLayoutSize(height);
 const scale = size =>
 
 {
-  console.log(SCREEN_WIDTH, guidelineBaseWidth, size, ' sizee',  SCREEN_WIDTH / guidelineBaseWidth * size)
+  console.log(SCREEN_WIDTH, SCREEN_HEIGHT, guidelineBaseWidth, guidelineBaseHeight, size, ' sizee', SCREEN_WIDTH / guidelineBaseWidth * size)
   return SCREEN_WIDTH / guidelineBaseWidth * size;
 
 }

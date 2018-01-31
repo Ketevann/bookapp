@@ -28,15 +28,15 @@ class Login extends Component {
   renderContent() {
     const { loggedIn } = this.props.auth;
 
-    if (loggedIn) {
-      return (
-        <Button
-          onPress={() =>
-            firebase.auth().signOut()}>;
-          Log Out</Button>)
-    } else if (loggedIn === false) {
+    // if (loggedIn) {
+    //   return (
+    //     <Button
+    //       onPress={() =>
+    //         firebase.auth().signOut()}>;
+    //       Log Out</Button>)
+    // } else if (loggedIn === false) {
       return <LoginForm />
-    } return <Spinner size='large' />;
+    // } return <Spinner size='large' />;
   }
 
   render() {
