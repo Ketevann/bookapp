@@ -14,8 +14,9 @@ import {
   loadingSearchResults
 } from '../redux/actions/bookActions';
 import Book from './Book';
+import SearchComponent from './Search';
+
 // import Search from './Search';
-import Search from './Search';
 import Login from './Login';
 class Home extends Component {
 
@@ -37,6 +38,7 @@ class Home extends Component {
 
 
   handleSubmit() {
+    console.log('in o hanlr', this.props)
     const { searchbooks, placeholder } = this.props.book;
     this.props.loadingSearchResults();
     const userId = this.props.auth.userId;
@@ -64,20 +66,22 @@ class Home extends Component {
   // }
 
   render() {
-    const { loadingCreditionals, userId }= this.props.auth;
+
+    const { loadingCreditionals, userId } = this.props.auth;
     // const { loggedIn } = this.props.auth;
     const { similarbooks, loadingSavedBook } = this.props.book;
-    
-    if ( loadingCreditionals || loadingSavedBook){//loadingCreditionals is boolean, display as spinner cuz otherwise when user is loggedin, the sign in form flashes briefly.
+
+    if (loadingCreditionals || loadingSavedBook) {//loadingCreditionals is boolean, display as spinner cuz otherwise when user is loggedin, the sign in form flashes briefly.
       return <Spinner size="large" />
     }
-    else if ( !this.props.auth.loggedIn ) { //display login form if not signed. 
-      return <Login/>;
-    }else return (
+    else if (!this.props.auth.loggedIn) { //display login form if not signed. 
+      return <Login />;
+    } else return (
       <View style={{ flex: 1 }}>
-         <Search handleSubmit={this.handleSubmit.bind(this) } />
-         <Text style={{ zIndex: 1000 }} onPress={() =>{firebase.auth().signOut() }}>Log Out</Text>
-        { this.display() }
+
+        <SearchComponent handleSubmit={this.handleSubmit.bind(this)} />
+        <Text style={{ zIndex: 1000 }} onPress={() => { firebase.auth().signOut() }}>Log Out</Text>
+        {this.display()}
       </View>
     );
   }

@@ -1,8 +1,21 @@
 import React, { Component } from 'react';
-import { View, Image, TouchableOpacity } from 'react-native';
+import { View, Image, TouchableOpacity, Dimensions, PixelRatio } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
+import { scale, verticalScale, moderateScale } from '../functions'
 import { getSavedBooks } from '../redux/actions/bookActions';
+import { Icon } from 'react-native-elements/';
+
+
+const { height, width } = Dimensions.get('window');
+
+let SCREEN_WIDTH = PixelRatio.getPixelSizeForLayoutSize(width);
+let SCREEN_HEIGHT = PixelRatio.getPixelSizeForLayoutSize(height);
+
+
+
+
+
 
 class Footer extends Component {
 
@@ -16,27 +29,29 @@ class Footer extends Component {
     return (
       <View style={{ position: 'absolute', left: 0, right: 0, bottom: 0 }}>
         <View style={{
-          flexDirection: 'row', backgroundColor: 'lightgray',
-          justifyContent: 'space-around',
-          height: 40
+          flexDirection: 'row', backgroundColor: '#3B509A', justifyContent: 'center',
+          height: scale(50), padding: scale(10)
         }}>
           <TouchableOpacity
-            onPress={() => Actions.home()}>
-            <Image
-              style={{ width: 27, height: 27, padding: 10, marginTop: 5 }}
-              source={require('../img/home.png')}
-            />
+          style={{marginLeft: 13}}
+            >
+            <Icon
+              name='home'
+              type='SimpleLineIcons'
+              color='white'
+              size={35}
+              onPress={() => Actions.home()} />
           </TouchableOpacity>
-          <Image
-            style={{ width: 27, height: 27, padding: 10, marginTop: 5 }}
-            source={require('../img/user1.png')}
-          />
+
           <TouchableOpacity
-            onPress={() => this.getBooks()}>
-            <Image
-              style={{ width: 27, height: 27, padding: 10, marginTop: 5 }}
-              source={require('../img/heart2.png')}
-            />
+
+           >
+           <Icon
+              name='heart'
+              type='font-awesome'
+              color='white'
+              size={30}
+               onPress={() => this.getBooks()} />
           </TouchableOpacity>
         </View>
       </View>

@@ -7,6 +7,8 @@ export const LOGIN_USER = 'LOGIN_USER'
 export const LOGIN_USER_FAIL = 'LOGIN_USER_FAIL'
 export const LOGIN_USER_SUCESS = 'LOGIN_USER_SUCESS'
 export const FORGOT = 'FORGOT'
+export const FORGOT_FAIL = 'FORGOT_FAIL'
+
 export const PASSWORD_CONFIRM = 'PASSWORD_CONFIRM'
 export const CLEARFORM = 'CLEARFORM';
 

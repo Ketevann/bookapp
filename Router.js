@@ -5,7 +5,7 @@ import Login from './components/Login'
 import Home from './components/Home'
 import ForgotPassword from './components/ForgotPassword'
 import SignUp from './components/SignUp'
-import Search from './components/Search'
+import SearchComponent from './components/Search'
 import Footer from './components/Footer'
 import Profile from './components/Profile'
 
@@ -21,10 +21,10 @@ const RouterComponent = () => (
   <Router>
 
     <Stack key="root">
-      <Scene key="login" component={Login} title="Login"  />
-      <Scene key="home" component={Home} initial panHandlers={null} hideNavBar/>
+      <Scene key="login" component={Login}   />
+      <Scene key="home" component={Home} initial />
       <Scene key="forgotpassowrd" component={ForgotPassword} />
-      <Scene key="signup" component={SignUp} panHandlers={null} hideNavBar  />
+      <Scene key="signup" component={SignUp} panHandlers={null} renderBackButton={()=>(null)} />
       <Scene key="profile" component={Profile} panHandlers={null} hideNavBar />
 
     </Stack>

@@ -1,14 +1,32 @@
 import React from 'react';
-import { Text, TouchableOpacity } from 'react-native';
+import {View, Text, TouchableOpacity, Dimensions, PixelRatio } from 'react-native';
+import { LinearGradient } from 'expo';
+
+
+const { height, width } = Dimensions.get('window');
+import {scale, verticalScale, moderateScale } from '../../functions'
+
+let SCREEN_WIDTH = PixelRatio.getPixelSizeForLayoutSize(width);
+let SCREEN_HEIGHT = PixelRatio.getPixelSizeForLayoutSize(height);
+
+
 
 const Button = ({ onPress, children }) => {
-  const { buttonStyle, textStyle } = styles;
+  const { textStyle } = styles;
 
   return (
-    <TouchableOpacity onPress={onPress} style={buttonStyle}>
-      <Text style={textStyle}>
+    <TouchableOpacity onPress={onPress}>
+     <View
+     style={{marginTop: scale(40)}}>
+       <LinearGradient
+        colors={['#A082C7', '#3F529C']}
+        style={{ alignItems: 'center', height: 40, width: (width / 1.5), marginLeft: SCREEN_WIDTH * (50 / SCREEN_WIDTH) }}
+      >
+      <Text style={styles.textStyle}>
         {children}
       </Text>
+      </LinearGradient>
+      </View>
     </TouchableOpacity>
   );
 };
@@ -16,22 +34,17 @@ const Button = ({ onPress, children }) => {
 const styles = {
   textStyle: {
     alignSelf: 'center',
-    color: '#007aff',
-    fontSize: 16,
-    fontWeight: '600',
-    paddingTop: 10,
-    paddingBottom: 10
-  },
-  buttonStyle: {
-    flex: 1,
-    alignSelf: 'stretch',
-    backgroundColor: '#fff',
-    borderRadius: 5,
-    borderWidth: 1,
-    borderColor: '#007aff',
-    marginLeft: 5,
-    marginRight: 5
+     backgroundColor: 'transparent',
+     fontFamily: 'Avenir-Book',
+     color: 'white',
+     padding: 10,
+    fontSize: SCREEN_WIDTH * (17 / SCREEN_WIDTH),
+
+
+
+
   }
+
 };
 
 export { Button };

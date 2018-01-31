@@ -16,16 +16,18 @@ import { scale, verticalScale, moderateScale } from '../functions'
 let SCREEN_WIDTH = PixelRatio.getPixelSizeForLayoutSize(width);
 let SCREEN_HEIGHT = PixelRatio.getPixelSizeForLayoutSize(height);
 import { LinearGradient } from 'expo';
+import { Icon } from 'react-native-elements';
 
 
 class SearchComponent extends Component {
+
   static defaultProps = {
     clearBooks: () => { },//defualt function
   }
   constructor() {
     super()
 
-    this.state = { book: { textDecorationLine: 'underline' }, author: { textDecorationLine: 'none' } }
+    this.state = { book: { textDecorationLine: 'underline' }, author: { textDecorationLine: 'none' }, search: false }
   }
   onSearchChange(searchbooks) {
     this.props.setSearchValue(searchbooks);
@@ -41,10 +43,8 @@ class SearchComponent extends Component {
     else if (query === 'author') this.setState({ author: { textDecorationLine: 'underline' }, book: { textDecorationLine: 'none' } })
     this.props.changeSearchBookQuery(query);
   }
-  cancelSearch() {
-    //this.search.blur();
-    this.props.clearBooks() //if props are passed, call that function, else nothing happens
-  }
+
+
   // Important: You must return a Promise
   beforeFocus = () => {
     return new Promise((resolve, reject) => {
@@ -62,6 +62,18 @@ class SearchComponent extends Component {
   }
 
   // Important: You must return a Promise
+
+
+  // Important: You must return a Promise
+  onFocus = (text) => {
+    return new Promise((resolve, reject) => {
+      console.log('onFocus', text);
+      resolve();
+    });
+  }
+
+  // Important: You must return a Promise
+
   afterFocus = () => {
     return new Promise((resolve, reject) => {
       console.log('afterFocus');
@@ -88,41 +100,52 @@ class SearchComponent extends Component {
             <Text
               style={[headerTextStyle, this.state.author, authorTextStyle]}
               onPress={() => this.onSetSearchQuery('author')}>Authors</Text>
+            <View
+              style={{ marginLeft: 36 }}
+            >
+              <Icon
+                name='search'
+                type='evilIcons'
+                color='#FAFAFA'
+                size={25}
+                onPress={() => this.setState({ search: !this.state.search })}//deletes a "disliked book from users suggestions"
+              />
+            </View>
           </View>
         </LinearGradient>
-        <Search
-          ref="search_box"
-          placeholder={this.props.book.placeholder}
-          autoCapitalize='words'
-          blurOnSubmit={true}
-          keyboardDismissOnSubmit
-          returnKeyType='search'
-          onSearch={() => this.props.handleSubmit()}
-          onChangeText={this.onSearchChange.bind(this)}
-          value={this.props.book.searchbooks}
-          placeholder='Search'
-          backgroundColor='rgba(142, 142, 147, 0.5)'
-          tintColorSearch='rgba(142, 142, 147, 0.5)'
-          onCancel={() => this.cancelSearch()}
-        /**
-        * There many props that can customizable
-        * Please scroll down to Props section
-        */
-        />
 
-        <TextInput
-          onSubmitEditing={Keyboard.dismiss}
-        />
+        {this.state.search ?
+
+          <Search
+            ref="search_box"
+            placeholder={this.props.book.placeholder}
+            autoCapitalize='words'
+            blurOnSubmit
+            keyboardDismissOnSubmit
+            returnKeyType='search'
+            onSearch={() => this.props.handleSubmit()}
+            onChangeText={this.onSearchChange.bind(this)}
+            value={this.props.book.searchbooks}
+            placeholder='Search'
+            backgroundColor='rgba(142, 142, 147, 0.5)'
+            tintColorSearch='rgba(142, 142, 147, 0.5)'
+          /**
+          * There many props that can customizable
+          * Please scroll down to Props section
+          */
+          />
+          : null}
+
       </View>
     )
   }
-
 }
+
 
 const styles = {
   viewStyle: {
     flexDirection: 'row',
-    height: verticalScale(36),
+    height: verticalScale(30),
     marginTop: verticalScale(15)
   },
   headerTextStyle: {
