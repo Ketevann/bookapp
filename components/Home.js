@@ -66,15 +66,15 @@ class Home extends Component {
   // }
 
   render() {
-
+    console.log(this.props, 'home')
     const { loadingCreditionals, userId } = this.props.auth;
     // const { loggedIn } = this.props.auth;
     const { similarbooks, loadingSavedBook } = this.props.book;
 
-    if (loadingCreditionals || loadingSavedBook) {//loadingCreditionals is boolean, display as spinner cuz otherwise when user is loggedin, the sign in form flashes briefly.
-      return <Spinner size="large" />
-    }
-    else if (!this.props.auth.loggedIn) { //display login form if not signed. 
+    // if (loadingCreditionals || loadingSavedBook) {//loadingCreditionals is boolean, display as spinner cuz otherwise when user is loggedin, the sign in form flashes briefly.
+    //   return <Spinner size="large" />
+    // }
+     if (!this.props.auth.loggedIn) { //display login form if not signed.
       return <Login />;
     } else return (
       <View style={{ flex: 1 }}>

@@ -96,7 +96,7 @@ class Deck extends Component {
       }
     });
 
-    this.state = { panResponder, position, index: 0, loadingImage: true, scroll: false, panResponderEnabled: true, SCREEN_HEIGHT, style: { paddingBottom: 0 } };
+    this.state = { panResponder, position, index: 0, loadingImage: true, scroll: false, panResponderEnabled: true, SCREEN_HEIGHT, style: { paddingBottom: 0 }, totop: false };
   }
 
   componentWillReceiveProps(nextProps) {
@@ -134,7 +134,7 @@ class Deck extends Component {
   }
 
   forceSwipe(direction) {
-    this.setState({ scroll: false, panResponderEnabled: true, style: { paddingBottom: 0 } })
+    this.setState({ scroll: false, panResponderEnabled: true, style: { paddingBottom: 0 }, totop: false })
     const x = direction === 'right' ? SCREEN_WIDTH : -SCREEN_WIDTH;
     Animated.timing(this.state.position, {
       toValue: { x, y: 0 },
@@ -156,6 +156,8 @@ class Deck extends Component {
   }
 
   renderCards() {
+ // const AnimatedScrollView = Animated.createAnimatedComponent(ScrollView);
+
     if (this.state.index >= this.props.data.length) {
       return this.renderNoMoreCards();
     }
@@ -165,12 +167,19 @@ class Deck extends Component {
       }
       if (i === this.state.index) {
         return (
+
           <Animated.ScrollView
             key={i}
             scrollEnabled={this.state.scroll}//added Scroll enables
-            style={[styles.cardStyle, { zIndex: 99, height: SCREEN_HEIGHT - 100 }, this.getCardStyle()
+            style={[styles.cardStyle, { zIndex: 99, height: SCREEN_HEIGHT - 158, marginTop: verticalScale(45),
+          backgroundColor: 'white',
+          borderRadius: 5,
+          paddingBottom: 10 }, this.getCardStyle()
             ]}
+
+        scrollEnabled={this.state.scroll}//added Scroll enables
             {...this.state.panResponder.panHandlers}
+                    scrollsToTop={this.state.totop}
 
           >
             {this.renderCard(item, i)}
@@ -197,19 +206,12 @@ class Deck extends Component {
     }
     return (
       <Animated.ScrollView
-        style={{
-          marginTop: verticalScale(45),
-          backgroundColor: 'white',
-          height: SCREEN_HEIGHT,
-          borderRadius: 5
-        }}
-        automaticallyAdjustContentInsets
-        key={index}
-        scrollEnabled={this.state.scroll}//added Scroll enables
+        ref="_scrollView"
 
       >
         <View
-          style={{ height: SCREEN_HEIGHT - verticalScale(290), borderRadius: 5 }}
+         ref="_View"
+
         >
           <Image
             source={{ uri: modifiedLink }}
@@ -234,7 +236,7 @@ class Deck extends Component {
             </View> :
             <View
               style={{
-                marginTop: verticalScale(85),
+                marginTop: verticalScale(75),
                 marginLeft: scale(18)
               }}
             >
@@ -278,12 +280,18 @@ class Deck extends Component {
                     type='materialIcons'
                     color='#3C509B'
                     size={35}
+
                     onPress={() => {
-                      let padding = 0;
-                      if (this.state.scroll)
-                        padding = 65;
-                      this.setState({ scroll: !this.state.scroll, panResponderEnabled: !this.state.panResponderEnabled, style: { paddingBottom: padding } })
-                    }} //sabes a "liked" book to users branch on swipe right
+                      console.log(this.state, ' in scroll')
+                      let totop = false
+                      if (this.state.scroll === true) {
+                        totop = true
+                        //if (this.refs._scrollView){
+                          //console.log('there is a ref', this.refs._scrollView, this.refs._View)
+                          //this.refs._scrollView.scrollTo({ x: 0, y: 0 })}
+                      }
+                      this.setState({ scroll: !this.state.scroll, panResponderEnabled: !this.state.panResponderEnabled, totop })
+                    }} //sabes a "liked" book to users b
                   />
                 </View>
 
@@ -356,7 +364,7 @@ class Deck extends Component {
   }
 
   render() {
-    console.log(this.props, this.state.scroll, 'panResponder', this.state.panResponderEnabled)
+    console.log(this.props, this.state, 'panResponder', this.state.panResponderEnabled)
     return (
       this.renderCards()
 
@@ -383,7 +391,8 @@ const styles = {
   authorTextStyle: {
     fontSize: scale(13),
     fontFamily: 'Avenir-Book',
-    color: '#050F37'
+    color: '#050F37',
+    paddingBottom: 15
   },
 
   description: {
@@ -392,9 +401,8 @@ const styles = {
     color: '#050F37',
     marginLeft: scale(18),
     width: width - scale(40),
-    position: 'relative',
     top: verticalScale(5),
-    paddingBottom: 65,
+    paddingBottom: 15,
     marginTop: 5
   },
   modalContainer: {
