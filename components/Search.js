@@ -35,7 +35,7 @@ class SearchComponent extends Component {
 
   onSetSearchQuery(query) {
     console.log('set query', query)
-    if (query === 'book') this.setState({
+    if (query === 'books') this.setState({
       book: { textDecorationLine: 'underline' },
 
       author: { textDecorationLine: 'none' }
@@ -96,7 +96,7 @@ class SearchComponent extends Component {
           >
             <Text
               style={[headerTextStyle, this.state.book, bookTextStyle]}
-              onPress={() => this.onSetSearchQuery('book')}>Books</Text>
+              onPress={() => this.onSetSearchQuery('books')}>Books</Text>
             <Text
               style={[headerTextStyle, this.state.author, authorTextStyle]}
               onPress={() => this.onSetSearchQuery('author')}>Authors</Text>
@@ -129,6 +129,7 @@ class SearchComponent extends Component {
             placeholder='Search'
             backgroundColor='rgba(142, 142, 147, 0.5)'
             tintColorSearch='rgba(142, 142, 147, 0.5)'
+            onCancel={()=>this.props.clearBooks()} //if props are passed, call that function, else nothing happens
           /**
           * There many props that can customizable
           * Please scroll down to Props section
