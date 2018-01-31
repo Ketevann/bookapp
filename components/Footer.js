@@ -29,7 +29,7 @@ class Footer extends Component {
     return (
       <View style={{ position: 'absolute', left: 0, right: 0, bottom: 0 }}>
         <View style={{
-          flexDirection: 'row', backgroundColor: '#3B509A', justifyContent: 'center',
+          flexDirection: 'row', backgroundColor: '#3B509A', justifyContent: 'space-around',
           height: scale(50), padding: scale(10)
         }}>
           <TouchableOpacity
@@ -39,6 +39,7 @@ class Footer extends Component {
               name='home'
               type='SimpleLineIcons'
               color='white'
+              underlayColor='#3B509A' // set the underlayColor of the view used behind the icon
               size={35}
               onPress={() => Actions.home()} />
           </TouchableOpacity>
@@ -50,8 +51,9 @@ class Footer extends Component {
               name='heart'
               type='font-awesome'
               color='white'
+              underlayColor='#3B509A' //  set the underlayColor of the view used behind the icon
               size={30}
-               onPress={() => this.getBooks()} />
+              onPress={() => this.getBooks()} />
           </TouchableOpacity>
         </View>
       </View>
