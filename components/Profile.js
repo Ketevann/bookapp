@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-import { View, ScrollView } from 'react-native';
+import { View, ScrollView, Text } from 'react-native';
 import { connect } from 'react-redux';
 import { Spinner } from './common';
 import {
-  getSavedBooks
+  getSavedBooks, searchSavedBooks, clearSearchedBooks, reRenderSearch
 } from '../redux/actions/bookActions';
 import BookCard from './BookCard';
+// import Search from './Search'
+import Search from './Search'
 
 class Profile extends Component {
   constructor(props) {
@@ -24,10 +26,20 @@ class Profile extends Component {
     })
     this.displayBooks(arr)
   }
-  displayBooks(arr) {
+
+  handleSubmit(){
+    const {searchbooks, placeholder} = this.props.book
+    const {userId} = this.props.auth.userId;
+    this.props.searchSavedBooks(searchbooks, placeholder, this.props.auth.userId); //checks the user's book for the query keyword
+  }
+
+  updateFilteredBooks( title, updateType ){//sending the searched books array, a title and what is to be done to that book (updateType = read || delete )
+    this.props.reRenderSearch( this.props.book.searchQuery, title, updateType)
+  }
+
+  displayBooks(books, filter = false ) {
     const { loading } = this.props.book;
-    //console.log(loading, 'loading in display');
-    return arr.map((book, index) => {
+    return books.map((book, index) => {
       return (
         <BookCard
           onDelete={this.onDelete.bind(this)}
@@ -35,13 +47,27 @@ class Profile extends Component {
           books={book}
           index={index}
           disableParentScroll={this.disableParentScroll.bind(this)}
+          updateFilteredBooks={ filter ? this.updateFilteredBooks.bind(this) : null }//if filter is true, set filterUpdate function to props (we use this to update read/delete searched books display)
         />
       )
     });
   }
 
+  displayPage(){// handles rendering of books 
+    const { savedBooks, searchQuery, loading } = this.props.book;
+    if ( searchQuery  && !loading){                            
+      return this.displayBooks( searchQuery, true ); //display searched books, filter paratmeter is true 
+    }else if ( savedBooks  && !loading ){             
+      return  ( 
+                <View style={ styles.booksContainer }>
+                  { this.displayBooks( savedBooks ) }
+                </View>//display saved books, no filter bool 
+              )
+    } return  <Spinner size="large" />;              //display spinner in when switching between saved and searched
+  }
+
   render() {
-    const { savedBooks, loading } = this.props.book;
+    const { userId } = this.props.auth.userId;
     return (
       <ScrollView style={styles.container} contentContainerStyle={{flexGrow: 1}} scrollEnabled={this.state.scrollActive}>
         {/*<View>
@@ -54,9 +80,8 @@ class Profile extends Component {
             activeOpacity={0.7}
           />
         </View>*/}
-        <View style={{ alignItems: 'center', flex:1 }} >
-          { savedBooks && !loading ? this.displayBooks(this.props.book.savedBooks) : <Spinner size="large" /> }
-        </View>
+        <Search handleSubmit={this.handleSubmit.bind(this)} userId={ userId } clearBooks={ this.props.clearSearchedBooks /* clears searched books results */ }/>
+        {this.displayPage()}
       </ScrollView>
     );
   }
@@ -66,6 +91,9 @@ const styles = {
   container: {
     flex: 1,
     paddingHorizontal: 10,
+  },
+  booksContainer:{
+    alignItems: 'center', flex:1
   }
 };
 
@@ -73,5 +101,8 @@ export default connect(
   ({ auth, book }) => ({ auth, book }),
   {
     getSavedBooks,
+    searchSavedBooks,
+    clearSearchedBooks,
+    reRenderSearch
   },
 )(Profile)

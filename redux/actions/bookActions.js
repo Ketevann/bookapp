@@ -5,7 +5,10 @@ import {
     LOAD_SAVED_BOOKS,
     BOOK_SEARCH_CLEAR,
     LOADING,
-    SEARCH_TYPE
+    SEARCH_TYPE,
+    SEARCH_QUERY_SUCCESS,
+    SEARCH_BOOKS_CLEAR,
+    SEARCH_PARAMS_CLEAR
 } from './action-types'
 import { GOOGLE_API_KEY } from '../../keys'
 import firebase from 'firebase';
@@ -80,6 +83,14 @@ export const setSearchValue = (book, dispatch) =>
     dispatch =>
         dispatch({ type: CHANGE_SEARCH, payload: book })
 
+export const clearSearch = (dispatch) =>//clearing search bar
+    dispatch=>
+        dispatch({ type: SEARCH_PARAMS_CLEAR})
+
+export const clearSearchedBooks = (dispatch) =>//clearing search book results from state
+    dispatch=>
+        dispatch({ type: SEARCH_BOOKS_CLEAR })
+
 //gets books from a google api
 const getBooks = (dispatch, data, userId, author = '', ) => {//added user id
     //  console.log('in GET BOOKS', author)
@@ -125,6 +136,29 @@ export const findSimilarBooks = (keyword, placeholder, userId, dispatch) =>
                 .catch(err => console.log(err));
     }
 
+export const searchSavedBooks = (keyword, placeholder, userId, dispatch) =>
+    dispatch => {
+        dispatch({ type: LOADING });//updates loading in saved books to true
+        firebase.database().ref(`users/${userId}/books`).once('value', (snapshot) => {
+            
+            dispatch({ type: SEARCH_PARAMS_CLEAR })//clears search form
+
+            if (snapshot.val()){  //if books branch exists
+                let savedBooksArray = snapshot.val();
+                if (Array.isArray(snapshot.val()) === false) {
+                    savedBooksArray = Object.values(snapshot.val());
+                }
+                if (placeholder==='books') placeholder='title';
+                books = savedBooksArray.filter(book => {        //filtering books that meet search parameters 
+                    keyword=keyword.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '');//removing empty spaces from both ends 
+                    return book[placeholder]=== keyword || book[placeholder].match(keyword)!==null// comparing search paramater to book data
+                });
+
+                return dispatch({ type: SEARCH_QUERY_SUCCESS, payload: books })//setting books to state
+            }
+        });
+}
+
 export const getSavedBooks = (user, dispatch) =>
     dispatch => {
         dispatch({ type: LOADING });//updates loading in saved books to true
@@ -159,7 +193,25 @@ export const markAsRead = (uid, title, dispatch) =>
         });
     };
 
-
+export const reRenderSearch = ( books, title, updateType, dispatch) =>//takes current array of searched books, deletes/updates read, then sets that updated array to state (our searchQuery variable)
+    dispatch => {                                                     //thus forcing a re-render of searched books ans we see changes in icon or the deleted book goes away 
+            if (updateType==='read'){
+                for (let i = 0; i < books.length; i++) {
+                    let book = books[i];
+                    
+                    if (book && book.title === title) {
+                       book.read = !book.read; //updating read
+                    }
+                }
+            } else {
+                books = books.filter(book => {
+                    if (book.title !== title) //filtering out the deleted book
+                        return book;
+                });
+            }
+            return dispatch({ type: SEARCH_QUERY_SUCCESS, payload: books }); //setting updated books to state
+    };
+    
 export const removeBooks = (uid, saved, dispatch) =>
     dispatch => {
         firebase.database().ref(`users/${uid}`).child('books').once('value', function (snapshot) {

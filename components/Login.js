@@ -19,25 +19,26 @@ class Login extends Component {
     });
   }
 
-  renderContent() {
-    const { loggedIn } = this.props.auth;
-    if (loggedIn) {
-      return (
-        <Button
-          onPress={() =>
-            firebase.auth().signOut()}>;
-          Log Out</Button>)
-    } else if (loggedIn === false) {
-      return <LoginForm />
-    } return <Spinner size='large' />;
-  }
+  // renderContent() {
+  //   const { loggedIn } = this.props.auth;
+  //   if (loggedIn) {
+  //     return (
+  //       <Button
+  //         onPress={() =>
+  //           firebase.auth().signOut()}>;
+  //         Log Out</Button>)
+  //   } else if (loggedIn === false) {
+  //     return <LoginForm />
+  //  } return <Spinner size='large' />;
+  // }
 
   render() {
     return (
       <View style={{ flex: 1 }}>
         <Header headerText="Authentication" />
-        {this.renderContent()}
         <Text>Already a User? </Text>
+        {/*{this.renderContent()}*/}
+         <LoginForm />
         <Text onPress={() => Actions.signup()}>Sign Up</Text>
       </View>
     );
