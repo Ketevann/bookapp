@@ -424,7 +424,7 @@ const styles = {
   errorViewStyle: {
     backgroundColor: '#F38D8D',
     height: verticalScale(60),
-    marginTop: 300
+    marginTop: 150
 
   },
   errorTextStyle: {
