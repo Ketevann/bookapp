@@ -39,6 +39,7 @@ class Login extends Component {
     // } return <Spinner size='large' />;
   }
 
+
   render() {
     const { textStyle, signUpLinkStyle } = styles;
     console.log(SCREEN_HEIGHT, SCREEN_WIDTH)

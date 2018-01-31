@@ -1,4 +1,4 @@
-const INITIAL_STATE = { email: '', password: '', passwordConfirm: '', error: '', loading: false, loggedIn: null, userId: '', forgotError: '' };
+const INITIAL_STATE = { email: '', password: '', passwordConfirm: '', error: '', loading: false, loggedIn: null, userId: '', forgotError: '', loadingCreditionals:true };
 import {
   EMAIL_CHANGED, PASSWORD_CHANGED, LOGIN_USER_SUCESS, LOGIN_USER_FAIL,
   LOGIN_USER,
@@ -20,7 +20,7 @@ export default (auth = INITIAL_STATE, action) => {
     case PASSWORD_CONFIRM:
       return { ...auth, passwordConfirm: action.payload };
     case LOGIN_USER_SUCESS:
-      return { ...auth, ...INITIAL_STATE, user: action.payload.uid };
+      return { ...auth, ...INITIAL_STATE, user: action.payload.uid , loadingCreditionals:false };//added credential variable for spinner
     case LOGIN_USER_FAIL:
       return { ...auth, error: action.error, loading: false };
     case LOGIN_USER:

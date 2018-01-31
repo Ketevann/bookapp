@@ -21,6 +21,9 @@ import { Icon } from 'react-native-elements';
 
 class SearchComponent extends Component {
 
+  static defaultProps = {
+    clearBooks: () => { },//defualt function
+  }
   constructor() {
     super()
 
@@ -40,9 +43,8 @@ class SearchComponent extends Component {
     else if (query === 'author') this.setState({ author: { textDecorationLine: 'underline' }, book: { textDecorationLine: 'none' } })
     this.props.changeSearchBookQuery(query);
   }
-  // cancelSearch() {
-  //   this.search.blur();
-  // }
+
+
   // Important: You must return a Promise
   beforeFocus = () => {
     return new Promise((resolve, reject) => {
@@ -60,6 +62,18 @@ class SearchComponent extends Component {
   }
 
   // Important: You must return a Promise
+
+
+  // Important: You must return a Promise
+  onFocus = (text) => {
+    return new Promise((resolve, reject) => {
+      console.log('onFocus', text);
+      resolve();
+    });
+  }
+
+  // Important: You must return a Promise
+
   afterFocus = () => {
     return new Promise((resolve, reject) => {
       console.log('afterFocus');
@@ -87,7 +101,7 @@ class SearchComponent extends Component {
               style={[headerTextStyle, this.state.author, authorTextStyle]}
               onPress={() => this.onSetSearchQuery('author')}>Authors</Text>
             <View
-            style={{marginLeft: 36}}
+              style={{ marginLeft: 36 }}
             >
               <Icon
                 name='search'
@@ -120,14 +134,13 @@ class SearchComponent extends Component {
           * Please scroll down to Props section
           */
           />
-
-
           : null}
+
       </View>
     )
   }
-
 }
+
 
 const styles = {
   viewStyle: {

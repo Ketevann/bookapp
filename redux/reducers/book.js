@@ -11,10 +11,14 @@ import {
   CLEAR,
   LOAD_SAVED_BOOKS,
   BOOK_SEARCH_CLEAR,
-  LOADING
+  LOADING,
+  SEARCH_QUERY_SUCCESS,
+  SEARCH_BOOKS_CLEAR,
+  SEARCH_PARAMS_CLEAR
 } from '../actions/action-types';
 
-const INITIAL_STATE = { saved: null, bookSuggestions: null, error: '', searchbooks: '', similarbooks: null, booksbool: true, authors: false, placeholder: 'author', savedBooks: [], user: null, read: false, loading: true, loadingSavedBook: false }
+
+const INITIAL_STATE = { saved: null, bookSuggestions: null, error: '', searchbooks: '', similarbooks: null, booksbool: true, authors: false, placeholder: 'books', savedBooks: [], user: null, read: false, loading: true, loadingSavedBook: false, searchQuery:null }
 
 export default (book = INITIAL_STATE, action) => {
   switch (action.type) {
@@ -49,7 +53,13 @@ export default (book = INITIAL_STATE, action) => {
     case LOAD_SAVED_BOOKS:
       return { ...book, loadingSavedBook: true, similarbooks: null };
     case LOADING:
-      return { ...book, loading: true };//upates to true when user is reloading saved books
+      return { ...book, loading: true };//upates to true when user is reloading saved books or loading searched books results 
+    case SEARCH_QUERY_SUCCESS:
+      return { ...book, searchQuery: action.payload, loading:false } //sets searched books to state 
+    case SEARCH_PARAMS_CLEAR:
+      return { ...book, placeholder: "books" , searchbooks:null }//clearing search bar
+    case SEARCH_BOOKS_CLEAR:
+      return {...book, searchQuery:'' }//clearing search book results
     default:
       return book;
   }
