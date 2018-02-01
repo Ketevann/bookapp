@@ -83,7 +83,7 @@ class SearchComponent extends Component {
     });
   }
   render() {
-    { console.log('book', this.props.book.placeholder) }
+    { console.log('book', this.props) }
     const { headerTextStyle, authorTextStyle, bookTextStyle, viewStyle } = styles;
     return (
       <View style={{ zIndex: 1000 }}>
@@ -113,10 +113,12 @@ class SearchComponent extends Component {
                 onPress={() => this.setState({ search: !this.state.search })}//deletes a "disliked book from users suggestions"
               />
             </View>
+            {this.props.auth.userId ?
              <Text style={[headerTextStyle, {marginLeft: 20}]} onPress={() => {
                firebase.auth().signOut()
                Actions.home()
             }}>Log Out</Text>
+            :null}
           </View>
         </LinearGradient>
 
@@ -169,8 +171,8 @@ const styles = {
     marginLeft: 30,
   }
 }
-export default connect(({ book }) =>
-  ({ book }), {
+export default connect(({ book, auth }) =>
+  ({ book, auth }), {
     setSearchValue,
     findSimilarBooks,
     changeSearchBookQuery
