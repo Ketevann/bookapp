@@ -171,7 +171,7 @@ class Deck extends Component {
           <Animated.ScrollView
             key={i}
             scrollEnabled={this.state.scroll}//added Scroll enables
-            style={[styles.cardStyle, { zIndex: 99, height: SCREEN_HEIGHT - 158, marginTop: verticalScale(45),
+            style={[styles.cardStyle, { zIndex: 99, height: SCREEN_HEIGHT - 100,
           backgroundColor: 'white',
           borderRadius: 5,
           paddingBottom: 10 }, this.getCardStyle()
@@ -207,7 +207,7 @@ class Deck extends Component {
     return (
       <Animated.ScrollView
         ref="_scrollView"
-
+        style={{marginTop: verticalScale(45)}}
       >
         <View
          ref="_View"
