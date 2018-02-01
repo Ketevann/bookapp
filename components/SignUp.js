@@ -68,7 +68,7 @@ class SignUp extends Component {
         >Sign Up</Text>
 
         <View
-          style={{ flexDirection: 'row', justifyContent: 'center', marginTop: scale(8) }}
+          style={{ flexDirection: 'row', justifyContent: 'center', marginTop: verticalScale(8) }}
         >
           <Text
             style={textStyle}

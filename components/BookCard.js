@@ -8,7 +8,8 @@ import {
   Image,
   TouchableOpacity,
   PixelRatio,
-  Dimensions
+  Dimensions,
+  PanResponder
 } from 'react-native';
 import { Spinner } from './common';
 
@@ -48,8 +49,28 @@ class BookCard extends Component {
     this.animatedValue.addListener(({ value }) => {
       this.value = value;
     });
-  }
+        this.wrapperPanResponder = PanResponder.create({
+        onStartShouldSetPanResponder: (e, g) => true,
+        onPanResponderGrant: () => {
+          console.log('GRANTED TO WRAPPER');
+        },
+        onPanResponderMove: (evt, gestureState) => {
+          console.log('WRAPPER MOVED');
+        }
+      });
 
+      this.scollerPanResponder = PanResponder.create({
+        onStartShouldSetPanResponder: (e, g) => true,
+        onPanResponderGrant: () => {
+          console.log('GRANTED TO SCROLLER');
+        },
+        onPanResponderMove: (evt, gestureState) => {
+          console.log('SCROLLER MOVED');
+        }
+      });
+    
+  }
+    
   frontCardStyle() {
     this.frontInterpolate = this.animatedValue.interpolate({
       inputRange: [0, 180],
@@ -123,7 +144,11 @@ class BookCard extends Component {
             <TouchableOpacity
               onPress={() => this.flipCard()}
             >
-              <Animated.View>
+              <Animated.View
+               style={{
+              justifyContent: 'center',
+              alignItems: 'center'
+            }}>
                 {/*<Animated.Image
                   style={[this.frontCardStyle(), styles.cardStyle]}
                   source={{ uri: book.image.smallThumbnail }}
@@ -138,7 +163,39 @@ class BookCard extends Component {
                 {this.state.loadingImage === true ? <View style={styles.imageContainer}>
                   <Spinner />
                 </View> :
-                  <View>
+                 null
+
+                }
+
+              </Animated.View>
+              <Animated.View style={[this.backCardStyle(), styles.cardStyle, styles.flipCardBack, {
+              justifyContent: 'center',
+              alignItems: 'center'
+            } ]}>
+                <ScrollView
+                   {...this.wrapperPanResponder.panHandlers}
+                  
+                >
+                  <View style={{ flex: 1 }}   {...this.scollerPanResponder.panHandlers} >
+                    <Text
+                      style={styles.textStyle}
+                    >Page Count: {book.pageCount}</Text>
+                    <Text
+                      style={styles.textStyle}
+                    >category: {book.categories[0]}</Text>
+                  </View>
+                  <Text
+                    style={[styles.textStyle,  {textAlign: 'center'}]}
+
+                  >{book.description}</Text>
+                </ScrollView>
+              </Animated.View>
+            </TouchableOpacity>
+            <Animated.View
+              style={{ flexDirection: 'column' }}
+            >  
+            <View  style={{ flexDirection: 'column' ,    alignItems: 'center',
+    justifyContent: 'center' }  } >
                     <Text
                       style={styles.textStyle}
                     >{book.title}  </Text>
@@ -151,35 +208,9 @@ class BookCard extends Component {
                       }}
                     >by {book.author}</Text>
                   </View>
-
-                }
-
-              </Animated.View>
-              <Animated.View style={[this.backCardStyle(), styles.cardStyle, styles.flipCardBack]} >
-                <ScrollView
-                  onTouchStart={(e) => this.props.disableParentScroll(false)}
-                  onTouchEnd={(e) => this.props.disableParentScroll(true)}
-                >
-                  <View style={{ flex: 1 }}>
-                    <Text
-                      style={styles.textStyle}
-                    >Page Count: {book.pageCount}</Text>
-                    <Text
-                      style={styles.textStyle}
-                    >category: {book.categories[0]}</Text>
-                  </View>
-                  <Text
-                    style={styles.textStyle}
-
-                  >{book.description}</Text>
-                </ScrollView>
-              </Animated.View>
-            </TouchableOpacity>
-            <Animated.View
-              style={{ flexDirection: 'row' }}
-            >
+              <View    style={{ flexDirection: 'row' ,   justifyContent: 'center',  paddingBottom: scale(15)}}>
               <View
-                style={{ position: 'relative', left: -40 }}
+                style={{ position: 'relative', left: -1* scale(40) }}
               >
                 <Icon
                   raised
@@ -192,7 +223,7 @@ class BookCard extends Component {
               </View>
 
               <View
-                style={{ position: 'relative', left: 40 }}
+                style={{ position: 'relative', left: scale(40) }}
               >
                 <Icon
 
@@ -204,6 +235,7 @@ class BookCard extends Component {
                   onPress={() => this.onRead(book.title)}
                 />
               </View>
+               </View>
             </Animated.View>
           </View>
         );
@@ -244,9 +276,8 @@ const styles = StyleSheet.create({
     height: verticalScale(400),
     width: scale(250),
     backfaceVisibility: 'hidden',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 10
+  
+    marginTop: 10,
 
   },
 
@@ -259,8 +290,8 @@ const styles = StyleSheet.create({
   },
 
   flipCardBack: {
-    position: "absolute",
-    top: 0,
+    position: "absolute",flexDirection:'row',
+   top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center'
   },
   imageContainer: {//styling for image spinner
     height: 425,
