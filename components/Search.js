@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { Text, View, TextInput, Keyboard, Dimensions, PixelRatio } from 'react-native';
 import { connect } from 'react-redux';
 import { Button } from './common';
+import firebase from 'firebase';
 import {
   setSearchValue,
   findSimilarBooks,
@@ -12,6 +13,7 @@ const { height, width } = Dimensions.get('window');
 import Search from 'react-native-search-box';
 
 import { scale, verticalScale, moderateScale } from '../functions'
+import { Actions } from 'react-native-router-flux';
 
 let SCREEN_WIDTH = PixelRatio.getPixelSizeForLayoutSize(width);
 let SCREEN_HEIGHT = PixelRatio.getPixelSizeForLayoutSize(height);
@@ -111,6 +113,10 @@ class SearchComponent extends Component {
                 onPress={() => this.setState({ search: !this.state.search })}//deletes a "disliked book from users suggestions"
               />
             </View>
+             <Text style={[headerTextStyle, {marginLeft: 20}]} onPress={() => {
+               firebase.auth().signOut()
+               Actions.home()
+            }}>Log Out</Text>
           </View>
         </LinearGradient>
 
@@ -136,6 +142,7 @@ class SearchComponent extends Component {
           */
           />
           : null}
+
 
       </View>
     )

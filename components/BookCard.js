@@ -6,7 +6,9 @@ import {
   ScrollView,
   Animated,
   Image,
-  TouchableOpacity
+  TouchableOpacity,
+  PixelRatio,
+  Dimensions
 } from 'react-native';
 import { Spinner } from './common';
 
@@ -20,15 +22,25 @@ const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
     contentSize.height - paddingToBottom;
 };
 
+
+
+const { height, width } = Dimensions.get('window');
+
+import { scale, verticalScale, moderateScale } from '../functions'
+
+let SCREEN_WIDTH = PixelRatio.getPixelSizeForLayoutSize(width);
+let SCREEN_HEIGHT = PixelRatio.getPixelSizeForLayoutSize(height);
+
+
 class BookCard extends Component {
   constructor(props) {
     super(props)
-    this.state = { index: 0, value: 0, loading: true , loadingImage: true }
+    this.state = { index: 0, value: 0, loading: true, loadingImage: true }
   }
 
   componentWillMount() {
-     if (this.props.books.image) {
-       this.setState({ loading: false });
+    if (this.props.books.image) {
+      this.setState({ loading: false });
     }
     this.animatedValue = new Animated.Value(0);
     this.value = 0;
@@ -75,18 +87,18 @@ class BookCard extends Component {
       }).start();
     }
   }
-  onUpdateBook( title ,type){
-     this.props.updateFilteredBooks  ?  this.props.updateFilteredBooks(title, type) : null;//checks if filterUpdate function exists then call it, else do nothing 
+  onUpdateBook(title, type) {
+    this.props.updateFilteredBooks ? this.props.updateFilteredBooks(title, type) : null;//checks if filterUpdate function exists then call it, else do nothing
   }                                                                             //if we are displaying searched books, then the filterUpdated functuion exists
-                                                                                //if we are displaying saved books then filterUpdated functuion does not exist 
+  //if we are displaying saved books then filterUpdated functuion does not exist
   onDelete(title) {
     this.props.removeBooks(this.props.auth.userId, title);//updating the db
-    this.onUpdateBook( title, 'delete');//updating the display of searched books 
+    this.onUpdateBook(title, 'delete');//updating the display of searched books
   }
 
   onRead(title) {
-    this.props.markAsRead(this.props.auth.userId, title ); //updating the db
-    this.onUpdateBook( title, 'read');//updating the display of searched books 
+    this.props.markAsRead(this.props.auth.userId, title); //updating the db
+    this.onUpdateBook(title, 'read');//updating the display of searched books
   }
 
   renderElemets(book) {
@@ -101,12 +113,13 @@ class BookCard extends Component {
     if (book) {
       if (!this.state.loading) {
         return (
-          <View>
-            <Text
-              style={{
-                fontFamily: 'Helvetica'
-              }}
-            >{book.title}</Text>
+          <View
+            style={{
+              justifyContent: 'center',
+              alignItems: 'center'
+            }}
+          >
+
             <TouchableOpacity
               onPress={() => this.flipCard()}
             >
@@ -118,38 +131,79 @@ class BookCard extends Component {
                 <Animated.Image
                   source={{ uri: book.image.smallThumbnail }}
                   style={[this.frontCardStyle(), styles.cardStyle]}
-                  onLoadStart={(e) => this.setState({loadingImage: true})}
-                  onLoad={() => this.setState({loadingImage: false, error: false})}
+                  onLoadStart={(e) => this.setState({ loadingImage: true })}
+                  onLoad={() => this.setState({ loadingImage: false, error: false })}
                 />
 
-                { this.state.loadingImage === true ? <View style={styles.imageContainer}>
-                                                        <Spinner/>
-                                                      </View> : null }
+                {this.state.loadingImage === true ? <View style={styles.imageContainer}>
+                  <Spinner />
+                </View> :
+                  <View>
+                    <Text
+                      style={styles.textStyle}
+                    >{book.title}  </Text>
+                    <Text
+                      style={{
+                        fontSize: scale(15),
+                        fontFamily: 'Avenir-Book',
+                        color: '#050F37',
+                        paddingBottom: 15
+                      }}
+                    >by {book.author}</Text>
+                  </View>
+
+                }
+
               </Animated.View>
               <Animated.View style={[this.backCardStyle(), styles.cardStyle, styles.flipCardBack]} >
                 <ScrollView
                   onTouchStart={(e) => this.props.disableParentScroll(false)}
                   onTouchEnd={(e) => this.props.disableParentScroll(true)}
                 >
-                  <Text >{book.description}</Text>
+                  <View style={{ flex: 1 }}>
+                    <Text
+                      style={styles.textStyle}
+                    >Page Count: {book.pageCount}</Text>
+                    <Text
+                      style={styles.textStyle}
+                    >category: {book.categories[0]}</Text>
+                  </View>
+                  <Text
+                    style={styles.textStyle}
+
+                  >{book.description}</Text>
                 </ScrollView>
               </Animated.View>
             </TouchableOpacity>
             <Animated.View
-              style={{ flexDirection: 'row', margin: 20 }}
+              style={{ flexDirection: 'row' }}
             >
-              <Icon
-                raised
-                name='check'
-                type='font-awesome'
-                color={color}
-                onPress={() => this.onRead(book.title)} />
-              <Icon
-                raised
-                name='delete'
-                type='delete'
-                color='#f50'
-                onPress={() => this.onDelete(book.title)} />
+              <View
+                style={{ position: 'relative', left: -40 }}
+              >
+                <Icon
+                  raised
+                  name='delete'
+                  type='delete'
+                  color='#F38D8D'
+                  size={30}
+                  onPress={() => this.onDelete(book.title)}
+                />
+              </View>
+
+              <View
+                style={{ position: 'relative', left: 40 }}
+              >
+                <Icon
+
+                  raised
+                  name='check'
+                  type='font-awesome'
+                  color={color}
+                  size={30}
+                  onPress={() => this.onRead(book.title)}
+                />
+              </View>
             </Animated.View>
           </View>
         );
@@ -175,6 +229,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FFF',
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   imageStyle: {
     position: 'absolute',
@@ -185,11 +241,13 @@ const styles = StyleSheet.create({
   },
 
   cardStyle: {
-    height: 400, width: 250,
+    height: verticalScale(400),
+    width: scale(250),
     backfaceVisibility: 'hidden',
     alignItems: 'center',
-    marginTop: 20,
-    padding: 20
+    justifyContent: 'center',
+    marginTop: 10
+
   },
 
   card: {
@@ -204,16 +262,23 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 0,
   },
-  imageContainer:{//styling for image spinner
-     height: 425, 
-     width: 250,
-     backgroundColor:'#E5EAEF' , 
-     position:'absolute', 
-     flex:1, 
-     flexDirection:'row', 
-     alignItems:'center',
-     justifyContent:'center'
-   }
+  imageContainer: {//styling for image spinner
+    height: 425,
+    width: 250,
+    backgroundColor: '#E5EAEF',
+    position: 'absolute',
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  textStyle: {
+    fontSize: scale(15),
+    fontFamily: 'Avenir-Book',
+    color: '#050F37',
+    marginTop: 5
+  }
+
 });
 
 export default connect(
