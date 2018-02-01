@@ -205,7 +205,6 @@ class Deck extends Component {
     return (
       <Animated.ScrollView
         contentContainerStyle={{ paddingBottom: scale(50) }}
-
         ref="_scrollView"
         style={{marginTop: verticalScale(45),
 
