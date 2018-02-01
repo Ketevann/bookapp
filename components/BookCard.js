@@ -12,31 +12,25 @@ import {
   PanResponder
 } from 'react-native';
 import { Spinner } from './common';
-
 import { getSavedBooks, removeBooks, markAsRead } from '../redux/actions/bookActions';
 import { connect } from 'react-redux';
-
 import { Icon } from 'react-native-elements'
-const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
-  const paddingToBottom = 20;
-  return layoutMeasurement.height + contentOffset.y >=
-    contentSize.height - paddingToBottom;
-};
-
-
-
 const { height, width } = Dimensions.get('window');
-
 import { scale, verticalScale, moderateScale } from '../functions'
 
 let SCREEN_WIDTH = PixelRatio.getPixelSizeForLayoutSize(width);
 let SCREEN_HEIGHT = PixelRatio.getPixelSizeForLayoutSize(height);
 
+// const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
+//   const paddingToBottom = 20;
+//   return layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingToBottom;
+// };
+
 
 class BookCard extends Component {
   constructor(props) {
     super(props)
-    this.state = { index: 0, value: 0, loading: true, loadingImage: true }
+    this.state = { index: 0, value: 0, loading: true, loadingImage: true, front:true }
   }
 
   componentWillMount() {
@@ -49,26 +43,26 @@ class BookCard extends Component {
     this.animatedValue.addListener(({ value }) => {
       this.value = value;
     });
-        this.wrapperPanResponder = PanResponder.create({
-        onStartShouldSetPanResponder: (e, g) => true,
-        onPanResponderGrant: () => {
-          console.log('GRANTED TO WRAPPER');
-        },
-        onPanResponderMove: (evt, gestureState) => {
-          console.log('WRAPPER MOVED');
-        }
-      });
-
-      this.scollerPanResponder = PanResponder.create({
-        onStartShouldSetPanResponder: (e, g) => true,
-        onPanResponderGrant: () => {
-          console.log('GRANTED TO SCROLLER');
-        },
-        onPanResponderMove: (evt, gestureState) => {
-          console.log('SCROLLER MOVED');
-        }
-      });
     
+    this.wrapperPanResponder = PanResponder.create({
+      onStartShouldSetPanResponder: (e, g) => true,
+      onPanResponderGrant: () => {
+          //console.log('GRANTED TO WRAPPER');
+      },
+      onPanResponderMove: (evt, gestureState) => {
+          //console.log('WRAPPER MOVED');
+      }
+    });
+
+    this.scollerPanResponder = PanResponder.create({
+      onStartShouldSetPanResponder: (e, g) => true,
+      onPanResponderGrant: () => {
+          //console.log('GRANTED TO SCROLLER');
+      },
+      onPanResponderMove: (evt, gestureState) => {
+          //console.log('SCROLLER MOVED');
+      }
+    });
   }
     
   frontCardStyle() {
@@ -94,6 +88,7 @@ class BookCard extends Component {
   }
 
   flipCard() {
+     this.setState({ front: !this.state.front });
     if (this.value >= 90) {
       Animated.spring(this.animatedValue, {
         toValue: 0,
@@ -110,8 +105,7 @@ class BookCard extends Component {
   }
   onUpdateBook(title, type) {
     this.props.updateFilteredBooks ? this.props.updateFilteredBooks(title, type) : null;//checks if filterUpdate function exists then call it, else do nothing
-  }                                                                             //if we are displaying searched books, then the filterUpdated functuion exists
-  //if we are displaying saved books then filterUpdated functuion does not exist
+  }                                                                                     //if we are displaying searched books, then the filterUpdated functuion exists
   onDelete(title) {
     this.props.removeBooks(this.props.auth.userId, title);//updating the db
     this.onUpdateBook(title, 'delete');//updating the display of searched books
@@ -140,43 +134,22 @@ class BookCard extends Component {
               alignItems: 'center'
             }}
           >
-
-            <TouchableOpacity
-              onPress={() => this.flipCard()}
-            >
+            <TouchableOpacity onPress={() => this.flipCard()} >
               <Animated.View
                style={{
-              justifyContent: 'center',
-              alignItems: 'center'
-            }}>
-                {/*<Animated.Image
-                  style={[this.frontCardStyle(), styles.cardStyle]}
-                  source={{ uri: book.image.smallThumbnail }}
-                />*/}
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
                 <Animated.Image
-                  source={{ uri: book.image.smallThumbnail }}
+                  source={{ uri: modifiedLink }}
                   style={[this.frontCardStyle(), styles.cardStyle]}
                   onLoadStart={(e) => this.setState({ loadingImage: true })}
                   onLoad={() => this.setState({ loadingImage: false, error: false })}
                 />
-
-                {this.state.loadingImage === true ? <View style={styles.imageContainer}>
-                  <Spinner />
-                </View> :
-                 null
-
-                }
-
               </Animated.View>
-              <Animated.View style={[this.backCardStyle(), styles.cardStyle, styles.flipCardBack, {
-              justifyContent: 'center',
-              alignItems: 'center'
-            } ]}>
-                <ScrollView
-                   {...this.wrapperPanResponder.panHandlers}
-                  
-                >
-                  <View style={{ flex: 1 }}   {...this.scollerPanResponder.panHandlers} >
+              <Animated.View style={[this.backCardStyle(), styles.cardStyle, styles.flipCardBack, { justifyContent: 'center', alignItems: 'center'} ]}>
+                <ScrollView {...this.wrapperPanResponder.panHandlers} contentContainerStyle={{ paddingBottom: scale(10) }} >
+                  <View style={{ flex: 1 }} {...this.scollerPanResponder.panHandlers} >
                     <Text
                       style={styles.textStyle}
                     >Page Count: {book.pageCount}</Text>
@@ -186,57 +159,48 @@ class BookCard extends Component {
                   </View>
                   <Text
                     style={[styles.textStyle,  {textAlign: 'center'}]}
-
                   >{book.description}</Text>
                 </ScrollView>
               </Animated.View>
             </TouchableOpacity>
-            <Animated.View
-              style={{ flexDirection: 'column' }}
-            >  
-            <View  style={{ flexDirection: 'column' ,    alignItems: 'center',
-    justifyContent: 'center' }  } >
-                    <Text
-                      style={styles.textStyle}
-                    >{book.title}  </Text>
-                    <Text
-                      style={{
-                        fontSize: scale(15),
-                        fontFamily: 'Avenir-Book',
-                        color: '#050F37',
-                        paddingBottom: 15
-                      }}
-                    >by {book.author}</Text>
-                  </View>
-              <View    style={{ flexDirection: 'row' ,   justifyContent: 'center',  paddingBottom: scale(15)}}>
-              <View
-                style={{ position: 'relative', left: -1* scale(40) }}
-              >
-                <Icon
-                  raised
-                  name='delete'
-                  type='delete'
-                  color='#F38D8D'
-                  size={30}
-                  onPress={() => this.onDelete(book.title)}
-                />
-              </View>
 
-              <View
-                style={{ position: 'relative', left: scale(40) }}
-              >
-                <Icon
-
-                  raised
-                  name='check'
-                  type='font-awesome'
-                  color={color}
-                  size={30}
-                  onPress={() => this.onRead(book.title)}
-                />
-              </View>
-               </View>
-            </Animated.View>
+             {
+              this.state.loadingImage === true ?   
+               <View style={styles.imageContainer}>
+                 <Spinner />
+              </View> :
+              <Animated.View style={[ {display: this.state.front ? 'flex': 'none'}, styles.buttons ]}>
+                <View style={{ position: 'relative', left: -1* scale(40) }}>
+                  <Icon
+                    raised
+                    name='delete'
+                    type='delete'
+                    color='#F38D8D'
+                    size={ scale(20) }
+                    onPress={() => this.onDelete(book.title)}
+                  />
+                </View>
+                <View style={{ position: 'relative', left: scale(40) }} >
+                  <Icon
+                    raised
+                    name='check'
+                    type='font-awesome'
+                    color={color}
+                    size={scale(20)}
+                    onPress={() => this.onRead(book.title)}
+                  />
+                </View>
+              </Animated.View>
+            }
+            { 
+              this.state.loadingImage === true ? null :
+              <Animated.View style={{ flexDirection: 'column' ,paddingBottom: scale(15)}} >  
+                <View style={styles.title}>
+                  <Text style={styles.textStyle}> {book.title}  </Text>
+                  <Text style={styles.author}> by {book.author}</Text>
+                </View>
+              </Animated.View>
+            }
           </View>
         );
       }
@@ -251,13 +215,7 @@ class BookCard extends Component {
 }
 
 
-
-
-
-
-
 const styles = StyleSheet.create({
-
   container: {
     flex: 1,
     backgroundColor: '#FFF',
@@ -271,16 +229,12 @@ const styles = StyleSheet.create({
     bottom: 0,
     right: 0,
   },
-
   cardStyle: {
     height: verticalScale(400),
     width: scale(250),
     backfaceVisibility: 'hidden',
-  
     marginTop: 10,
-
   },
-
   card: {
     backgroundColor: 'white',
     width: 300,
@@ -288,10 +242,15 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     height: 500
   },
-
   flipCardBack: {
-    position: "absolute",flexDirection:'row',
-   top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center'
+    position: "absolute",
+    flexDirection:'row',
+    top: 0, 
+    left: 0, 
+    right: 0, 
+    bottom: 0, 
+    justifyContent: 'center', 
+    alignItems: 'center'
   },
   imageContainer: {//styling for image spinner
     height: 425,
@@ -308,8 +267,25 @@ const styles = StyleSheet.create({
     fontFamily: 'Avenir-Book',
     color: '#050F37',
     marginTop: 5
+  },
+  author:{
+    fontSize: scale(15),
+    fontFamily: 'Avenir-Book',
+    color: '#050F37',
+    paddingBottom: 15
+  },
+  title:{ 
+    flexDirection: 'column',    
+    alignItems: 'center', 
+    justifyContent: 'center' 
+  },
+  buttons:{ 
+    marginTop: -1 * scale(50), 
+    height:50,  
+    flexDirection: 'row', 
+    alignItems:'flex-end', 
+    justifyContent: 'space-around'
   }
-
 });
 
 export default connect(
