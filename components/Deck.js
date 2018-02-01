@@ -210,7 +210,7 @@ class Deck extends Component {
           backgroundColor: 'white',
           borderRadius: 5,
           paddingBottom: 10,
-          height: SCREEN_HEIGHT - 160
+          height: SCREEN_HEIGHT - 140
        }}
       >
         <View
