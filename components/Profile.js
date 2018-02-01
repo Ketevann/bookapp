@@ -7,7 +7,7 @@ import {
 } from '../redux/actions/bookActions';
 import BookCard from './BookCard';
 // import Search from './Search'
-import Search from './Search'
+import SearchComponent from './Search'
 
 class Profile extends Component {
   constructor(props) {
@@ -27,17 +27,17 @@ class Profile extends Component {
     this.displayBooks(arr)
   }
 
-  handleSubmit(){
-    const {searchbooks, placeholder} = this.props.book
-    const {userId} = this.props.auth.userId;
+  handleSubmit() {
+    const { searchbooks, placeholder } = this.props.book
+    const { userId } = this.props.auth.userId;
     this.props.searchSavedBooks(searchbooks, placeholder, this.props.auth.userId); //checks the user's book for the query keyword
   }
 
-  updateFilteredBooks( title, updateType ){//sending the searched books array, a title and what is to be done to that book (updateType = read || delete )
-    this.props.reRenderSearch( this.props.book.searchQuery, title, updateType)
+  updateFilteredBooks(title, updateType) {//sending the searched books array, a title and what is to be done to that book (updateType = read || delete )
+    this.props.reRenderSearch(this.props.book.searchQuery, title, updateType)
   }
 
-  displayBooks(books, filter = false ) {
+  displayBooks(books, filter = false) {
     const { loading } = this.props.book;
     return books.map((book, index) => {
       return (
@@ -47,53 +47,47 @@ class Profile extends Component {
           books={book}
           index={index}
           disableParentScroll={this.disableParentScroll.bind(this)}
-          updateFilteredBooks={ filter ? this.updateFilteredBooks.bind(this) : null }//if filter is true, set filterUpdate function to props (we use this to update read/delete searched books display)
+          updateFilteredBooks={filter ? this.updateFilteredBooks.bind(this) : null}//if filter is true, set filterUpdate function to props (we use this to update read/delete searched books display)
         />
       )
     });
   }
 
-  displayPage(){// handles rendering of books 
+  displayPage() {// handles rendering of books
     const { savedBooks, searchQuery, loading } = this.props.book;
-    if ( searchQuery  && !loading){                            
-      return this.displayBooks( searchQuery, true ); //display searched books, filter paratmeter is true 
-    }else if ( savedBooks  && !loading ){             
-      return  ( 
-                <View style={ styles.booksContainer }>
-                  { this.displayBooks( savedBooks ) }
-                </View>//display saved books, no filter bool 
-              )
-    } return  <Spinner size="large" />;              //display spinner in when switching between saved and searched
+    if (searchQuery && !loading) {
+      return this.displayBooks(searchQuery, true); //display searched books, filter paratmeter is true
+    } else if (savedBooks && !loading) {
+      return (
+        <View style={styles.booksContainer}>
+          {this.displayBooks(savedBooks)}
+        </View>//display saved books, no filter bool
+      )
+    } return <Spinner size="large" />;              //display spinner in when switching between saved and searched
   }
 
   render() {
     const { userId } = this.props.auth.userId;
     return (
-      <ScrollView style={styles.container} contentContainerStyle={{flexGrow: 1}} scrollEnabled={this.state.scrollActive}>
-        {/*<View>
-          <Avatar
-            containerStyle={{ position: 'absolute', right: 0 }}
-            large
-            rounded
-            source={{ uri: `data:image/jpeg;base64,${this.props.auth.image}` }}
-            onPress={() => console.log("Works!")}
-            activeOpacity={0.7}
-          />
-        </View>*/}
-        <Search handleSubmit={this.handleSubmit.bind(this)} userId={ userId } clearBooks={ this.props.clearSearchedBooks /* clears searched books results */ }/>
+
+      <View>
+       <SearchComponent handleSubmit={this.handleSubmit.bind(this)} userId={userId} clearBooks={this.props.clearSearchedBooks} />
+
+      <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1 }} scrollEnabled={this.state.scrollActive}>
+
         {this.displayPage()}
       </ScrollView>
+       </View>
     );
   }
 }
 
 const styles = {
   container: {
-    flex: 1,
-    paddingHorizontal: 10,
+    backgroundColor: 'white'
   },
-  booksContainer:{
-    alignItems: 'center', flex:1
+  booksContainer: {
+
   }
 };
 

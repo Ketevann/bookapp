@@ -109,7 +109,7 @@ class LoginForm extends Component {
     },
     errorViewStyle: {
       backgroundColor: '#F38D8D',
-      height: verticalScale(42),
+      height: verticalScale(59),
       marginTop: verticalScale(25)
     },
     errorTextStyle: {

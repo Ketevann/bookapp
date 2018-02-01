@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, Dimensions, PixelRatio } from 'react-native';
+import { View, Text, Dimensions, PixelRatio, ScrollView } from 'react-native';
 import { Card, CardSection, Button, Input } from './common';
 import { connect } from 'react-redux';
 import {
@@ -12,13 +12,13 @@ import {
 } from '../redux/actions/authActions';
 import { scale, verticalScale, moderateScale } from '../functions'
 const { height, width } = Dimensions.get('window');
+import { Actions } from 'react-native-router-flux';
 
 let SCREEN_WIDTH = PixelRatio.getPixelSizeForLayoutSize(width);
 let SCREEN_HEIGHT = PixelRatio.getPixelSizeForLayoutSize(height);
 
 
 //import RNF from './Pic'
-import { Actions } from 'react-native-router-flux';
 
 class SignUp extends Component {
 
@@ -49,16 +49,19 @@ class SignUp extends Component {
   OnRedirect() {
     const { email, password, passwordConfirm } = this.props.auth;
     this.props.signUpUser(email, password, passwordConfirm);
-    if (this.props.auth.loggedIn)
-      Actions.preferencesForm();
+    if (this.props.auth.userId)
+      Actions.home();
   }
 
   render() {
     const { textStyle, signUpLinkStyle, errorTextStyle, errorViewStyle } = styles;
 
     return (
+      <ScrollView
+
+      >
       <View
-        style={{ flex: 1, backgroundColor: 'white' }}
+        style={{ height, backgroundColor: 'white' }}
       >
         <Text
           style={styles.header}
@@ -111,6 +114,7 @@ class SignUp extends Component {
         <Button onPress={this.OnRedirect.bind(this)}>Sign Up</Button>
 
       </View>
+      </ScrollView>
     )
   }
 }

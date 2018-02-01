@@ -80,7 +80,6 @@ class Home extends Component {
     } else return (
       <View style={{ flex: 1 }}>
         <SearchComponent handleSubmit={this.handleSubmit.bind(this)} />
-        <Text style={{ zIndex: 1000 }} onPress={() => { firebase.auth().signOut() }}>Log Out</Text>
         {this.display()}
       </View>
     );
