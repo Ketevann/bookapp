@@ -49,7 +49,7 @@ class Login extends Component {
         style={styles.header}
         >Log In</Text>
         <View
-        style={{flexDirection: 'row', justifyContent: 'center', marginTop: scale(8)}}
+        style={{flexDirection: 'row', justifyContent: 'center', marginTop: verticalScale(8)}}
         >
         <Text
         style={textStyle}
@@ -71,17 +71,17 @@ class Login extends Component {
 const styles = {
   header: {
    textAlign: 'center',
-    fontSize: scale(20),
+    fontSize: verticalScale(20),
     fontFamily: 'Avenir-Book',
-    marginTop: scale(20)
+    marginTop: verticalScale(20)
   },
 
     textStyle: {
     textAlign: 'center',
     fontFamily: 'Avenir-Book',
     color: '#9B9B9B',
-    fontSize: scale(14),
-    lineHeight: scale(15)
+    fontSize: verticalScale(14),
+    lineHeight: verticalScale(15)
   },
   signUpLinkStyle:{
     textDecorationLine: 'underline',

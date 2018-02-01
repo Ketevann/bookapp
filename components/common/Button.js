@@ -18,14 +18,10 @@ const Button = ({ onPress, children }) => {
     <TouchableOpacity onPress={onPress}>
      <View
      style={{marginTop: scale(40)}}>
-       <LinearGradient
-        colors={['#A082C7', '#3F529C']}
-        style={{ alignItems: 'center', height: 40, width: (width / 1.5), marginLeft: SCREEN_WIDTH * (50 / SCREEN_WIDTH) }}
-      >
+
       <Text style={styles.textStyle}>
         {children}
       </Text>
-      </LinearGradient>
       </View>
     </TouchableOpacity>
   );
@@ -34,11 +30,12 @@ const Button = ({ onPress, children }) => {
 const styles = {
   textStyle: {
     alignSelf: 'center',
-     backgroundColor: 'transparent',
+     backgroundColor: '#f4426b',
      fontFamily: 'Avenir-Book',
      color: 'white',
      padding: 10,
     fontSize: SCREEN_WIDTH * (17 / SCREEN_WIDTH),
+    height: 40, width: (width / 1.5), marginLeft: SCREEN_WIDTH * (50 / SCREEN_WIDTH)
 
 
 

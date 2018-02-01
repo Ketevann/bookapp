@@ -82,7 +82,7 @@ class Deck extends Component {
 
         //this.setState({scroll: true}); //changing state as they had in the article
 
-        //      if (this.state.panResponderEnabled) {
+             if (this.state.panResponderEnabled) {
         if (gesture.dx > SWIPE_THRESHOLD
         ) {
           this.forceSwipe('right');
@@ -92,7 +92,7 @@ class Deck extends Component {
         } else {
           this.resetPosition();
         }
-        // }
+         }
       }
     });
 
@@ -171,10 +171,7 @@ class Deck extends Component {
           <Animated.ScrollView
             key={i}
             scrollEnabled={this.state.scroll}//added Scroll enables
-            style={[styles.cardStyle, { zIndex: 99, height: SCREEN_HEIGHT - 100,
-          backgroundColor: 'white',
-          borderRadius: 5,
-          paddingBottom: 10 }, this.getCardStyle()
+            style={[styles.cardStyle, { zIndex: 99, height: SCREEN_HEIGHT}, this.getCardStyle()
             ]}
 
         scrollEnabled={this.state.scroll}//added Scroll enables
@@ -190,7 +187,8 @@ class Deck extends Component {
         return (
           <Animated.ScrollView
             key={i}
-            style={[styles.cardStyle, { zIndex: 0 }]}
+            style={[styles.cardStyle, { zIndex: 0,    height: SCREEN_HEIGHT,
+                }]}
           >
             {this.renderCard(item, i)}
           </Animated.ScrollView>
@@ -207,21 +205,29 @@ class Deck extends Component {
     return (
       <Animated.ScrollView
         ref="_scrollView"
-        style={{marginTop: verticalScale(45)}}
+        style={{marginTop: verticalScale(45),
+
+          backgroundColor: 'white',
+          borderRadius: 5,
+          paddingBottom: 10,
+          height: SCREEN_HEIGHT - 160
+       }}
       >
         <View
          ref="_View"
-
+         style={{borderRadius: 70}}
         >
           <Image
             source={{ uri: modifiedLink }}
-            resizeMode='contain'
+            resizeMode='cover'
+            borderRadius={10}
             style={{
               width: width - scale(40),
               height: SCREEN_HEIGHT - verticalScale(290),
               borderRadius: 22,
               marginLeft: scale(18),
               marginTop: verticalScale(10)
+
 
 
 
@@ -236,7 +242,7 @@ class Deck extends Component {
             </View> :
             <View
               style={{
-                marginTop: verticalScale(75),
+                marginTop: verticalScale(25),
                 marginLeft: scale(18)
               }}
             >
@@ -248,11 +254,11 @@ class Deck extends Component {
                 style={styles.authorTextStyle}
               >by {item.author}</Text>
               <View
-                style={{ flexDirection: 'row', zIndex: 500, position: 'absolute', top: verticalScale(-85), justifyContent: 'space-between' }}
+                style={{ flexDirection: 'row', zIndex: 500, position: 'absolute', top: verticalScale(-80), justifyContent: 'space-between' }}
               //this keeps the buttons from traveling with each card. buttons remain in position as user swioes but functionality is passed to the next card
               >
                 <View
-                  style={{ left: scale(-20) }}
+                  style={{ left: scale(-10) }}
                 >
                   <Icon
                     raised
@@ -296,7 +302,7 @@ class Deck extends Component {
                 </View>
 
                 <View
-                  style={{ right: scale(-130) }}
+                  style={{ left: scale(120) }}
                 >
                   <Icon
                     raised
@@ -315,6 +321,7 @@ class Deck extends Component {
         {
           this.state.scroll ?
             <View
+
             >
               <Text
                 style={{
@@ -386,13 +393,15 @@ const styles = {
   titleTextStyle: {
     fontSize: scale(15),
     fontFamily: 'Avenir-Book',
-    color: '#050F37'
+    color: '#050F37',
+   // color: 'white'
   },
   authorTextStyle: {
     fontSize: scale(13),
     fontFamily: 'Avenir-Book',
     color: '#050F37',
-    paddingBottom: 15
+    paddingBottom: 15,
+    //color: 'white'
   },
 
   description: {
@@ -403,7 +412,8 @@ const styles = {
     width: width - scale(40),
     top: verticalScale(5),
     paddingBottom: 25,
-    marginTop: 5
+    marginTop: 5,
+   // color: 'white'
   },
   modalContainer: {
     flex: 1,
