@@ -34,7 +34,7 @@ class ForgotPassword extends Component {
           >Enter your email and we will send</Text>
           <Text
             style={textStyle}>
-            your instructions...</Text>
+            you instructions...</Text>
         </View>
         {this.props.auth.forgotError ?
           <View
