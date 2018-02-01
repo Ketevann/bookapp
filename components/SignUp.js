@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, Dimensions, PixelRatio } from 'react-native';
+import { View, Text, Dimensions, PixelRatio, ScrollView } from 'react-native';
 import { Card, CardSection, Button, Input } from './common';
 import { connect } from 'react-redux';
 import {
@@ -57,8 +57,11 @@ class SignUp extends Component {
     const { textStyle, signUpLinkStyle, errorTextStyle, errorViewStyle } = styles;
 
     return (
+      <ScrollView
+
+      >
       <View
-        style={{ flex: 1, backgroundColor: 'white' }}
+        style={{ height, backgroundColor: 'white' }}
       >
         <Text
           style={styles.header}
@@ -111,6 +114,7 @@ class SignUp extends Component {
         <Button onPress={this.OnRedirect.bind(this)}>Sign Up</Button>
 
       </View>
+      </ScrollView>
     )
   }
 }

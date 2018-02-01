@@ -402,7 +402,7 @@ const styles = {
     marginLeft: scale(18),
     width: width - scale(40),
     top: verticalScale(5),
-    paddingBottom: 15,
+    paddingBottom: 25,
     marginTop: 5
   },
   modalContainer: {
