@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, View, Dimensions } from 'react-native';
 import { Button, Spinner} from './common';
 import { connect } from 'react-redux';
-import { saveBook , removeSuggestion} from '../redux/actions/bookActions';
+import { saveBook , removeSuggestion} from '../actions/bookActions';
 import Deck from './Deck';
 
 class Book extends Component {
@@ -38,7 +38,6 @@ class Book extends Component {
 
 
 export default connect(({ auth }) => ({ auth }), {
-    //clearPreferences,
     removeSuggestion,
     saveBook
   })(Book);

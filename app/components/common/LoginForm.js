@@ -1,14 +1,14 @@
 import React, { Component } from 'react'
 import { View, Text, TextInput, Dimensions, PixelRatio } from 'react-native'
 import { Scene, Router, Actions, Stack } from 'react-native-router-flux';
-import { loginUser, emailDispatch, passwordDispatch } from '../../redux/actions/authActions'
+import { loginUser, emailDispatch, passwordDispatch } from '../../actions/authActions'
 import { connect } from 'react-redux'
 
 import { Header, Card, CardSection, Button, Input, Spinner } from './'
 import firebase from 'firebase'
 
 const { height, width } = Dimensions.get('window');
-import {scale, verticalScale, moderateScale } from '../../functions'
+import {scale, verticalScale, moderateScale } from '../../utils/functions';
 
 let SCREEN_WIDTH = PixelRatio.getPixelSizeForLayoutSize(width);
 let SCREEN_HEIGHT = PixelRatio.getPixelSizeForLayoutSize(height);

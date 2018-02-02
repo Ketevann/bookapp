@@ -8,7 +8,7 @@ let SCREEN_HEIGHT = PixelRatio.getPixelSizeForLayoutSize(height);
 
 
 
-import {scale, verticalScale, moderateScale } from '../../functions'
+import {scale, verticalScale, moderateScale } from '../../utils/functions';
 
 
 const Input = ({ label, value, onChangeText, placeholder, secureTextEntry }) => {

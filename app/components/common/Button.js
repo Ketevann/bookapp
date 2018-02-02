@@ -4,7 +4,7 @@ import { LinearGradient } from 'expo';
 
 
 const { height, width } = Dimensions.get('window');
-import {scale, verticalScale, moderateScale } from '../../functions'
+import {scale, verticalScale, moderateScale } from '../../utils/functions';
 
 let SCREEN_WIDTH = PixelRatio.getPixelSizeForLayoutSize(width);
 let SCREEN_HEIGHT = PixelRatio.getPixelSizeForLayoutSize(height);

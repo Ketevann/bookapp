@@ -1,19 +1,16 @@
 import React, { Component } from 'react';
 import { Text, View, Dimensions, PixelRatio } from 'react-native';
-const { height, width } = Dimensions.get('window');
-
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import firebase from 'firebase';
 import { Header, Button, Spinner } from './common';
 import LoginForm from './common/LoginForm';
-import { loginDispatch, loginDispatchFalse, clearForm } from '../redux/actions/authActions';
-import { scale, verticalScale, moderateScale } from '../functions'
+import { loginDispatch, loginDispatchFalse, clearForm } from '../actions/authActions';
+import { scale, verticalScale, moderateScale } from '../utils/functions'
 
 let SCREEN_WIDTH = PixelRatio.getPixelSizeForLayoutSize(width);
 let SCREEN_HEIGHT = PixelRatio.getPixelSizeForLayoutSize(height);
-
-
+const { height, width } = Dimensions.get('window');
 
 class Login extends Component {
   componentWillMount() {
@@ -26,43 +23,22 @@ class Login extends Component {
   }
 
   renderContent() {
-    const { loggedIn } = this.props.auth;
-
-    // if (loggedIn) {
-    //   return (
-    //     <Button
-    //       onPress={() =>
-    //         firebase.auth().signOut()}>;
-    //       Log Out</Button>)
-    // } else if (loggedIn === false) {
-      return <LoginForm />
-    // } return <Spinner size='large' />;
+    return <LoginForm />
   }
-
 
   render() {
     const { textStyle, signUpLinkStyle } = styles;
-    console.log(SCREEN_HEIGHT, SCREEN_WIDTH)
+    //console.log(SCREEN_HEIGHT, SCREEN_WIDTH)
     return (
       <View style={{ flex: 1, backgroundColor: 'white'}}>
-        <Text
-        style={styles.header}
-        >Log In</Text>
-        <View
-        style={{flexDirection: 'row', justifyContent: 'center', marginTop: verticalScale(8)}}
-        >
-        <Text
-        style={textStyle}
-        >
-          Don't have an account? sign up
-        </Text>
-        <Text
-        onPress={() => Actions.signup()}
-        style={[textStyle, signUpLinkStyle]}
-        > here</Text>
+        <Text style={styles.header} >Log In</Text>
+        <View style={{flexDirection: 'row', justifyContent: 'center', marginTop: verticalScale(8)}} >
+          <Text style={textStyle} >
+            Don't have an account? sign up
+          </Text>
+          <Text onPress={() => Actions.signup()} style={[textStyle, signUpLinkStyle]}> here</Text>
         </View>
         {this.renderContent()}
-
       </View>
     );
   }
@@ -75,8 +51,7 @@ const styles = {
     fontFamily: 'Avenir-Book',
     marginTop: verticalScale(20)
   },
-
-    textStyle: {
+  textStyle: {
     textAlign: 'center',
     fontFamily: 'Avenir-Book',
     color: '#9B9B9B',
@@ -87,7 +62,6 @@ const styles = {
     textDecorationLine: 'underline',
     color: 'navy'
   }
-
 }
 
 export default connect(({ auth }) => ({ auth }),

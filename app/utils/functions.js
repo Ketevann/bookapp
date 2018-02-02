@@ -7,15 +7,8 @@ const guidelineBaseHeight = 1136;
 let SCREEN_WIDTH = PixelRatio.getPixelSizeForLayoutSize(width);
 let SCREEN_HEIGHT = PixelRatio.getPixelSizeForLayoutSize(height);
 
-
-const scale = size =>
-
-{
-
-  return SCREEN_WIDTH / guidelineBaseWidth * size;
-
-}
+const scale = size => SCREEN_WIDTH / guidelineBaseWidth * size;
 const verticalScale = size => SCREEN_HEIGHT / guidelineBaseHeight * size;
 const moderateScale = (size, factor = 0.5) => size + ( scale(size) - size ) * factor;
 
-export {scale, verticalScale, moderateScale }
+export { scale, verticalScale, moderateScale }

@@ -4,10 +4,9 @@ import { connect } from 'react-redux';
 import { Spinner } from './common';
 import {
   getSavedBooks, searchSavedBooks, clearSearchedBooks, reRenderSearch
-} from '../redux/actions/bookActions';
-import { scale, verticalScale, moderateScale } from '../functions'
+} from '../actions/bookActions';
+import { scale, verticalScale, moderateScale } from '../utils/functions'
 import BookCard from './BookCard';
-// import Search from './Search'
 import SearchComponent from './Search'
 
 class Profile extends Component {
@@ -71,11 +70,10 @@ class Profile extends Component {
     const { userId } = this.props.auth.userId;
     return (
       <View >
-       <SearchComponent handleSubmit={this.handleSubmit.bind(this)} userId={userId} clearBooks={this.props.clearSearchedBooks} />
-      <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1 , paddingBottom: scale(150) }} scrollEnabled={this.state.scrollActive}>
-
-        {this.displayPage()}
-      </ScrollView>
+        <SearchComponent handleSubmit={this.handleSubmit.bind(this)} userId={userId} clearBooks={this.props.clearSearchedBooks} />
+        <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1 , paddingBottom: scale(150) }} scrollEnabled={this.state.scrollActive}>
+          {this.displayPage()}
+        </ScrollView>
        </View>
     );
   }
@@ -85,9 +83,6 @@ const styles = {
   container: {
     backgroundColor: 'white',
     paddingBottom:300
-  },
-  booksContainer: {
-
   }
 };
 

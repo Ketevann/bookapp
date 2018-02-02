@@ -5,8 +5,7 @@ import {
   BOOK_SEARCH,
   READ,
   CHANGE_SEARCH,
-   SEARCH_TYPE,
-
+  SEARCH_TYPE,
   GET_SAVED_BOOK,
   CLEAR,
   LOAD_SAVED_BOOKS,
@@ -16,7 +15,6 @@ import {
   SEARCH_BOOKS_CLEAR,
   SEARCH_PARAMS_CLEAR
 } from '../actions/action-types';
-
 
 const INITIAL_STATE = { saved: null, bookSuggestions: null, error: '', searchbooks: '', similarbooks: null, booksbool: true, authors: false, placeholder: 'books', savedBooks: [], user: null, read: false, loading: true, loadingSavedBook: false, searchQuery:null }
 
@@ -34,7 +32,6 @@ export default (book = INITIAL_STATE, action) => {
       return { ...book, similarbooks: action.payload, loadingSavedBook: false };
     case SEARCH_TYPE:
       return { ...book, booksbool: true, authors: false, placeholder: action.query };
-
     case GET_SAVED_BOOK:
       return { ...book, loading: false, savedBooks: action.payload, user: action.user };//when saved books are loaded, loading = false
     case READ:

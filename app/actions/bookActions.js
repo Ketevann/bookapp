@@ -14,8 +14,8 @@ import { GOOGLE_API_KEY } from '../../keys'
 import firebase from 'firebase';
 import axios from 'axios';
 import { TASTE_DIVE_API_KEY } from '../../keys'
-import { defaultBookImg } from '../../components/data/defaultBookImg';
-import defaultBooks from '../../components/data/defaultBooks';
+import { defaultBookImg } from './../data/defaultBookImg';
+import defaultBooks from './../data/defaultBooks';
 import * as cloudscraper from 'react-native-cloudscraper'
 export const getBookSuggestions = (books, dispatch) =>
     dispatch => {
@@ -76,7 +76,6 @@ export const saveBook = (book, userID, dispatch) =>
 export const changeSearchBookQuery = (query, dispatch) =>
     dispatch =>
         dispatch({ type: SEARCH_TYPE, query })
-
 
 
 export const setSearchValue = (book, dispatch) =>
@@ -295,8 +294,6 @@ export const updateDefaultSuggestions = (userID,author='', dispatch) =>
       
            
     }
-
-
 
 export const removeSuggestion = (suggested, uid, dispatch) =>
     dispatch => {

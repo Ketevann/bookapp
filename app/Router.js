@@ -10,29 +10,19 @@ import Footer from './components/Footer'
 import Profile from './components/Profile'
 
 
-
-
-
-
 const RouterComponent = () => (
   <View style={{ flex: 1 }}>
-
-
     <Router>
-
       <Stack key="root">
         <Scene key="login" component={Login} />
         <Scene key="home" component={Home} initial />
         <Scene key="forgotpassowrd" component={ForgotPassword} />
         <Scene key="signup" component={SignUp} panHandlers={null} renderBackButton={() => (null)} />
         <Scene key="profile" component={Profile} />
-
       </Stack>
-
     </Router>
-    <Footer />
+    <Footer/>
   </View>
 );
-
 
 export default RouterComponent;

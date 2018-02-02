@@ -12,20 +12,14 @@ import {
   PanResponder
 } from 'react-native';
 import { Spinner } from './common';
-import { getSavedBooks, removeBooks, markAsRead } from '../redux/actions/bookActions';
+import { getSavedBooks, removeBooks, markAsRead } from '../actions/bookActions';
 import { connect } from 'react-redux';
 import { Icon } from 'react-native-elements'
-const { height, width } = Dimensions.get('window');
-import { scale, verticalScale, moderateScale } from '../functions'
+import { scale, verticalScale, moderateScale } from '../utils/functions'
 
+const { height, width } = Dimensions.get('window');
 let SCREEN_WIDTH = PixelRatio.getPixelSizeForLayoutSize(width);
 let SCREEN_HEIGHT = PixelRatio.getPixelSizeForLayoutSize(height);
-
-// const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
-//   const paddingToBottom = 20;
-//   return layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingToBottom;
-// };
-
 
 class BookCard extends Component {
   constructor(props) {

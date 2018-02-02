@@ -3,26 +3,21 @@ import { StyleSheet, Text, View } from 'react-native';
 import firebase from 'firebase';
 import { connect } from 'react-redux';
 import { Spinner, Button } from './common';
-import {
-  loginDispatch,
-  loginDispatchFalse
-} from '../redux/actions/authActions';
+import { loginDispatch, loginDispatchFalse } from '../actions/authActions';
 import {
   updateDefaultSuggestions,
   getDefualt, getSuggestions,
   clearSearchBooks, findSimilarBooks,
   loadingSearchResults
-} from '../redux/actions/bookActions';
+} from '../actions/bookActions';
 import Book from './Book';
 import SearchComponent from './Search';
 
-// import Search from './Search';
 import Login from './Login';
 class Home extends Component {
-
   componentWillMount() {
-    if (this.props.book && this.props.book.similarbooks) {
-    }
+    // if (this.props.book && this.props.book.similarbooks) {
+    // }
     this.props.clearSearchBooks();
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
@@ -35,7 +30,6 @@ class Home extends Component {
       }
     });
   }
-
 
   handleSubmit() {
     console.log('in o hanlr', this.props)
@@ -54,23 +48,10 @@ class Home extends Component {
     }
   }
 
-  // render() {
-  //   const userId = this.props.auth.userId;
-  //   const { similarbooks, loadingSavedBook } = this.props.book;
-  //   return (
-  //     <View style={{ flex: 1 }}>
-  //     {/*<Search handleSubmit={this.handleSubmit.bind(this)} userId={ userId } />*/}
-  //       { loadingSavedBook ? <Spinner size="large" /> : this.display() }
-  //     </View>
-  //   );
-  // }
-
   render() {
     console.log(this.props, 'home')
     const { loadingCreditionals, userId } = this.props.auth;
-    // const { loggedIn } = this.props.auth;
     const { similarbooks, loadingSavedBook } = this.props.book;
-
 
     if (loadingCreditionals || loadingSavedBook) {//loadingCreditionals is boolean, display as spinner cuz otherwise when user is loggedin, the sign in form flashes briefly.
       return <Spinner size="large" />

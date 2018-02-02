@@ -9,16 +9,14 @@ import {
   passwordConfirmChange,
   signUpUser,
   clearForm
-} from '../redux/actions/authActions';
-import { scale, verticalScale, moderateScale } from '../functions'
+} from '../actions/authActions';
+import { scale, verticalScale, moderateScale } from '../utils/functions'
 const { height, width } = Dimensions.get('window');
 import { Actions } from 'react-native-router-flux';
 
 let SCREEN_WIDTH = PixelRatio.getPixelSizeForLayoutSize(width);
 let SCREEN_HEIGHT = PixelRatio.getPixelSizeForLayoutSize(height);
 
-
-//import RNF from './Pic'
 
 class SignUp extends Component {
 
@@ -57,63 +55,44 @@ class SignUp extends Component {
     const { textStyle, signUpLinkStyle, errorTextStyle, errorViewStyle } = styles;
 
     return (
-      <ScrollView
-
-      >
-      <View
-        style={{ height, backgroundColor: 'white' }}
-      >
-        <Text
-          style={styles.header}
-        >Sign Up</Text>
-
-        <View
-          style={{ flexDirection: 'row', justifyContent: 'center', marginTop: verticalScale(8) }}
-        >
-          <Text
-            style={textStyle}
-          >
-            Already have an account? login
-        </Text>
-          <Text
-            onPress={() => Actions.login()}
-            style={[textStyle, signUpLinkStyle]}
-          > here</Text>
-        </View>
-        {this.props.auth.error ?
-
-          <View
-            style={errorViewStyle}
-          >
-            <Text
-              style={errorTextStyle}
-            >{this.props.auth.error}
-            </Text>
+      <ScrollView>
+        <View style={{ height, backgroundColor: 'white' }}>
+          <Text style={styles.header} >Sign Up</Text>
+          <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: verticalScale(8) }}>
+            <Text style={textStyle} > Already have an account? login </Text>
+            <Text onPress={() => Actions.login()} style={[textStyle, signUpLinkStyle]} > here</Text>
           </View>
-          : null}
-        <Input
-          placeholder="Email"
-          value={this.props.auth.email}
-          onChangeText={this.onEmailChange.bind(this)}
-        />
 
-        <Input
-          secureTextEntry
-          placeholder="password"
-          onChangeText={this.onPasswordChange.bind(this)}
-          value={this.props.auth.password}
-        />
+          {
+            this.props.auth.error ?
+            <View style= {errorViewStyle} >
+              <Text style={errorTextStyle} >{this.props.auth.error} </Text>
+            </View> : null
+          }
 
-        <Input
-          secureTextEntry
-          placeholder="confirm password"
-          onChangeText={this.onPasswordConfirm.bind(this)}
-          value={this.props.auth.passwordConfirm}
-        />
+          <Input
+            placeholder="Email"
+            value={this.props.auth.email}
+            onChangeText={this.onEmailChange.bind(this)}
+          />
 
-        <Button onPress={this.OnRedirect.bind(this)}>Sign Up</Button>
+          <Input
+            secureTextEntry
+            placeholder="password"
+            onChangeText={this.onPasswordChange.bind(this)}
+            value={this.props.auth.password}
+          />
 
-      </View>
+          <Input
+            secureTextEntry
+            placeholder="confirm password"
+            onChangeText={this.onPasswordConfirm.bind(this)}
+            value={this.props.auth.passwordConfirm}
+          />
+
+          <Button onPress={this.OnRedirect.bind(this)}>Sign Up</Button>
+
+        </View>
       </ScrollView>
     )
   }
