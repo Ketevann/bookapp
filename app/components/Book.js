@@ -22,7 +22,7 @@ class Book extends Component {
   }
 
   render() {
-   const { data } = this.props;
+   const { data, error } = this.props;
 
     return (
       data ? //checking if books are in state
@@ -31,6 +31,8 @@ class Book extends Component {
           onSwipeRight={ this.onSaveBook.bind(this) } //passing save/delete suggestions function as props
           onSwipeLeft={ this.onRemoveBook.bind(this) }
           onEnd={ this.onEnd.bind(this) }
+          error={ error }
+          userId={ this.props.auth.userId}
         /> : <Spinner size='large' />
     );
   }

@@ -127,7 +127,7 @@ class SearchComponent extends Component {
             backgroundColor='rgba(142, 142, 147, 0.5)'
             tintColorSearch='rgba(142, 142, 147, 0.5)'
             onCancel={()=>this.props.clearBooks()} //if props are passed, call that function, else nothing happens
-         
+            onDelete={()=>this.props.onDelete()}
           />
           : null}
       </View>

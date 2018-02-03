@@ -11,6 +11,8 @@ import {
   Easing,
   PixelRatio
 } from 'react-native';
+import { connect } from 'react-redux';
+import { checkSaved, updateErrDisplay} from '../actions/bookActions';
 import { Card, Button, Icon } from 'react-native-elements';
 import { Spinner } from './common';
 import { scale, verticalScale, moderateScale } from '../utils/functions';
@@ -49,7 +51,6 @@ class Deck extends Component {
       },
 
       onPanResponderRelease: (event, gesture) => {
-        console.log('released', this.state.position.x, this.state.position.y)
         if (this.state.panResponderEnabled) {
           if (gesture.dx > SWIPE_THRESHOLD) {
             this.forceSwipe('right');
@@ -71,6 +72,10 @@ class Deck extends Component {
     }
   }
 
+  componentDidMount(){//checking if the first card on deck has been saved previous
+    this.props.checkSaved( this.props.data[this.state.index].title, this.props.userId )
+  }
+
   componentWillUpdate() {
     UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
     LayoutAnimation.spring();
@@ -82,6 +87,9 @@ class Deck extends Component {
     direction === 'right' ? onSwipeRight(item) : onSwipeLeft(item.title);//for dislike on swipe we only need a title to remove from user suggestion in db
     this.state.position.setValue({ x: 0, y: 0 });
     this.setState({ index: this.state.index + 1 });
+     if (this.state.index < this.props.data.length){ //check if the current card has been saved before
+       this.props.checkSaved( this.props.data[this.state.index].title, this.props.userId)
+     }
   }
 
   getCardStyle() {
@@ -98,14 +106,20 @@ class Deck extends Component {
   }
 
   forceSwipe(direction) {
-    this.setState({ scroll: false, panResponderEnabled: true, style: { paddingBottom: 0 }, totop: false })
-    const x = direction === 'right' ? SCREEN_WIDTH : -SCREEN_WIDTH;
-    Animated.timing(this.state.position, {
-      toValue: { x, y: 0 },
-      duration: SWIPE_OUT_DURATION,
-      easing: Easing.linear
-    }).start(() => this.onSwipeComplete(direction));
+    if (this.props.book.duplicateTitle === this.props.data[this.state.index].title && direction ==='right'){//reset cover position and display error 
+     this.resetPosition()
+     this.props.updateErrDisplay(true);
+   } else {   
+     this.setState({ scroll: false, panResponderEnabled: true, style: { paddingBottom: 0 }, totop: false })
+      const x = direction === 'right' ? SCREEN_WIDTH : -SCREEN_WIDTH;
+      Animated.timing(this.state.position, {
+        toValue: { x, y: 0 },
+        duration: SWIPE_OUT_DURATION,
+        easing: Easing.linear
+      }).start(() => this.onSwipeComplete(direction));
+    }
   }
+
   resetPosition() {
     console.log('rsetting')
     Animated.spring(this.state.position, {
@@ -365,4 +379,9 @@ const styles = {
   }
 };
 
-export default Deck;
+//export default Deck;
+export default connect(
+ ({ book }) => ({ book }), {
+    checkSaved,updateErrDisplay
+  })(Deck);
+
