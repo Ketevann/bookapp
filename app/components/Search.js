@@ -92,7 +92,7 @@ class SearchComponent extends Component {
               style={[headerTextStyle, this.state.author, authorTextStyle]}
               onPress={() => this.onSetSearchQuery('author')}>Authors</Text>
             <View
-              style={{ marginLeft: 36 }}
+              style={{ marginLeft: 28 }}
             >
               <Icon
                 name='search'
@@ -103,7 +103,7 @@ class SearchComponent extends Component {
               />
             </View>
             {this.props.auth.userId ?
-             <Text style={[headerTextStyle, {marginLeft: 20}]} onPress={() => {
+             <Text style={[headerTextStyle, {marginLeft: 30}]} onPress={() => {
                firebase.auth().signOut()
                Actions.home()
             }}>Log Out</Text>
@@ -152,7 +152,7 @@ const styles = {
     marginLeft: 40
   },
   bookTextStyle: {
-    marginLeft: 30,
+    marginLeft: 20,
   }
 }
 export default connect(({ book, auth }) =>
