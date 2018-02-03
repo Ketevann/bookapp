@@ -260,7 +260,8 @@ const styles = StyleSheet.create({
     fontSize: scale(15),
     fontFamily: 'Avenir-Book',
     color: '#050F37',
-    marginTop: 5
+    marginTop: 5,
+    textAlign: 'center'
   },
   author:{
     fontSize: scale(15),
