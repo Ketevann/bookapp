@@ -23,13 +23,13 @@ export default Err = (props) => {
           >
             <View style={styles.modalContainer}>
               <View style={styles.innerContainer}>
-                <Text style={[ {marginTop:10}, styles.errorTextStyle ]}>{ props.errorActive}</Text>
+                <Text style={[ {marginTop: verticalScale(10)}, styles.errorTextStyle ]}>{ props.errorActive}</Text>
                 <Text style={ styles.errorTextStyle }>{ props.message }</Text>
                  <Icon
                     name='close'
                     type='materialIcons'
                     color='#3C509B'
-                    size={35}
+                    size={scale(35)}
                     onPress={() => props.closeModal()}
                   />
               </View>
@@ -49,10 +49,10 @@ const styles = StyleSheet.create({
   },
   innerContainer: {
     backgroundColor: 'white',
-    padding:scale(10),
-    width: 0.80 * Dimensions.get('window').width,
-    height: 0.20 * Dimensions.get('window').height,
-    marginBottom: 0.10 * Dimensions.get('window').height,
+    padding: scale(10),
+    width: scale(0.80) * Dimensions.get('window').width,
+    height: verticalScale(0.20) * Dimensions.get('window').height,
+    marginBottom: verticalScale(0.10) * Dimensions.get('window').height,
     borderRadius:10
   },
    errorTextStyle: {

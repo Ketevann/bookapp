@@ -57,10 +57,10 @@ class Profile extends Component {
     const { savedBooks, searchQuery, loading } = this.props.book;
     if (searchQuery && !loading) {
       return (
-              searchQuery.length===0 ? 
+              searchQuery.length===0 ?
               <View style={styles.errContainer}>
-                <Text style={[ {marginTop: scale(10)}, styles.errorTextStyle ]}>Your search returned no results</Text>
-                <Image 
+                <Text style={[ {marginTop: verticalScale(10)}, styles.errorTextStyle ]}>Your search returned no results</Text>
+                <Image
                   style={styles.image}
                   source={{ uri: 'https://vignette.wikia.nocookie.net/youtubepoop/images/3/37/Ice_bear.png/revision/latest?cb=20160108184102' }}
                 />
@@ -70,10 +70,10 @@ class Profile extends Component {
     } else if (savedBooks && !loading) {
       return (
         <View style={styles.booksContainer}>
-         { savedBooks.length===0 ? 
-         
-        
-            <Text style={[ {marginTop: scale(10)}, styles.errorTextStyle ]}>Time to save some books!  </Text>
+         { savedBooks.length===0 ?
+
+
+            <Text style={[ {marginTop: verticalScale(10)}, styles.errorTextStyle ]}>Time to save some books!  </Text>
          :this.displayBooks(savedBooks)}
         </View>//display saved books, no filter bool
       )
@@ -85,7 +85,7 @@ class Profile extends Component {
     return (
       <View >
         <SearchComponent handleSubmit={this.handleSubmit.bind(this)} userId={userId} onDelete={this.props.clearSearch} clearBooks={this.props.clearSearchedBooks} />
-        <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1 , paddingBottom: scale(150) }} scrollEnabled={this.state.scrollActive}>
+        <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1 , paddingBottom: verticalScale(150) }} scrollEnabled={this.state.scrollActive}>
           {this.displayPage()}
         </ScrollView>
        </View>
@@ -96,10 +96,10 @@ class Profile extends Component {
 const styles = {
   container: {
     backgroundColor: 'white',
-    paddingBottom:300
+    paddingBottom: verticalScale(300)
   },
     errorTextStyle: {
-    marginTop: 5,
+    marginTop: verticalScale(5),
     color: '#f50',
     fontSize: scale(17),
     textAlign: 'center',
@@ -108,14 +108,14 @@ const styles = {
   },
   image:{
     flex: 1,
-    opacity: 0.5,    
-    width: 300,
-    height: 300,
+    opacity: 0.5,
+    width: scale(300),
+    height: verticalScale(300),
     resizeMode: 'contain'
   },
   errContainer:{
     flex:1,
-    padding:20, 
+    padding: scale(20),
     flexDirection:'column-reverse',
     justifyContent: 'center',
     alignItems: 'center'

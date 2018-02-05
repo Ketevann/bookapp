@@ -111,7 +111,7 @@ const styles = {
     fontFamily: 'Avenir-Book',
     color: '#9B9B9B',
     fontSize: scale(14),
-    lineHeight: scale(15)
+    lineHeight: verticalScale(15)
   },
   signUpLinkStyle: {
     textDecorationLine: 'underline',
@@ -126,7 +126,7 @@ const styles = {
     color: '#FFFFFF',
     fontSize: scale(14),
     textAlign: 'center',
-    padding: 10,
+    padding: scale(10),
     fontFamily: 'Avenir-Book'
 
   }

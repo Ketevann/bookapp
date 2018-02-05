@@ -106,10 +106,10 @@ class Deck extends Component {
   }
 
   forceSwipe(direction) {
-    if (this.props.book.duplicateTitle === this.props.data[this.state.index].title && direction ==='right'){//reset cover position and display error 
+    if (this.props.book.duplicateTitle === this.props.data[this.state.index].title && direction ==='right'){//reset cover position and display error
      this.resetPosition()
      this.props.updateErrDisplay(true);
-   } else {   
+   } else {
      this.setState({ scroll: false, panResponderEnabled: true, style: { paddingBottom: 0 }, totop: false })
       const x = direction === 'right' ? SCREEN_WIDTH : -SCREEN_WIDTH;
       Animated.timing(this.state.position, {
@@ -168,13 +168,13 @@ class Deck extends Component {
     }
     return (
       <Animated.ScrollView
-        contentContainerStyle={{ paddingBottom: scale(50) }}
+        contentContainerStyle={{ paddingBottom: verticalScale(50) }}
         ref="_scrollView"
         style={{marginTop: verticalScale(45),
           backgroundColor: 'white',
           borderRadius: 5,
           paddingBottom: verticalScale(10),
-          height: SCREEN_HEIGHT - 140
+          height: SCREEN_HEIGHT - verticalScale(140)
        }}
       >
         <View ref="_View" style={{borderRadius: 70}}>
@@ -216,7 +216,7 @@ class Deck extends Component {
                     name='close'
                     type='Foundation'
                     color='#f50'
-                    size={25}
+                    size={scale(25)}
                     onPress={() => this.forceSwipe('left')}//deletes a "disliked book from users suggestions"
                   />
                 </View>
@@ -242,7 +242,7 @@ class Deck extends Component {
                     name='check'
                     type='feather'
                     color='#3C509B'
-                    size={25}
+                    size={scale(25)}
                     onPress={() => this.forceSwipe('right')}//sabes a "liked" book to users branch on swipe right
                   />
                 </View>
@@ -254,7 +254,7 @@ class Deck extends Component {
             <View>
               <Text
                 style={{
-                  marginTop: scale(7),
+                  marginTop: verticalScale(7),
                   fontSize: scale(15),
                   fontFamily: 'Avenir-Book',
                   color: '#050F37',
@@ -286,7 +286,7 @@ class Deck extends Component {
       <View
         style={{ flex: 1, backgroundColor: 'white' }}>
         <View style={styles.errorViewStyle}>
-          <Text style={[{ marginBottom: 10 }, styles.errorTextStyle]}>
+          <Text style={[{ marginBottom: verticalScale(10) }, styles.errorTextStyle]}>
             There's no more content here!
         </Text>
         </View>
@@ -347,13 +347,13 @@ const styles = {
   innerContainer: {
     // justifyContent: 'center',
     backgroundColor: 'white',
-    padding: 10,
-    width: 0.75 * SCREEN_WIDTH,
+    padding: scale(10),
+    width: scale(0.75) * SCREEN_WIDTH,
     borderRadius: 10
   },
   imageContainer: {
-    width: width - 40,
-    height: SCREEN_HEIGHT - 250,
+    width: width - scale(40),
+    height: SCREEN_HEIGHT - verticalScale(250),
     backgroundColor: 'white',
     position: 'absolute',
     flex: 1,

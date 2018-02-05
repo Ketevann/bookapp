@@ -92,18 +92,18 @@ class SearchComponent extends Component {
               style={[headerTextStyle, this.state.author, authorTextStyle]}
               onPress={() => this.onSetSearchQuery('author')}>Authors</Text>
             <View
-              style={{ marginLeft: 28 }}
+              style={{ marginLeft: scale(28) }}
             >
               <Icon
                 name='search'
                 type='evilIcons'
                 color='#FAFAFA'
-                size={25}
+                size={scale(25)}
                 onPress={() => this.setState({ search: !this.state.search })}//deletes a "disliked book from users suggestions"
               />
             </View>
             {this.props.auth.userId ?
-             <Text style={[headerTextStyle, {marginLeft: 30}]} onPress={() => {
+             <Text style={[headerTextStyle, {marginLeft: scale(30)}]} onPress={() => {
                firebase.auth().signOut()
                Actions.home()
             }}>Log Out</Text>
@@ -149,10 +149,10 @@ const styles = {
     color: '#FAFAFA'
   },
   authorTextStyle: {
-    marginLeft: 40
+    marginLeft: scale(40)
   },
   bookTextStyle: {
-    marginLeft: 20,
+    marginLeft: scale(20),
   }
 }
 export default connect(({ book, auth }) =>

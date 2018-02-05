@@ -76,7 +76,7 @@ const styles = {
     color: '#FFFFFF',
     fontSize: scale(14),
     textAlign: 'center',
-    padding: 10,
+    padding: scale(10),
     fontFamily: 'Avenir-Book'
   }
 };

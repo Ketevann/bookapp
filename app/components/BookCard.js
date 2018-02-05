@@ -37,7 +37,7 @@ class BookCard extends Component {
     this.animatedValue.addListener(({ value }) => {
       this.value = value;
     });
-    
+
     this.wrapperPanResponder = PanResponder.create({
       onStartShouldSetPanResponder: (e, g) => true,
       onPanResponderGrant: () => {
@@ -58,7 +58,7 @@ class BookCard extends Component {
       }
     });
   }
-    
+
   frontCardStyle() {
     this.frontInterpolate = this.animatedValue.interpolate({
       inputRange: [0, 180],
@@ -159,7 +159,7 @@ class BookCard extends Component {
             </TouchableOpacity>
 
              {
-              this.state.loadingImage === true ?   
+              this.state.loadingImage === true ?
                <View style={styles.imageContainer}>
                  <Spinner />
               </View> :
@@ -186,9 +186,9 @@ class BookCard extends Component {
                 </View>
               </Animated.View>
             }
-            { 
+            {
               this.state.loadingImage === true ? null :
-              <Animated.View style={{ flexDirection: 'column' ,paddingBottom: scale(15)}} >  
+              <Animated.View style={{ flexDirection: 'column' ,paddingBottom: scale(15)}} >
                 <View style={styles.title}>
                   <Text style={styles.textStyle}> {book.title}  </Text>
                   <Text style={styles.author}> by {book.author}</Text>
@@ -227,28 +227,28 @@ const styles = StyleSheet.create({
     height: verticalScale(400),
     width: scale(250),
     backfaceVisibility: 'hidden',
-    marginTop: verticalScale(10),
+    marginTop: 10,
   },
   card: {
     backgroundColor: 'white',
-    width: scale(300),
+    width: 300,
     alignItems: 'center',
     borderRadius: 10,
-    height: verticalScale(500)
+    height: 500
   },
   flipCardBack: {
     position: "absolute",
     flexDirection:'row',
-    top: 0, 
-    left: 0, 
-    right: 0, 
-    bottom: 0, 
-    justifyContent: 'center', 
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center',
     alignItems: 'center'
   },
   imageContainer: {//styling for image spinner
-    height: verticalScale(425),
-    width: scale(250),
+    height: 425,
+    width: 250,
     backgroundColor: '#E5EAEF',
     position: 'absolute',
     flex: 1,
@@ -260,25 +260,25 @@ const styles = StyleSheet.create({
     fontSize: scale(15),
     fontFamily: 'Avenir-Book',
     color: '#050F37',
-    marginTop: verticalScale(5),
+    marginTop: 5,
     textAlign: 'center'
   },
   author:{
     fontSize: scale(15),
     fontFamily: 'Avenir-Book',
     color: '#050F37',
-    paddingBottom: verticalScale(15)
+    paddingBottom: 15
   },
-  title:{ 
-    flexDirection: 'column',    
-    alignItems: 'center', 
-    justifyContent: 'center' 
+  title:{
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center'
   },
-  buttons:{ 
-    marginTop: -1 * scale(50), 
-    height:verticalScale(50),  
-    flexDirection: 'row', 
-    alignItems:'flex-end', 
+  buttons:{
+    marginTop: -1 * scale(50),
+    height:50,
+    flexDirection: 'row',
+    alignItems:'flex-end',
     justifyContent: 'space-around'
   }
 });
