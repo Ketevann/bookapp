@@ -226,6 +226,7 @@ class Deck extends Component {
                     type='materialIcons'
                     color='#3C509B'
                     size={scale(35)}
+                    underlayColor='rgba(0, 0, 0, 0)'
                     onPress={() => {
                       console.log(this.state, ' in scroll')
                       let totop = false

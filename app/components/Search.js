@@ -98,6 +98,7 @@ class SearchComponent extends Component {
                 name='search'
                 type='evilIcons'
                 color='#FAFAFA'
+                underlayColor='rgba(0, 0, 0, 0)'
                 size={25}
                 onPress={() => this.setState({ search: !this.state.search })}//deletes a "disliked book from users suggestions"
               />
