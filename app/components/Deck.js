@@ -173,7 +173,7 @@ class Deck extends Component {
         style={{marginTop: verticalScale(45),
           backgroundColor: 'white',
           borderRadius: 5,
-          paddingBottom: 10,
+          paddingBottom: verticalScale(10),
           height: SCREEN_HEIGHT - 140
        }}
       >
@@ -225,7 +225,7 @@ class Deck extends Component {
                     name='arrow-drop-down-circle'
                     type='materialIcons'
                     color='#3C509B'
-                    size={35}
+                    size={scale(35)}
                     onPress={() => {
                       console.log(this.state, ' in scroll')
                       let totop = false
@@ -308,7 +308,6 @@ const styles = {
     width: SCREEN_WIDTH
   },
   container: {
-
     justifyContent: 'center',
     backgroundColor: 'white'
   },
@@ -323,7 +322,7 @@ const styles = {
     fontSize: scale(13),
     fontFamily: 'Avenir-Book',
     color: '#050F37',
-    paddingBottom: 15,
+    paddingBottom: verticalScale(15),
     //color: 'white'
   },
 
@@ -334,8 +333,8 @@ const styles = {
     marginLeft: scale(18),
     width: width - scale(40),
     top: verticalScale(5),
-    paddingBottom: 25,
-    marginTop: 5,
+    paddingBottom: verticalScale(25),
+    marginTop: verticalScale(5),
    // color: 'white'
   },
   modalContainer: {
@@ -365,15 +364,15 @@ const styles = {
   errorViewStyle: {
     backgroundColor: '#F38D8D',
     height: verticalScale(60),
-    marginTop: 150
+    marginTop: verticalScale(150)
 
   },
   errorTextStyle: {
-    marginTop: 5,
+    marginTop: verticalScale(5),
     color: '#FFFFFF',
     fontSize: scale(17),
     textAlign: 'center',
-    padding: 10,
+    padding: scale(10),
     fontFamily: 'Avenir-Book'
 
   }

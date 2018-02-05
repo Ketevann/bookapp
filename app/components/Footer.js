@@ -26,13 +26,13 @@ class Footer extends Component {
           flexDirection: 'row', backgroundColor: '#3B509A', justifyContent: 'space-around',
           height: scale(50), padding: scale(10)
         }}>
-          <TouchableOpacity style={{marginLeft: 13}}>
+          <TouchableOpacity style={{marginLeft: scale(13)}}>
             <Icon
               name='home'
               type='SimpleLineIcons'
               color='white'
               underlayColor='#3B509A' // set the underlayColor of the view used behind the icon
-              size={35}
+              size={scale(35)}
               onPress={() => Actions.home()} />
           </TouchableOpacity>
           <TouchableOpacity>
@@ -41,7 +41,7 @@ class Footer extends Component {
               type='font-awesome'
               color='white'
               underlayColor='#3B509A' //  set the underlayColor of the view used behind the icon
-              size={30}
+              size={scale(30)}
               onPress={() => this.getBooks()} />
           </TouchableOpacity>
         </View>

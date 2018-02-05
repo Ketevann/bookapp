@@ -49,14 +49,14 @@ const styles = StyleSheet.create({
   },
   innerContainer: {
     backgroundColor: 'white',
-    padding:10,
+    padding:scale(10),
     width: 0.80 * Dimensions.get('window').width,
     height: 0.20 * Dimensions.get('window').height,
     marginBottom: 0.10 * Dimensions.get('window').height,
     borderRadius:10
   },
    errorTextStyle: {
-    marginTop: 5,
+    marginTop: verticalScale(5),
     color: '#f50',
     fontSize: scale(17),
     textAlign: 'center',
