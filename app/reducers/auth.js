@@ -15,7 +15,7 @@ export default (auth = INITIAL_STATE, action) => {
     case EMAIL_CHANGED:
       return { ...auth, email: action.payload };
     case PASSWORD_CHANGED:
-      console.log('passowrd', action)
+      //console.log('passowrd', action)
       return { ...auth, password: action.payload };
     case PASSWORD_CONFIRM:
       return { ...auth, passwordConfirm: action.payload };
@@ -31,10 +31,10 @@ export default (auth = INITIAL_STATE, action) => {
       return { ...auth, loggedIn: false ,  loadingCreditionals:false};//terminate loading credentials
     case FORGOT:
       return { ...auth, email: '', forgotError: '' };
-      case CLEARFORM:
+    case CLEARFORM:
         return { ...auth, email:'', password: '', passwordConfirm: '', error:'' };
-        case  FORGOT_FAIL:
-          return {...auth, forgotError: action.error}
+    case  FORGOT_FAIL:
+        return {...auth, forgotError: action.error}
     default:
       return auth;
   }

@@ -8,11 +8,11 @@ import {
   setSearchValue,
   findSimilarBooks,
   changeSearchBookQuery
-} from '../redux/actions/bookActions';
+} from '../actions/bookActions';
 const { height, width } = Dimensions.get('window');
 import Search from 'react-native-search-box';
 
-import { scale, verticalScale, moderateScale } from '../functions'
+import { scale, verticalScale, moderateScale } from '../utils/functions';
 import { Actions } from 'react-native-router-flux';
 
 let SCREEN_WIDTH = PixelRatio.getPixelSizeForLayoutSize(width);
@@ -22,13 +22,11 @@ import { Icon } from 'react-native-elements';
 
 
 class SearchComponent extends Component {
-
   static defaultProps = {
     clearBooks: () => { },//defualt function
   }
   constructor() {
     super()
-
     this.state = { book: { textDecorationLine: 'underline' }, author: { textDecorationLine: 'none' }, search: false }
   }
   onSearchChange(searchbooks) {
@@ -55,7 +53,6 @@ class SearchComponent extends Component {
     });
   }
 
-  // Important: You must return a Promise
   onFocus = (text) => {
     return new Promise((resolve, reject) => {
       console.log('onFocus', text);
@@ -63,18 +60,12 @@ class SearchComponent extends Component {
     });
   }
 
-  // Important: You must return a Promise
-
-
-  // Important: You must return a Promise
   onFocus = (text) => {
     return new Promise((resolve, reject) => {
       console.log('onFocus', text);
       resolve();
     });
   }
-
-  // Important: You must return a Promise
 
   afterFocus = () => {
     return new Promise((resolve, reject) => {
@@ -82,6 +73,7 @@ class SearchComponent extends Component {
       resolve();
     });
   }
+
   render() {
     { console.log('book', this.props) }
     const { headerTextStyle, authorTextStyle, bookTextStyle, viewStyle } = styles;
@@ -91,11 +83,8 @@ class SearchComponent extends Component {
         <LinearGradient
           colors={['#B88FD2', '#3C509B']}
           start={[1, 0]} end={[0, 0]}
-
         >
-          <View
-            style={viewStyle}
-          >
+          <View style={viewStyle} >
             <Text
               style={[headerTextStyle, this.state.book, bookTextStyle]}
               onPress={() => this.onSetSearchQuery('books')}>Books</Text>
@@ -103,7 +92,7 @@ class SearchComponent extends Component {
               style={[headerTextStyle, this.state.author, authorTextStyle]}
               onPress={() => this.onSetSearchQuery('author')}>Authors</Text>
             <View
-              style={{ marginLeft: 36 }}
+              style={{ marginLeft: 28 }}
             >
               <Icon
                 name='search'
@@ -114,7 +103,7 @@ class SearchComponent extends Component {
               />
             </View>
             {this.props.auth.userId ?
-             <Text style={[headerTextStyle, {marginLeft: 20}]} onPress={() => {
+             <Text style={[headerTextStyle, {marginLeft: 30}]} onPress={() => {
                firebase.auth().signOut()
                Actions.home()
             }}>Log Out</Text>
@@ -138,14 +127,9 @@ class SearchComponent extends Component {
             backgroundColor='rgba(142, 142, 147, 0.5)'
             tintColorSearch='rgba(142, 142, 147, 0.5)'
             onCancel={()=>this.props.clearBooks()} //if props are passed, call that function, else nothing happens
-          /**
-          * There many props that can customizable
-          * Please scroll down to Props section
-          */
+            onDelete={()=>this.props.onDelete()}
           />
           : null}
-
-
       </View>
     )
   }
@@ -168,7 +152,7 @@ const styles = {
     marginLeft: 40
   },
   bookTextStyle: {
-    marginLeft: 30,
+    marginLeft: 20,
   }
 }
 export default connect(({ book, auth }) =>

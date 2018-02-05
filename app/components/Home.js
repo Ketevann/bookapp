@@ -1,28 +1,23 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Modal, Dimensions } from 'react-native';
 import firebase from 'firebase';
 import { connect } from 'react-redux';
-import { Spinner, Button } from './common';
-import {
-  loginDispatch,
-  loginDispatchFalse
-} from '../redux/actions/authActions';
+import { Spinner } from './common';
+import { loginDispatch, loginDispatchFalse } from '../actions/authActions';
 import {
   updateDefaultSuggestions,
   getDefualt, getSuggestions,
   clearSearchBooks, findSimilarBooks,
-  loadingSearchResults
-} from '../redux/actions/bookActions';
+  loadingSearchResults, updateErrDisplay
+} from '../actions/bookActions';
 import Book from './Book';
 import SearchComponent from './Search';
-
-// import Search from './Search';
+import { scale, verticalScale, moderateScale } from '../utils/functions';
+import { Icon } from 'react-native-elements';
 import Login from './Login';
+import Error from './Error'; 
 class Home extends Component {
-
   componentWillMount() {
-    if (this.props.book && this.props.book.similarbooks) {
-    }
     this.props.clearSearchBooks();
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
@@ -36,7 +31,6 @@ class Home extends Component {
     });
   }
 
-
   handleSubmit() {
     console.log('in o hanlr', this.props)
     const { searchbooks, placeholder } = this.props.book;
@@ -45,33 +39,25 @@ class Home extends Component {
     this.props.findSimilarBooks(searchbooks, placeholder, userId);
   }
 
-  display() {
-    const { similarbooks, loading } = this.props.book;
+  display() {   
+    const { similarbooks, loading, error } = this.props.book;
+    const userId = this.props.auth.userId;
     if (this.props.book && similarbooks) {
       if (similarbooks.length === 0)
-        return <Text>Your Search returned no results </Text>
-      return (<Book data={similarbooks} loading={loading} />)
+        return <Text style={[ {marginTop: scale(10)}, styles.errorTextStyle ]} >Your search returned no results </Text>
+      return (<Book data={similarbooks} loading={loading} error={error} />)
     }
   }
 
-  // render() {
-  //   const userId = this.props.auth.userId;
-  //   const { similarbooks, loadingSavedBook } = this.props.book;
-  //   return (
-  //     <View style={{ flex: 1 }}>
-  //     {/*<Search handleSubmit={this.handleSubmit.bind(this)} userId={ userId } />*/}
-  //       { loadingSavedBook ? <Spinner size="large" /> : this.display() }
-  //     </View>
-  //   );
-  // }
+  closeModal() {
+   this.props.updateErrDisplay(false);
+  }
 
   render() {
     console.log(this.props, 'home')
     const { loadingCreditionals, userId } = this.props.auth;
-    // const { loggedIn } = this.props.auth;
-    const { similarbooks, loadingSavedBook } = this.props.book;
-
-
+    const { similarbooks, loadingSavedBook, errorActive, error, title, displayModal } = this.props.book;
+    
     if (loadingCreditionals || loadingSavedBook) {//loadingCreditionals is boolean, display as spinner cuz otherwise when user is loggedin, the sign in form flashes briefly.
       return <Spinner size="large" />
     }
@@ -81,6 +67,12 @@ class Home extends Component {
       <View style={{ flex: 1 }}>
         <SearchComponent handleSubmit={this.handleSubmit.bind(this)} />
         {this.display()}
+        <Error  
+          errorActive={this.props.book.errorActive} 
+          message={error} 
+          title={title}
+          closeModal={ this.closeModal.bind(this) }
+        />
       </View>
     );
   }
@@ -95,6 +87,14 @@ const styles = StyleSheet.create({
     fontSize: 12,
     height: 20
   },
+    errorTextStyle: {
+    marginTop: 5,
+    color: '#f50',
+    fontSize: scale(17),
+    textAlign: 'center',
+    //padding: 10,
+    fontFamily: 'Avenir-Book'
+  }
 });
 
 export default connect(
@@ -107,5 +107,6 @@ export default connect(
     updateDefaultSuggestions,
     clearSearchBooks,
     findSimilarBooks,
-    loadingSearchResults
+    loadingSearchResults,
+    updateErrDisplay
   })(Home);

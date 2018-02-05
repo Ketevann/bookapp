@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, View, Dimensions } from 'react-native';
 import { Button, Spinner} from './common';
 import { connect } from 'react-redux';
-import { saveBook , removeSuggestion} from '../redux/actions/bookActions';
+import { saveBook , removeSuggestion} from '../actions/bookActions';
 import Deck from './Deck';
 
 class Book extends Component {
@@ -22,7 +22,7 @@ class Book extends Component {
   }
 
   render() {
-   const { data } = this.props;
+   const { data, error } = this.props;
 
     return (
       data ? //checking if books are in state
@@ -31,6 +31,8 @@ class Book extends Component {
           onSwipeRight={ this.onSaveBook.bind(this) } //passing save/delete suggestions function as props
           onSwipeLeft={ this.onRemoveBook.bind(this) }
           onEnd={ this.onEnd.bind(this) }
+          error={ error }
+          userId={ this.props.auth.userId}
         /> : <Spinner size='large' />
     );
   }
@@ -38,7 +40,6 @@ class Book extends Component {
 
 
 export default connect(({ auth }) => ({ auth }), {
-    //clearPreferences,
     removeSuggestion,
     saveBook
   })(Book);

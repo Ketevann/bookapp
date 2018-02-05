@@ -11,17 +11,17 @@ import {
   Easing,
   PixelRatio
 } from 'react-native';
+import { connect } from 'react-redux';
+import { checkSaved, updateErrDisplay} from '../actions/bookActions';
 import { Card, Button, Icon } from 'react-native-elements';
 import { Spinner } from './common';
+import { scale, verticalScale, moderateScale } from '../utils/functions';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SCREEN_HEIGHT = Dimensions.get('window').height;
-
 const SWIPE_THRESHOLD = 0.25 * SCREEN_WIDTH;
 const SWIPE_OUT_DURATION = 250;
 const { width } = Dimensions.get('window');
-
-import { scale, verticalScale, moderateScale } from '../functions'
 
 let PIXEL_WIDTH = PixelRatio.getPixelSizeForLayoutSize(width);
 let PIXEL_HEIGHT = PixelRatio.getPixelSizeForLayout
@@ -39,60 +39,27 @@ class Deck extends Component {
     const panResponder = PanResponder.create({
       onStartShouldSetPanResponder: () => this.state.panResponderEnabled,
       onMoveShouldSetPanResponder: (evt, gestureState) => true,
-
       //detects movement
       onPanResponderMove: (event, gesture) => {
-        //  console.log(gesture.dy, gesture.dx, this.state.scroll, this.state.panResponderEnabled)
-        // if (Math.abs(gesture.dx) < Math.abs(gesture.dy)) {
-        //   position.setValue({ x: 0, y: 0 });
-        // } else if (Math.abs(gesture.dx) > (15)) {
-
         if (this.state.panResponderEnabled) {
-          // if (gesture.dy >= 10 && gesture.dy <= 50)
           this.state.position.setValue({ x: gesture.dx, y: gesture.dy });
         }
-        // }
-
-        //    else if (gesture.dy < 10 || gesture.dy >50 )
-        //      {
-        //        console.log('less repositioning')
-        //       Animated.spring(this.state.position, {
-        //   toValue: { x: 0, y: 0 }// there was glitch on rest. card was not returning to original position
-        // }).start();
-        // }
       },
       //detects release
-
       onPanResponderEnd: (event, gesture) => {
         console.log('ended')
-        //   if (gesture.dy < -10 || gesture.dy >50 )
-        //  {
-        //    console.log('less repositioning')
-        //    this.state.position.setValue({ x: 0, y: 0 });}
-
-
       },
 
       onPanResponderRelease: (event, gesture) => {
-        console.log('released', this.state.position.x, this.state.position.y)
-        //   if (gesture.dy < -10 || gesture.dy >50 )
-        //  {
-        //    console.log('less repositioning')
-        //    this.state.position.setValue({ x: 0, y: 0 });}
-
-        //this.setState({scroll: true}); //changing state as they had in the article
-
-             if (this.state.panResponderEnabled) {
-        if (gesture.dx > SWIPE_THRESHOLD
-        ) {
-          this.forceSwipe('right');
-        } else if (gesture.dx < -SWIPE_THRESHOLD
-        ) {
-          this.forceSwipe('left');
-        } else {
-          this.resetPosition();
+        if (this.state.panResponderEnabled) {
+          if (gesture.dx > SWIPE_THRESHOLD) {
+            this.forceSwipe('right');
+          } else if (gesture.dx < -SWIPE_THRESHOLD) {
+            this.forceSwipe('left');
+          } else {
+            this.resetPosition();
+          }
         }
-         }
       }
     });
 
@@ -105,12 +72,14 @@ class Deck extends Component {
     }
   }
 
+  componentDidMount(){//checking if the first card on deck has been saved previous
+    this.props.checkSaved( this.props.data[this.state.index].title, this.props.userId )
+  }
+
   componentWillUpdate() {
     UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
     LayoutAnimation.spring();
   }
-
-
 
   onSwipeComplete(direction) {
     const { onSwipeLeft, onSwipeRight, data } = this.props;
@@ -118,6 +87,9 @@ class Deck extends Component {
     direction === 'right' ? onSwipeRight(item) : onSwipeLeft(item.title);//for dislike on swipe we only need a title to remove from user suggestion in db
     this.state.position.setValue({ x: 0, y: 0 });
     this.setState({ index: this.state.index + 1 });
+     if (this.state.index < this.props.data.length){ //check if the current card has been saved before
+       this.props.checkSaved( this.props.data[this.state.index].title, this.props.userId)
+     }
   }
 
   getCardStyle() {
@@ -134,30 +106,28 @@ class Deck extends Component {
   }
 
   forceSwipe(direction) {
-    this.setState({ scroll: false, panResponderEnabled: true, style: { paddingBottom: 0 }, totop: false })
-    const x = direction === 'right' ? SCREEN_WIDTH : -SCREEN_WIDTH;
-    Animated.timing(this.state.position, {
-      toValue: { x, y: 0 },
-      duration: SWIPE_OUT_DURATION,
-      easing: Easing.linear
-    }).start(() => this.onSwipeComplete(direction));
+    if (this.props.book.duplicateTitle === this.props.data[this.state.index].title && direction ==='right'){//reset cover position and display error 
+     this.resetPosition()
+     this.props.updateErrDisplay(true);
+   } else {   
+     this.setState({ scroll: false, panResponderEnabled: true, style: { paddingBottom: 0 }, totop: false })
+      const x = direction === 'right' ? SCREEN_WIDTH : -SCREEN_WIDTH;
+      Animated.timing(this.state.position, {
+        toValue: { x, y: 0 },
+        duration: SWIPE_OUT_DURATION,
+        easing: Easing.linear
+      }).start(() => this.onSwipeComplete(direction));
+    }
   }
+
   resetPosition() {
     console.log('rsetting')
     Animated.spring(this.state.position, {
       toValue: { x: 0, y: 0 }// there was glitch on rest. card was not returning to original position
     }).start();
-
-
-    //    Animated.spring(this.state.position, {
-    //   toValue: { x: 0, y: 0 }// there was glitch on rest. card was not returning to original position
-    // }).start();
-
   }
 
   renderCards() {
- // const AnimatedScrollView = Animated.createAnimatedComponent(ScrollView);
-
     if (this.state.index >= this.props.data.length) {
       return this.renderNoMoreCards();
     }
@@ -167,17 +137,13 @@ class Deck extends Component {
       }
       if (i === this.state.index) {
         return (
-
           <Animated.ScrollView
             key={i}
             scrollEnabled={this.state.scroll}//added Scroll enables
-            style={[styles.cardStyle, { zIndex: 99, height: SCREEN_HEIGHT}, this.getCardStyle()
-            ]}
-
+            style={[styles.cardStyle, { zIndex: 99, height: SCREEN_HEIGHT}, this.getCardStyle()]}
             scrollEnabled={this.state.scroll}//added Scroll enables
             {...this.state.panResponder.panHandlers}
-                    scrollsToTop={this.state.totop}
-
+            scrollsToTop={this.state.totop}
           >
             {this.renderCard(item, i)}
           </Animated.ScrollView>
@@ -187,9 +153,7 @@ class Deck extends Component {
         return (
           <Animated.ScrollView
             key={i}
-            style={[styles.cardStyle, { zIndex: 0,    height: SCREEN_HEIGHT,
-                }]}
-          >
+            style={[styles.cardStyle, { zIndex: 0,    height: SCREEN_HEIGHT }]}>
             {this.renderCard(item, i)}
           </Animated.ScrollView>
         );
@@ -207,17 +171,13 @@ class Deck extends Component {
         contentContainerStyle={{ paddingBottom: scale(50) }}
         ref="_scrollView"
         style={{marginTop: verticalScale(45),
-
           backgroundColor: 'white',
           borderRadius: 5,
-          paddingBottom: 10,
+          paddingBottom: verticalScale(10),
           height: SCREEN_HEIGHT - 140
        }}
       >
-        <View
-         ref="_View"
-         style={{borderRadius: 70}}
-        >
+        <View ref="_View" style={{borderRadius: 70}}>
           <Image
             source={{ uri: modifiedLink }}
             resizeMode='cover'
@@ -228,10 +188,6 @@ class Deck extends Component {
               borderRadius: 22,
               marginLeft: scale(18),
               marginTop: verticalScale(10)
-
-
-
-
             }}
             onLoadStart={(e) => this.setState({ loadingImage: true })}
             onLoad={() => this.setState({ loadingImage: false, error: false })} />
@@ -247,20 +203,14 @@ class Deck extends Component {
                 marginLeft: scale(18)
               }}
             >
-              <Text
-                style={styles.titleTextStyle}
-                ref={'author' + this.state.index}
-              >{item.title}</Text>
-              <Text
-                style={styles.authorTextStyle}
-              >by {item.author}</Text>
-              <View
-                style={{ flexDirection: 'row', zIndex: 500, position: 'absolute', top: verticalScale(-80), justifyContent: 'space-between' }}
-              //this keeps the buttons from traveling with each card. buttons remain in position as user swioes but functionality is passed to the next card
-              >
-                <View
-                  style={{ left: scale(-10) }}
-                >
+              <Text style={styles.titleTextStyle} ref={'author' + this.state.index}>
+                {item.title}
+              </Text>
+              <Text style={styles.authorTextStyle}>
+                by {item.author}
+              </Text>
+              <View style={{ flexDirection: 'row', zIndex: 500, position: 'absolute', top: verticalScale(-80), justifyContent: 'space-between' }} >
+                <View style={{ left: scale(-10) }}>
                   <Icon
                     raised
                     name='close'
@@ -270,41 +220,23 @@ class Deck extends Component {
                     onPress={() => this.forceSwipe('left')}//deletes a "disliked book from users suggestions"
                   />
                 </View>
-                {/*<Button
-          icon={{ name: 'code' }}
-          backgroundColor="#03A9F4"
-          title="View Now!"
-        />*/}
-
-                <View
-                  style={{
-                    left: scale(55),
-                    top: verticalScale(20)
-                  }}
-                >
+                <View style={{ left: scale(55), top: verticalScale(20)}}>
                   <Icon
                     name='arrow-drop-down-circle'
                     type='materialIcons'
                     color='#3C509B'
-                    size={35}
-
+                    size={scale(35)}
                     onPress={() => {
                       console.log(this.state, ' in scroll')
                       let totop = false
                       if (this.state.scroll === true) {
                         totop = true
-                        //if (this.refs._scrollView){
-                          //console.log('there is a ref', this.refs._scrollView, this.refs._View)
-                          //this.refs._scrollView.scrollTo({ x: 0, y: 0 })}
                       }
                       this.setState({ scroll: !this.state.scroll, panResponderEnabled: !this.state.panResponderEnabled, totop })
                     }} //sabes a "liked" book to users b
                   />
                 </View>
-
-                <View
-                  style={{ left: scale(120) }}
-                >
+                <View style={{ left: scale(120) }} >
                   <Icon
                     raised
                     name='check'
@@ -314,16 +246,12 @@ class Deck extends Component {
                     onPress={() => this.forceSwipe('right')}//sabes a "liked" book to users branch on swipe right
                   />
                 </View>
-
               </View>
-
             </View>
         }
         {
           this.state.scroll ?
-            <View
-
-            >
+            <View>
               <Text
                 style={{
                   marginTop: scale(7),
@@ -348,9 +276,6 @@ class Deck extends Component {
               </Text>
             </View> : null
         }
-
-
-
       </Animated.ScrollView>
     );
   }
@@ -360,9 +285,7 @@ class Deck extends Component {
     return (
       <View
         style={{ flex: 1, backgroundColor: 'white' }}>
-        <View
-          style={styles.errorViewStyle}
-        >
+        <View style={styles.errorViewStyle}>
           <Text style={[{ marginBottom: 10 }, styles.errorTextStyle]}>
             There's no more content here!
         </Text>
@@ -375,7 +298,6 @@ class Deck extends Component {
     console.log(this.props, this.state, 'panResponder', this.state.panResponderEnabled)
     return (
       this.renderCards()
-
     );
   }
 }
@@ -386,7 +308,6 @@ const styles = {
     width: SCREEN_WIDTH
   },
   container: {
-
     justifyContent: 'center',
     backgroundColor: 'white'
   },
@@ -401,7 +322,7 @@ const styles = {
     fontSize: scale(13),
     fontFamily: 'Avenir-Book',
     color: '#050F37',
-    paddingBottom: 15,
+    paddingBottom: verticalScale(15),
     //color: 'white'
   },
 
@@ -412,8 +333,8 @@ const styles = {
     marginLeft: scale(18),
     width: width - scale(40),
     top: verticalScale(5),
-    paddingBottom: 25,
-    marginTop: 5,
+    paddingBottom: verticalScale(25),
+    marginTop: verticalScale(5),
    // color: 'white'
   },
   modalContainer: {
@@ -443,18 +364,23 @@ const styles = {
   errorViewStyle: {
     backgroundColor: '#F38D8D',
     height: verticalScale(60),
-    marginTop: 150
+    marginTop: verticalScale(150)
 
   },
   errorTextStyle: {
-    marginTop: 5,
+    marginTop: verticalScale(5),
     color: '#FFFFFF',
     fontSize: scale(17),
     textAlign: 'center',
-    padding: 10,
+    padding: scale(10),
     fontFamily: 'Avenir-Book'
 
   }
 };
 
-export default Deck;
+//export default Deck;
+export default connect(
+ ({ book }) => ({ book }), {
+    checkSaved,updateErrDisplay
+  })(Deck);
+

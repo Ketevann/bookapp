@@ -12,20 +12,14 @@ import {
   PanResponder
 } from 'react-native';
 import { Spinner } from './common';
-import { getSavedBooks, removeBooks, markAsRead } from '../redux/actions/bookActions';
+import { getSavedBooks, removeBooks, markAsRead } from '../actions/bookActions';
 import { connect } from 'react-redux';
 import { Icon } from 'react-native-elements'
-const { height, width } = Dimensions.get('window');
-import { scale, verticalScale, moderateScale } from '../functions'
+import { scale, verticalScale, moderateScale } from '../utils/functions'
 
+const { height, width } = Dimensions.get('window');
 let SCREEN_WIDTH = PixelRatio.getPixelSizeForLayoutSize(width);
 let SCREEN_HEIGHT = PixelRatio.getPixelSizeForLayoutSize(height);
-
-// const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
-//   const paddingToBottom = 20;
-//   return layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingToBottom;
-// };
-
 
 class BookCard extends Component {
   constructor(props) {
@@ -233,14 +227,14 @@ const styles = StyleSheet.create({
     height: verticalScale(400),
     width: scale(250),
     backfaceVisibility: 'hidden',
-    marginTop: 10,
+    marginTop: verticalScale(10),
   },
   card: {
     backgroundColor: 'white',
-    width: 300,
+    width: scale(300),
     alignItems: 'center',
     borderRadius: 10,
-    height: 500
+    height: verticalScale(500)
   },
   flipCardBack: {
     position: "absolute",
@@ -253,8 +247,8 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   imageContainer: {//styling for image spinner
-    height: 425,
-    width: 250,
+    height: verticalScale(425),
+    width: scale(250),
     backgroundColor: '#E5EAEF',
     position: 'absolute',
     flex: 1,
@@ -266,13 +260,14 @@ const styles = StyleSheet.create({
     fontSize: scale(15),
     fontFamily: 'Avenir-Book',
     color: '#050F37',
-    marginTop: 5
+    marginTop: verticalScale(5),
+    textAlign: 'center'
   },
   author:{
     fontSize: scale(15),
     fontFamily: 'Avenir-Book',
     color: '#050F37',
-    paddingBottom: 15
+    paddingBottom: verticalScale(15)
   },
   title:{ 
     flexDirection: 'column',    
@@ -281,7 +276,7 @@ const styles = StyleSheet.create({
   },
   buttons:{ 
     marginTop: -1 * scale(50), 
-    height:50,  
+    height:verticalScale(50),  
     flexDirection: 'row', 
     alignItems:'flex-end', 
     justifyContent: 'space-around'

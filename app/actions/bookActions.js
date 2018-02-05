@@ -8,14 +8,16 @@ import {
     SEARCH_TYPE,
     SEARCH_QUERY_SUCCESS,
     SEARCH_BOOKS_CLEAR,
-    SEARCH_PARAMS_CLEAR
+    SEARCH_PARAMS_CLEAR,
+    SAVED_ERR,
+    DISPLAY_ERR
 } from './action-types'
 import { GOOGLE_API_KEY } from '../../keys'
 import firebase from 'firebase';
 import axios from 'axios';
 import { TASTE_DIVE_API_KEY } from '../../keys'
-import { defaultBookImg } from '../../components/data/defaultBookImg';
-import defaultBooks from '../../components/data/defaultBooks';
+import { defaultBookImg } from './../data/defaultBookImg';
+import defaultBooks from './../data/defaultBooks';
 import * as cloudscraper from 'react-native-cloudscraper'
 export const getBookSuggestions = (books, dispatch) =>
     dispatch => {
@@ -55,17 +57,7 @@ export const saveBook = (book, userID, dispatch) =>
                 if (!snapshot.val())//checking if a books branch exists in firebase
                     throw ("Error")
                 const savedBook = Object.values(snapshot.val());
-                let hasBook = false;
-                for (var i = 0; i < savedBook.length; i++) {
-                    if ((savedBook[i].title === title) &&
-                        (savedBook[i].author === author) &&
-                        (savedBook[i].description === description)) {
-                        hasBook = true;
-                        break;
-                    };
-                }
-                //added ternary on description, error thrown when discription is undefined
-                hasBook ? alert('already saved') : firebase.database().ref(`users/${userID}/`).child('books').set([...savedBook, newBook]);
+                firebase.database().ref(`users/${userID}/`).child('books').set([...savedBook, newBook]);
             })
             .catch(error => {
                 //starting a books branch in firebase if none exists already
@@ -73,10 +65,31 @@ export const saveBook = (book, userID, dispatch) =>
             });
     }
 
+export const checkSaved = (title, userID, dispatch) =>
+    dispatch => {
+        firebase.database().ref(`users/${userID}/books`).once('value')
+            .then(snapshot => {
+                if (!snapshot.val())//checking if a books branch exists in firebase
+                    throw ("Error")
+                const savedBook = Object.values(snapshot.val());
+                let hasBook = false;
+                let errTitle='';
+
+                for (var i = 0; i < savedBook.length; i++) {
+                    if (savedBook[i].title === title) {
+                        dispatch({type: SAVED_ERR, payload: title })
+                        break;
+                    };
+                }
+            })
+            .catch(error => {
+                //starting a books branch in firebase if none exists already
+                //firebase.database().ref(`users/${userID}/`).child('books').set([newBook]);
+            });
+    }
 export const changeSearchBookQuery = (query, dispatch) =>
     dispatch =>
         dispatch({ type: SEARCH_TYPE, query })
-
 
 
 export const setSearchValue = (book, dispatch) =>
@@ -90,6 +103,14 @@ export const clearSearch = (dispatch) =>//clearing search bar
 export const clearSearchedBooks = (dispatch) =>//clearing search book results from state
     dispatch=>
         dispatch({ type: SEARCH_BOOKS_CLEAR })
+
+export const updateErr = (title,dispatch) =>
+    dispatch=>
+        dispatch({type: SAVED_ERR, payload: title })
+
+export const updateErrDisplay = (bool,dispatch) =>
+    dispatch=>
+        dispatch({type: DISPLAY_ERR, payload: bool})
 
 //gets books from a google api
 const getBooks = (dispatch, data, userId, author = '', ) => {//added user id
@@ -125,7 +146,7 @@ export const findSimilarBooks = (keyword, placeholder, userId, dispatch) =>
                     suggestionsRef.set(null);
                 }
             });
-            return cloudscraper.get(`https://tastedive.com/api/similar?q=${keyword}&k=${TASTE_DIVE_API_KEY}&limit=2&type=${placeholder}`)
+            return cloudscraper.get(`https://tastedive.com/api/similar?q=${keyword}&k=${TASTE_DIVE_API_KEY}&limit=20&type=${placeholder}`)
                 .then(res => {
                     const data = JSON.parse(res._bodyText).Similar.Results;
                     let query = '';
@@ -139,6 +160,7 @@ export const findSimilarBooks = (keyword, placeholder, userId, dispatch) =>
 export const searchSavedBooks = (keyword, placeholder, userId, dispatch) =>
     dispatch => {
         dispatch({ type: LOADING });//updates loading in saved books to true
+        if (keyword==="")  return dispatch({ type: SEARCH_QUERY_SUCCESS, payload: [] })
         firebase.database().ref(`users/${userId}/books`).once('value', (snapshot) => {
             //dispatch({ type: SEARCH_PARAMS_CLEAR })//clears search form
             if (snapshot.val()){  //if books branch exists
@@ -151,7 +173,7 @@ export const searchSavedBooks = (keyword, placeholder, userId, dispatch) =>
                     keyword=keyword.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '');//removing empty spaces from both ends 
                     return book[placeholder]=== keyword || book[placeholder].match(keyword)!==null// comparing search paramater to book data
                 });
-
+                //if (books.length===0) return dispatch({ type: 'SEARCH_QUERY_UNSUCCESSFUL', payload: 'search returned no books'});
                 return dispatch({ type: SEARCH_QUERY_SUCCESS, payload: books })//setting books to state
             }
         });
@@ -295,8 +317,6 @@ export const updateDefaultSuggestions = (userID,author='', dispatch) =>
       
            
     }
-
-
 
 export const removeSuggestion = (suggested, uid, dispatch) =>
     dispatch => {

@@ -2,20 +2,14 @@ import React, { Component } from 'react';
 import { View, Image, TouchableOpacity, Dimensions, PixelRatio } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
-import { scale, verticalScale, moderateScale } from '../functions'
-import { getSavedBooks } from '../redux/actions/bookActions';
+import { scale, verticalScale, moderateScale } from '../utils/functions';
+import { getSavedBooks } from '../actions/bookActions';
 import { Icon } from 'react-native-elements/';
-
 
 const { height, width } = Dimensions.get('window');
 
 let SCREEN_WIDTH = PixelRatio.getPixelSizeForLayoutSize(width);
 let SCREEN_HEIGHT = PixelRatio.getPixelSizeForLayoutSize(height);
-
-
-
-
-
 
 class Footer extends Component {
 
@@ -32,27 +26,22 @@ class Footer extends Component {
           flexDirection: 'row', backgroundColor: '#3B509A', justifyContent: 'space-around',
           height: scale(50), padding: scale(10)
         }}>
-          <TouchableOpacity
-          style={{marginLeft: 13}}
-            >
+          <TouchableOpacity style={{marginLeft: scale(13)}}>
             <Icon
               name='home'
               type='SimpleLineIcons'
               color='white'
               underlayColor='#3B509A' // set the underlayColor of the view used behind the icon
-              size={35}
+              size={scale(35)}
               onPress={() => Actions.home()} />
           </TouchableOpacity>
-
-          <TouchableOpacity
-
-           >
+          <TouchableOpacity>
            <Icon
               name='heart'
               type='font-awesome'
               color='white'
               underlayColor='#3B509A' //  set the underlayColor of the view used behind the icon
-              size={30}
+              size={scale(30)}
               onPress={() => this.getBooks()} />
           </TouchableOpacity>
         </View>
@@ -60,7 +49,6 @@ class Footer extends Component {
     );
   }
 }
-
 
 export default connect(
   ({ book, auth }) => ({ book, auth }),
