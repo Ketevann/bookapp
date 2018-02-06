@@ -106,10 +106,10 @@ class Deck extends Component {
   }
 
   forceSwipe(direction) {
-    if (this.props.book.duplicateTitle === this.props.data[this.state.index].title && direction ==='right'){//reset cover position and display error 
+    if (this.props.book.duplicateTitle === this.props.data[this.state.index].title && direction ==='right'){//reset cover position and display error
      this.resetPosition()
      this.props.updateErrDisplay(true);
-   } else {   
+   } else {
      this.setState({ scroll: false, panResponderEnabled: true, style: { paddingBottom: 0 }, totop: false })
       const x = direction === 'right' ? SCREEN_WIDTH : -SCREEN_WIDTH;
       Animated.timing(this.state.position, {
@@ -168,16 +168,16 @@ class Deck extends Component {
     }
     return (
       <Animated.ScrollView
-        contentContainerStyle={{ paddingBottom: scale(50) }}
+        contentContainerStyle={{ paddingBottom: verticalScale(50) }}
         ref="_scrollView"
         style={{marginTop: verticalScale(45),
           backgroundColor: 'white',
           borderRadius: 5,
           paddingBottom: verticalScale(10),
-          height: SCREEN_HEIGHT - 140
+          height: SCREEN_HEIGHT - verticalScale(140)
        }}
       >
-        <View ref="_View" style={{borderRadius: 70}}>
+        <View ref="_View" style={{borderRadius: 70, alignItems:'center' }}>
           <Image
             source={{ uri: modifiedLink }}
             resizeMode='cover'
@@ -186,7 +186,7 @@ class Deck extends Component {
               width: width - scale(40),
               height: SCREEN_HEIGHT - verticalScale(290),
               borderRadius: 22,
-              marginLeft: scale(18),
+              
               marginTop: verticalScale(10)
             }}
             onLoadStart={(e) => this.setState({ loadingImage: true })}
@@ -197,30 +197,27 @@ class Deck extends Component {
             <View style={styles.imageContainer}>
               <Spinner />
             </View> :
-            <View
-              style={{
-                marginTop: verticalScale(25),
-                marginLeft: scale(18)
-              }}
-            >
-              <Text style={styles.titleTextStyle} ref={'author' + this.state.index}>
-                {item.title}
-              </Text>
-              <Text style={styles.authorTextStyle}>
-                by {item.author}
-              </Text>
-              <View style={{ flexDirection: 'row', zIndex: 500, position: 'absolute', top: verticalScale(-80), justifyContent: 'space-between' }} >
-                <View style={{ left: scale(-10) }}>
+            <View style={{ marginTop: verticalScale(25) }}>
+              <View style={{ alignItems:'center'}}>
+                <Text style={styles.titleTextStyle} ref={'author' + this.state.index}>
+                  {item.title}
+                </Text>
+                <Text style={styles.authorTextStyle}>
+                  by {item.author}
+                </Text>
+             </View>
+              <View style={styles.iconsContainer} >
+                <View >
                   <Icon
                     raised
                     name='close'
                     type='Foundation'
                     color='#f50'
-                    size={25}
+                    size={scale(25)}
                     onPress={() => this.forceSwipe('left')}//deletes a "disliked book from users suggestions"
                   />
                 </View>
-                <View style={{ left: scale(55), top: verticalScale(20)}}>
+                <View >
                   <Icon
                     name='arrow-drop-down-circle'
                     type='materialIcons'
@@ -237,13 +234,13 @@ class Deck extends Component {
                     }} //sabes a "liked" book to users b
                   />
                 </View>
-                <View style={{ left: scale(120) }} >
+                <View >
                   <Icon
                     raised
                     name='check'
                     type='feather'
                     color='#3C509B'
-                    size={25}
+                    size={scale(25)}
                     onPress={() => this.forceSwipe('right')}//sabes a "liked" book to users branch on swipe right
                   />
                 </View>
@@ -255,7 +252,7 @@ class Deck extends Component {
             <View>
               <Text
                 style={{
-                  marginTop: scale(7),
+                  marginTop: verticalScale(7),
                   fontSize: scale(15),
                   fontFamily: 'Avenir-Book',
                   color: '#050F37',
@@ -287,7 +284,7 @@ class Deck extends Component {
       <View
         style={{ flex: 1, backgroundColor: 'white' }}>
         <View style={styles.errorViewStyle}>
-          <Text style={[{ marginBottom: 10 }, styles.errorTextStyle]}>
+          <Text style={[{ marginBottom: verticalScale(10) }, styles.errorTextStyle]}>
             There's no more content here!
         </Text>
         </View>
@@ -324,7 +321,6 @@ const styles = {
     fontFamily: 'Avenir-Book',
     color: '#050F37',
     paddingBottom: verticalScale(15),
-    //color: 'white'
   },
 
   description: {
@@ -336,7 +332,6 @@ const styles = {
     top: verticalScale(5),
     paddingBottom: verticalScale(25),
     marginTop: verticalScale(5),
-   // color: 'white'
   },
   modalContainer: {
     flex: 1,
@@ -346,15 +341,14 @@ const styles = {
     backgroundColor: 'rgba(52, 52, 52, 0.8)'
   },
   innerContainer: {
-    // justifyContent: 'center',
     backgroundColor: 'white',
-    padding: 10,
-    width: 0.75 * SCREEN_WIDTH,
+    padding: scale(10),
+    width: scale(0.75) * SCREEN_WIDTH,
     borderRadius: 10
   },
   imageContainer: {
-    width: width - 40,
-    height: SCREEN_HEIGHT - 250,
+    width: width - scale(40),
+    height: SCREEN_HEIGHT - verticalScale(250),
     backgroundColor: 'white',
     position: 'absolute',
     flex: 1,
@@ -366,7 +360,6 @@ const styles = {
     backgroundColor: '#F38D8D',
     height: verticalScale(60),
     marginTop: verticalScale(150)
-
   },
   errorTextStyle: {
     marginTop: verticalScale(5),
@@ -375,11 +368,18 @@ const styles = {
     textAlign: 'center',
     padding: scale(10),
     fontFamily: 'Avenir-Book'
-
+  },
+  iconsContainer:{ 
+    flexDirection: 'row', 
+    zIndex: 500, 
+    left:scale(10), 
+    right:scale(10),
+    position: 'absolute', 
+    top: verticalScale(-80), 
+    justifyContent: 'space-between' 
   }
 };
 
-//export default Deck;
 export default connect(
  ({ book }) => ({ book }), {
     checkSaved,updateErrDisplay

@@ -15,7 +15,7 @@ import SearchComponent from './Search';
 import { scale, verticalScale, moderateScale } from '../utils/functions';
 import { Icon } from 'react-native-elements';
 import Login from './Login';
-import Error from './Error'; 
+import Error from './Error';
 class Home extends Component {
   componentWillMount() {
     this.props.clearSearchBooks();
@@ -39,12 +39,12 @@ class Home extends Component {
     this.props.findSimilarBooks(searchbooks, placeholder, userId);
   }
 
-  display() {   
+  display() {
     const { similarbooks, loading, error } = this.props.book;
     const userId = this.props.auth.userId;
     if (this.props.book && similarbooks) {
       if (similarbooks.length === 0)
-        return <Text style={[ {marginTop: scale(10)}, styles.errorTextStyle ]} >Your search returned no results </Text>
+        return <Text style={[ {marginTop: verticalScale(10)}, styles.errorTextStyle ]} >Your search returned no results </Text>
       return (<Book data={similarbooks} loading={loading} error={error} />)
     }
   }
@@ -57,7 +57,7 @@ class Home extends Component {
     console.log(this.props, 'home')
     const { loadingCreditionals, userId } = this.props.auth;
     const { similarbooks, loadingSavedBook, errorActive, error, title, displayModal } = this.props.book;
-    
+
     if (loadingCreditionals || loadingSavedBook) {//loadingCreditionals is boolean, display as spinner cuz otherwise when user is loggedin, the sign in form flashes briefly.
       return <Spinner size="large" />
     }
@@ -67,9 +67,9 @@ class Home extends Component {
       <View style={{ flex: 1 }}>
         <SearchComponent handleSubmit={this.handleSubmit.bind(this)} />
         {this.display()}
-        <Error  
-          errorActive={this.props.book.errorActive} 
-          message={error} 
+        <Error
+          errorActive={this.props.book.errorActive}
+          message={error}
           title={title}
           closeModal={ this.closeModal.bind(this) }
         />
@@ -84,11 +84,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFF',
   },
   header: {
-    fontSize: 12,
-    height: 20
+    fontSize: scale(12),
+    height: verticalScale(20)
   },
     errorTextStyle: {
-    marginTop: 5,
+    marginTop: verticalScale(5),
     color: '#f50',
     fontSize: scale(17),
     textAlign: 'center',

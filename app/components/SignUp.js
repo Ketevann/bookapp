@@ -56,7 +56,7 @@ class SignUp extends Component {
 
     return (
       <ScrollView>
-        <View style={{ height, backgroundColor: 'white' }}>
+        <View style={{ height, backgroundColor: 'white' , alignItems:'center'}}>
           <Text style={styles.header} >Sign Up</Text>
           <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: verticalScale(8) }}>
             <Text style={textStyle} > Already have an account? login </Text>
@@ -111,7 +111,7 @@ const styles = {
     fontFamily: 'Avenir-Book',
     color: '#9B9B9B',
     fontSize: scale(14),
-    lineHeight: scale(15)
+    lineHeight: verticalScale(15)
   },
   signUpLinkStyle: {
     textDecorationLine: 'underline',
@@ -120,13 +120,14 @@ const styles = {
   errorViewStyle: {
     backgroundColor: '#F38D8D',
     height: verticalScale(42),
-    marginTop: verticalScale(25)
+    marginTop: verticalScale(25),
+    width:width,
   },
   errorTextStyle: {
     color: '#FFFFFF',
     fontSize: scale(14),
     textAlign: 'center',
-    padding: 10,
+    padding: scale(10),
     fontFamily: 'Avenir-Book'
 
   }

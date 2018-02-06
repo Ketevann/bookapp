@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Dimensions } from 'react-native';
 import { Card, CardSection, Button, Input } from './common';
 import { connect } from 'react-redux';
 import { forgotPassword, emailDispatch } from '../actions/authActions';
 import { scale, verticalScale, moderateScale } from '../utils/functions'
+const { height, width } = Dimensions.get('window');
 
 class ForgotPassword extends Component {
 
@@ -18,11 +19,11 @@ class ForgotPassword extends Component {
   render() {
     const { viewStyle, errorViewStyle, errorTextStyle, textStyle } = styles;
     return (
-      <View style={{ flex: 1, backgroundColor: 'white' }} >
+      <View style={{ flex: 1, backgroundColor: 'white' , alignItems:'center'}} >
         <Text style={styles.header}>
           Forgot your Password ?
         </Text>
-        <View style={{ paddingBottom: verticalScale(10), marginTop: scale(10) }}>
+        <View style={{ paddingBottom: verticalScale(10), marginTop: verticalScale(10) }}>
           <Text style={textStyle}>
             Enter your email and we will send
           </Text>
@@ -58,7 +59,7 @@ const styles = {
     textAlign: 'center',
     fontSize: scale(17),
     fontFamily: 'Avenir-Book',
-    marginTop: scale(20)
+    marginTop: verticalScale(20)
   },
   textStyle: {
     textAlign: 'center',
@@ -70,13 +71,14 @@ const styles = {
   errorViewStyle: {
     backgroundColor: '#F38D8D',
     height: verticalScale(60),
-    marginTop: verticalScale(25)
+    marginTop: verticalScale(25),
+    width:width,
   },
   errorTextStyle: {
     color: '#FFFFFF',
     fontSize: scale(14),
     textAlign: 'center',
-    padding: 10,
+    padding: scale(10),
     fontFamily: 'Avenir-Book'
   }
 };
