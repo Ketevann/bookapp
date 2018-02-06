@@ -177,7 +177,7 @@ class Deck extends Component {
           height: SCREEN_HEIGHT - verticalScale(140)
        }}
       >
-        <View ref="_View" style={{borderRadius: 70}}>
+        <View ref="_View" style={{borderRadius: 70, alignItems:'center' }}>
           <Image
             source={{ uri: modifiedLink }}
             resizeMode='cover'
@@ -186,7 +186,7 @@ class Deck extends Component {
               width: width - scale(40),
               height: SCREEN_HEIGHT - verticalScale(290),
               borderRadius: 22,
-              marginLeft: scale(18),
+              
               marginTop: verticalScale(10)
             }}
             onLoadStart={(e) => this.setState({ loadingImage: true })}
@@ -197,20 +197,17 @@ class Deck extends Component {
             <View style={styles.imageContainer}>
               <Spinner />
             </View> :
-            <View
-              style={{
-                marginTop: verticalScale(25),
-                marginLeft: scale(18)
-              }}
-            >
-              <Text style={styles.titleTextStyle} ref={'author' + this.state.index}>
-                {item.title}
-              </Text>
-              <Text style={styles.authorTextStyle}>
-                by {item.author}
-              </Text>
-              <View style={{ flexDirection: 'row', zIndex: 500, position: 'absolute', top: verticalScale(-80), justifyContent: 'space-between' }} >
-                <View style={{ left: scale(-10) }}>
+            <View style={{ marginTop: verticalScale(25) }}>
+              <View style={{ alignItems:'center'}}>
+                <Text style={styles.titleTextStyle} ref={'author' + this.state.index}>
+                  {item.title}
+                </Text>
+                <Text style={styles.authorTextStyle}>
+                  by {item.author}
+                </Text>
+             </View>
+              <View style={styles.iconsContainer} >
+                <View >
                   <Icon
                     raised
                     name='close'
@@ -220,12 +217,13 @@ class Deck extends Component {
                     onPress={() => this.forceSwipe('left')}//deletes a "disliked book from users suggestions"
                   />
                 </View>
-                <View style={{ left: scale(55), top: verticalScale(20)}}>
+                <View >
                   <Icon
                     name='arrow-drop-down-circle'
                     type='materialIcons'
                     color='#3C509B'
                     size={scale(35)}
+                    underlayColor='rgba(0, 0, 0, 0)'
                     onPress={() => {
                       console.log(this.state, ' in scroll')
                       let totop = false
@@ -236,7 +234,7 @@ class Deck extends Component {
                     }} //sabes a "liked" book to users b
                   />
                 </View>
-                <View style={{ left: scale(120) }} >
+                <View >
                   <Icon
                     raised
                     name='check'
@@ -323,7 +321,6 @@ const styles = {
     fontFamily: 'Avenir-Book',
     color: '#050F37',
     paddingBottom: verticalScale(15),
-    //color: 'white'
   },
 
   description: {
@@ -335,7 +332,6 @@ const styles = {
     top: verticalScale(5),
     paddingBottom: verticalScale(25),
     marginTop: verticalScale(5),
-   // color: 'white'
   },
   modalContainer: {
     flex: 1,
@@ -345,7 +341,6 @@ const styles = {
     backgroundColor: 'rgba(52, 52, 52, 0.8)'
   },
   innerContainer: {
-    // justifyContent: 'center',
     backgroundColor: 'white',
     padding: scale(10),
     width: scale(0.75) * SCREEN_WIDTH,
@@ -365,7 +360,6 @@ const styles = {
     backgroundColor: '#F38D8D',
     height: verticalScale(60),
     marginTop: verticalScale(150)
-
   },
   errorTextStyle: {
     marginTop: verticalScale(5),
@@ -374,11 +368,18 @@ const styles = {
     textAlign: 'center',
     padding: scale(10),
     fontFamily: 'Avenir-Book'
-
+  },
+  iconsContainer:{ 
+    flexDirection: 'row', 
+    zIndex: 500, 
+    left:scale(10), 
+    right:scale(10),
+    position: 'absolute', 
+    top: verticalScale(-80), 
+    justifyContent: 'space-between' 
   }
 };
 
-//export default Deck;
 export default connect(
  ({ book }) => ({ book }), {
     checkSaved,updateErrDisplay

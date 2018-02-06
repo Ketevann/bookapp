@@ -1,15 +1,11 @@
 import React, { Component } from 'react';
-import { View, Image, TouchableOpacity, Dimensions, PixelRatio } from 'react-native';
+import { View, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
 import { scale, verticalScale, moderateScale } from '../utils/functions';
 import { getSavedBooks } from '../actions/bookActions';
 import { Icon } from 'react-native-elements/';
 
-const { height, width } = Dimensions.get('window');
-
-let SCREEN_WIDTH = PixelRatio.getPixelSizeForLayoutSize(width);
-let SCREEN_HEIGHT = PixelRatio.getPixelSizeForLayoutSize(height);
 
 class Footer extends Component {
 
@@ -21,11 +17,8 @@ class Footer extends Component {
   }
   render() {
     return (
-      <View style={{ position: 'absolute', left: 0, right: 0, bottom: 0 }}>
-        <View style={{
-          flexDirection: 'row', backgroundColor: '#3B509A', justifyContent: 'space-around',
-          height: scale(50), padding: scale(10)
-        }}>
+      <View style={styles.container}>
+        <View style={styles.iconsContainer}>
           <TouchableOpacity style={{marginLeft: scale(13)}}>
             <Icon
               name='home'
@@ -49,6 +42,23 @@ class Footer extends Component {
     );
   }
 }
+
+
+const styles = StyleSheet.create({
+  container:{
+    position: 'absolute', 
+    left: 0, 
+    right: 0, 
+    bottom: 0 
+  },
+  iconsContainer:{
+    flexDirection: 'row', 
+    backgroundColor: '#3B509A', 
+    justifyContent: 'space-around',
+    height: verticalScale(50), 
+    padding: scale(10)
+  }
+});
 
 export default connect(
   ({ book, auth }) => ({ book, auth }),

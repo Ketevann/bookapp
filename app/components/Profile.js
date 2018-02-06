@@ -14,10 +14,7 @@ class Profile extends Component {
     super(props)
     this.state = { scrollActive: true }
   }
-  disableParentScroll(bool) {
-    this.setState({ scrollActive: bool })
-  }
-
+ 
   onDelete(title) {
     var arr = this.props.book.savedBooks.filter(eachbook => {
       if (title !== eachbook.title) {
@@ -46,7 +43,6 @@ class Profile extends Component {
           key={index}
           books={book}
           index={index}
-          disableParentScroll={this.disableParentScroll.bind(this)}
           updateFilteredBooks={filter ? this.updateFilteredBooks.bind(this) : null}//if filter is true, set filterUpdate function to props (we use this to update read/delete searched books display)
         />
       )
@@ -103,7 +99,6 @@ const styles = {
     color: '#f50',
     fontSize: scale(17),
     textAlign: 'center',
-    //padding: 10,
     fontFamily: 'Avenir-Book'
   },
   image:{

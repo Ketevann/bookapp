@@ -1,25 +1,18 @@
-import { SearchBar } from 'react-native-elements'
 import React, { Component } from 'react';
-import { Text, View, TextInput, Keyboard, Dimensions, PixelRatio } from 'react-native';
+import { SearchBar } from 'react-native-elements';
+import { Text, View, Keyboard } from 'react-native';
 import { connect } from 'react-redux';
-import { Button } from './common';
 import firebase from 'firebase';
 import {
   setSearchValue,
   findSimilarBooks,
   changeSearchBookQuery
 } from '../actions/bookActions';
-const { height, width } = Dimensions.get('window');
 import Search from 'react-native-search-box';
-
-import { scale, verticalScale, moderateScale } from '../utils/functions';
+import { scale, verticalScale } from '../utils/functions';
 import { Actions } from 'react-native-router-flux';
-
-let SCREEN_WIDTH = PixelRatio.getPixelSizeForLayoutSize(width);
-let SCREEN_HEIGHT = PixelRatio.getPixelSizeForLayoutSize(height);
 import { LinearGradient } from 'expo';
 import { Icon } from 'react-native-elements';
-
 
 class SearchComponent extends Component {
   static defaultProps = {
@@ -44,32 +37,26 @@ class SearchComponent extends Component {
     this.props.changeSearchBookQuery(query);
   }
 
-
-  // Important: You must return a Promise
   beforeFocus = () => {
     return new Promise((resolve, reject) => {
-      console.log('beforeFocus');
       resolve();
     });
   }
 
   onFocus = (text) => {
     return new Promise((resolve, reject) => {
-      console.log('onFocus', text);
       resolve();
     });
   }
 
   onFocus = (text) => {
     return new Promise((resolve, reject) => {
-      console.log('onFocus', text);
       resolve();
     });
   }
 
   afterFocus = () => {
     return new Promise((resolve, reject) => {
-      console.log('afterFocus');
       resolve();
     });
   }
@@ -98,6 +85,7 @@ class SearchComponent extends Component {
                 name='search'
                 type='evilIcons'
                 color='#FAFAFA'
+                underlayColor='rgba(0, 0, 0, 0)'
                 size={scale(25)}
                 onPress={() => this.setState({ search: !this.state.search })}//deletes a "disliked book from users suggestions"
               />

@@ -56,7 +56,7 @@ class SignUp extends Component {
 
     return (
       <ScrollView>
-        <View style={{ height, backgroundColor: 'white' }}>
+        <View style={{ height, backgroundColor: 'white' , alignItems:'center'}}>
           <Text style={styles.header} >Sign Up</Text>
           <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: verticalScale(8) }}>
             <Text style={textStyle} > Already have an account? login </Text>
@@ -120,7 +120,8 @@ const styles = {
   errorViewStyle: {
     backgroundColor: '#F38D8D',
     height: verticalScale(42),
-    marginTop: verticalScale(25)
+    marginTop: verticalScale(25),
+    width:width,
   },
   errorTextStyle: {
     color: '#FFFFFF',

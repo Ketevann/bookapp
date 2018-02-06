@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, Dimensions, PixelRatio } from 'react-native';
+import { Text, View } from 'react-native';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import firebase from 'firebase';
@@ -8,9 +8,6 @@ import LoginForm from './common/LoginForm';
 import { loginDispatch, loginDispatchFalse, clearForm } from '../actions/authActions';
 import { scale, verticalScale, moderateScale } from '../utils/functions'
 
-let SCREEN_WIDTH = PixelRatio.getPixelSizeForLayoutSize(width);
-let SCREEN_HEIGHT = PixelRatio.getPixelSizeForLayoutSize(height);
-const { height, width } = Dimensions.get('window');
 
 class Login extends Component {
   componentWillMount() {
@@ -28,7 +25,6 @@ class Login extends Component {
 
   render() {
     const { textStyle, signUpLinkStyle } = styles;
-    //console.log(SCREEN_HEIGHT, SCREEN_WIDTH)
     return (
       <View style={{ flex: 1, backgroundColor: 'white'}}>
         <Text style={styles.header} >Log In</Text>
