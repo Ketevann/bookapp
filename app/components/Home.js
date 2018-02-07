@@ -32,7 +32,6 @@ class Home extends Component {
   }
 
   handleSubmit() {
-    console.log('in o hanlr', this.props)
     const { searchbooks, placeholder } = this.props.book;
     this.props.loadingSearchResults();
     const userId = this.props.auth.userId;
@@ -54,7 +53,6 @@ class Home extends Component {
   }
 
   render() {
-    console.log(this.props, 'home')
     const { loadingCreditionals, userId } = this.props.auth;
     const { similarbooks, loadingSavedBook, errorActive, error, title, displayModal } = this.props.book;
 

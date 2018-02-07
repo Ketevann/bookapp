@@ -1,4 +1,6 @@
-const INITIAL_STATE = { email: '', password: '', passwordConfirm: '', error: '', loading: false, loggedIn: null, userId: '', forgotError: '', loadingCreditionals:true };
+const INITIAL_STATE = { email: '', password: '', passwordConfirm: '', error: '', loading: false, loggedIn: null, userId: '',
+forgotError: '',
+loadingCreditionals:true, sentMessage: null };
 import {
   EMAIL_CHANGED, PASSWORD_CHANGED, LOGIN_USER_SUCESS, LOGIN_USER_FAIL,
   LOGIN_USER,
@@ -7,7 +9,8 @@ import {
   FORGOT,
   PASSWORD_CONFIRM,
   CLEARFORM,
-   FORGOT_FAIL
+  FORGOT_FAIL,
+  FORGOT_SUCCESS
 } from '../actions/action-types';
 
 export default (auth = INITIAL_STATE, action) => {
@@ -15,7 +18,6 @@ export default (auth = INITIAL_STATE, action) => {
     case EMAIL_CHANGED:
       return { ...auth, email: action.payload };
     case PASSWORD_CHANGED:
-      //console.log('passowrd', action)
       return { ...auth, password: action.payload };
     case PASSWORD_CONFIRM:
       return { ...auth, passwordConfirm: action.payload };
@@ -28,13 +30,15 @@ export default (auth = INITIAL_STATE, action) => {
     case LOGGEDIN:
       return { loggedIn: true, userId: action.payload,  loadingCreditionals:false };//terminate loading credentials
     case NOTLOGGEDIN:
-      return { ...auth, loggedIn: false ,  loadingCreditionals:false};//terminate loading credentials
+      return { ...auth, loggedIn: false, loadingCreditionals:false };//terminate loading credentials
     case FORGOT:
-      return { ...auth, email: '', forgotError: '' };
+      return { ...auth, email: '', forgotError: '', sentMessage: null };
     case CLEARFORM:
-        return { ...auth, email:'', password: '', passwordConfirm: '', error:'' };
+        return { ...auth, email:'', password: '', passwordConfirm: '', error:'', sentMessage: null };
     case  FORGOT_FAIL:
-        return {...auth, forgotError: action.error}
+        return {...auth, forgotError: action.error, sentMessage: null}
+    case  FORGOT_SUCCESS:
+      return {...auth, sentMessage: 'Reset instructions have been sent to your email'}
     default:
       return auth;
   }

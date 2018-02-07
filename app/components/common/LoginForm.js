@@ -14,7 +14,7 @@ let SCREEN_HEIGHT = PixelRatio.getPixelSizeForLayoutSize(height);
 
 
 class LoginForm extends Component {
-  
+
   OnButtonPress() {
     const { email, password } = this.props.auth
     this.props.loginUser(email, password)
@@ -37,14 +37,15 @@ class LoginForm extends Component {
 
   render() {
     const { forgotpassowrdStyle, errorViewStyle, errorTextStyle } = styles;
+    const { email } = this.props.auth
       return (
-        <View style={{ flex: 1 }}>
+                <View style={{ flex: 1 }}>
           {
             this.props.auth.error ?
             <View style={errorViewStyle}>
             <Text style={errorTextStyle}> {this.props.auth.error}</Text>
             </View>
-            : null 
+            : null
           }
           <Input
             placeholder="Email"

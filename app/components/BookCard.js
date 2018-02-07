@@ -41,20 +41,16 @@ class BookCard extends Component {
     this.wrapperPanResponder = PanResponder.create({
       onStartShouldSetPanResponder: (e, g) => true,
       onPanResponderGrant: () => {
-          //console.log('GRANTED TO WRAPPER');
       },
       onPanResponderMove: (evt, gestureState) => {
-          //console.log('WRAPPER MOVED');
       }
     });
 
     this.scollerPanResponder = PanResponder.create({
       onStartShouldSetPanResponder: (e, g) => true,
       onPanResponderGrant: () => {
-          //console.log('GRANTED TO SCROLLER');
       },
       onPanResponderMove: (evt, gestureState) => {
-          //console.log('SCROLLER MOVED');
       }
     });
   }
@@ -142,7 +138,7 @@ class BookCard extends Component {
                 />
               </Animated.View>
               <Animated.View style={[this.backCardStyle(), styles.cardStyle, styles.flipCardBack, { justifyContent: 'center', alignItems: 'center'} ]}>
-                <ScrollView {...this.wrapperPanResponder.panHandlers} contentContainerStyle={{ paddingBottom: scale(10) }} >
+                <ScrollView {...this.wrapperPanResponder.panHandlers} contentContainerStyle={{ paddingBottom: verticalScale(10) }} >
                   <View style={{ flex: 1 }} {...this.scollerPanResponder.panHandlers} >
                     <Text
                       style={styles.textStyle}
@@ -227,14 +223,14 @@ const styles = StyleSheet.create({
     height: verticalScale(400),
     width: scale(250),
     backfaceVisibility: 'hidden',
-    marginTop: 10,
+    marginTop: verticalScale(10),
   },
   card: {
     backgroundColor: 'white',
-    width: 300,
+    width: scale(300),
     alignItems: 'center',
     borderRadius: 10,
-    height: 500
+    height: verticalScale(500)
   },
   flipCardBack: {
     position: "absolute",
@@ -247,8 +243,8 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   imageContainer: {//styling for image spinner
-    height: 425,
-    width: 250,
+    height: verticalScale(425),
+    width: scale(250),
     backgroundColor: '#E5EAEF',
     position: 'absolute',
     flex: 1,
@@ -260,14 +256,14 @@ const styles = StyleSheet.create({
     fontSize: scale(15),
     fontFamily: 'Avenir-Book',
     color: '#050F37',
-    marginTop: 5,
+    marginTop: verticalScale(5),
     textAlign: 'center'
   },
   author:{
     fontSize: scale(15),
     fontFamily: 'Avenir-Book',
     color: '#050F37',
-    paddingBottom: 15
+    paddingBottom: verticalScale(15)
   },
   title:{
     flexDirection: 'column',
@@ -275,8 +271,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   buttons:{
-    marginTop: -1 * scale(50),
-    height:50,
+    marginTop: -1 * verticalScale(50),
+    height: verticalScale(50),
     flexDirection: 'row',
     alignItems:'flex-end',
     justifyContent: 'space-around'

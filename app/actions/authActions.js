@@ -3,7 +3,8 @@ import {
   LOGIN_USER_SUCESS, LOGIN_USER_FAIL,
   LOGIN_USER, NOTLOGGEDIN, LOGGEDIN, FORGOT,
   CLEARFORM,
-  FORGOT_FAIL
+  FORGOT_FAIL,
+  FORGOT_SUCCESS
 } from './action-types'
 
 import firebase from 'firebase';
@@ -27,7 +28,7 @@ export const signUpUser = (email, password, confirm) => dispatch => {
     firebase.auth().createUserWithEmailAndPassword(email, password)
       .then(user => {
         firebase.database().ref(`users/${user.uid}`).set({ email });
-         return loginUserSuccess(dispatch, user.uid);
+         return loginUserSuccess(dispatch, user);
       })
       .catch((error) => {
         const errorMessage = error.message;
@@ -39,13 +40,13 @@ export const signUpUser = (email, password, confirm) => dispatch => {
   }
 };
 
-export const forgotPassword = () =>
+export const forgotPassword = (emailAddress) =>
   dispatch => {
-    dispatch({ type: FORGOT })
+    dispatch({ type: FORGOT });
     const auth = firebase.auth();
-    const emailAddress = "katie.tsin@gmail.com";
     auth.sendPasswordResetEmail(emailAddress).then(() => {
       console.log('Email sent')
+      dispatch({ type: FORGOT_SUCCESS });
     })
     .catch(error => {
       ForgotPasswordFail(dispatch, error.message);

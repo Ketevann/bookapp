@@ -34,7 +34,6 @@ class SearchComponent extends Component {
   }
 
   onSetSearchQuery(query) {
-    console.log('set query', query)
     if (query === 'books') this.setState({
       book: { textDecorationLine: 'underline' },
 
@@ -48,34 +47,29 @@ class SearchComponent extends Component {
   // Important: You must return a Promise
   beforeFocus = () => {
     return new Promise((resolve, reject) => {
-      console.log('beforeFocus');
       resolve();
     });
   }
 
   onFocus = (text) => {
     return new Promise((resolve, reject) => {
-      console.log('onFocus', text);
       resolve();
     });
   }
 
   onFocus = (text) => {
     return new Promise((resolve, reject) => {
-      console.log('onFocus', text);
       resolve();
     });
   }
 
   afterFocus = () => {
     return new Promise((resolve, reject) => {
-      console.log('afterFocus');
       resolve();
     });
   }
 
   render() {
-    { console.log('book', this.props) }
     const { headerTextStyle, authorTextStyle, bookTextStyle, viewStyle } = styles;
     return (
       <View style={{ zIndex: 1000 }}>

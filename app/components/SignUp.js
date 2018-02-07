@@ -39,16 +39,17 @@ class SignUp extends Component {
     this.props.passwordConfirmChange(text);
   }
 
-  OnButtonPress() {
-    const { email, password, passwordConfirm } = this.props.auth;
-    this.props.signUpUser(email, password, passwordConfirm);
-  }
+  // OnButtonPress() {
+  //   const { email, password, passwordConfirm } = this.props.auth;
+  //   this.props.signUpUser(email, password, passwordConfirm);
+  // }
 
   OnRedirect() {
     const { email, password, passwordConfirm } = this.props.auth;
     this.props.signUpUser(email, password, passwordConfirm);
-    if (this.props.auth.userId)
+    if (this.props.auth.userId) {
       Actions.home();
+    }
   }
 
   render() {
@@ -132,7 +133,7 @@ const styles = {
   }
 }
 
-export default connect(({ auth, cameraRoll }) => ({ auth, cameraRoll }), {
+export default connect(({ auth }) => ({ auth }), {
   forgotPassword,
   emailDispatch,
   passwordDispatch,

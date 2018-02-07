@@ -27,7 +27,6 @@ export const getBookSuggestions = (books, dispatch) =>
             .then(axios.spread((...args) => {
                 //collect returned data for each api call in array
                 const bookList = args.map((book) => {
-                    console.log(book.data.items[0].volumeInfo.title, "title");
                     return book.data.items[0].volumeInfo;
                 })
                 return dispatch({
@@ -41,7 +40,6 @@ export const getBookSuggestions = (books, dispatch) =>
 
 export const saveBook = (book, userID, dispatch) =>
     dispatch => {
-        console.log(book, userID, '*** save')
         const { author, description, imageLinks, title, categories, pageCount } = book;
         const newBook = {
             title: title,
@@ -114,7 +112,6 @@ export const updateErrDisplay = (bool,dispatch) =>
 
 //gets books from a google api
 const getBooks = (dispatch, data, userId, author = '', ) => {//added user id
-    //  console.log('in GET BOOKS', author)
     const bookPromises = data.map((book) => axios.get(`https://www.googleapis.com/books/v1/volumes?q=${author}${book.Name}&key=${GOOGLE_API_KEY}`));
     axios.all(bookPromises)
         .then(axios.spread((...args) => {
@@ -169,8 +166,8 @@ export const searchSavedBooks = (keyword, placeholder, userId, dispatch) =>
                     savedBooksArray = Object.values(snapshot.val());
                 }
                 if (placeholder==='books') placeholder='title';
-                books = savedBooksArray.filter(book => {        //filtering books that meet search parameters 
-                    keyword=keyword.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '');//removing empty spaces from both ends 
+                books = savedBooksArray.filter(book => {        //filtering books that meet search parameters
+                    keyword=keyword.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '');//removing empty spaces from both ends
                     return book[placeholder]=== keyword || book[placeholder].match(keyword)!==null// comparing search paramater to book data
                 });
                 //if (books.length===0) return dispatch({ type: 'SEARCH_QUERY_UNSUCCESSFUL', payload: 'search returned no books'});
@@ -183,7 +180,6 @@ export const getSavedBooks = (user, dispatch) =>
     dispatch => {
         dispatch({ type: LOADING });//updates loading in saved books to true
         var savedBook = [];
-        console.log(' in geeet', user)
         firebase.database().ref(`users/${user}/books`).once('value', (snapshot) => {
             if (snapshot.val())
                 savedBook = Object.values(snapshot.val())
@@ -214,11 +210,11 @@ export const markAsRead = (uid, title, dispatch) =>
     };
 
 export const reRenderSearch = ( books, title, updateType, dispatch) =>//takes current array of searched books, deletes/updates read, then sets that updated array to state (our searchQuery variable)
-    dispatch => {                                                     //thus forcing a re-render of searched books ans we see changes in icon or the deleted book goes away 
+    dispatch => {                                                     //thus forcing a re-render of searched books ans we see changes in icon or the deleted book goes away
             if (updateType==='read'){
                 for (let i = 0; i < books.length; i++) {
                     let book = books[i];
-                    
+
                     if (book && book.title === title) {
                        book.read = !book.read; //updating read
                     }
@@ -231,7 +227,7 @@ export const reRenderSearch = ( books, title, updateType, dispatch) =>//takes cu
             }
             return dispatch({ type: SEARCH_QUERY_SUCCESS, payload: books }); //setting updated books to state
     };
-    
+
 export const removeBooks = (uid, saved, dispatch) =>
     dispatch => {
         firebase.database().ref(`users/${uid}`).child('books').once('value', function (snapshot) {
@@ -314,8 +310,8 @@ export const updateDefaultSuggestions = (userID,author='', dispatch) =>
         })).catch((error) => {
             console.error(error);
         });
-      
-           
+
+
     }
 
 export const removeSuggestion = (suggested, uid, dispatch) =>

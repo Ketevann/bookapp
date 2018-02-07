@@ -3,12 +3,12 @@ import { View, Text } from 'react-native';
 import { Card, CardSection, Button, Input } from './common';
 import { connect } from 'react-redux';
 import { forgotPassword, emailDispatch } from '../actions/authActions';
-import { scale, verticalScale, moderateScale } from '../utils/functions'
+import { scale, verticalScale } from '../utils/functions'
 
 class ForgotPassword extends Component {
 
   onForgotPassword(email) {
-    this.props.forgotPassword(email);
+    this.props.forgotPassword(this.props.auth.email);
   }
 
   onEmailChange(text) {
@@ -35,6 +35,15 @@ class ForgotPassword extends Component {
           <View style={errorViewStyle}>
             <Text style={errorTextStyle}>
               {this.props.auth.forgotError}
+            </Text>
+          </View>
+          : null
+        }
+
+        {this.props.auth.sentMessage ?
+          <View style={errorViewStyle}>
+            <Text style={errorTextStyle}>
+              {this.props.auth.sentMessage}
             </Text>
           </View>
           : null
@@ -69,7 +78,7 @@ const styles = {
   },
   errorViewStyle: {
     backgroundColor: '#F38D8D',
-    height: verticalScale(60),
+    height: verticalScale(50),
     marginTop: verticalScale(25)
   },
   errorTextStyle: {

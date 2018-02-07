@@ -12,7 +12,6 @@ import { scale, verticalScale, moderateScale } from '../utils/functions';
 import { Card, Button, Icon } from 'react-native-elements';
 
 export default Err = (props) => {
-    console.log (props, "errorActive")
   return (
     <View style={{ flex: 1 }}>
          <Modal

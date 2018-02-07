@@ -47,7 +47,6 @@ class Deck extends Component {
       },
       //detects release
       onPanResponderEnd: (event, gesture) => {
-        console.log('ended')
       },
 
       onPanResponderRelease: (event, gesture) => {
@@ -121,7 +120,6 @@ class Deck extends Component {
   }
 
   resetPosition() {
-    console.log('rsetting')
     Animated.spring(this.state.position, {
       toValue: { x: 0, y: 0 }// there was glitch on rest. card was not returning to original position
     }).start();
@@ -227,7 +225,6 @@ class Deck extends Component {
                     color='#3C509B'
                     size={scale(35)}
                     onPress={() => {
-                      console.log(this.state, ' in scroll')
                       let totop = false
                       if (this.state.scroll === true) {
                         totop = true
@@ -295,7 +292,6 @@ class Deck extends Component {
   }
 
   render() {
-    console.log(this.props, this.state, 'panResponder', this.state.panResponderEnabled)
     return (
       this.renderCards()
     );

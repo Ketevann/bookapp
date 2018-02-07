@@ -28,7 +28,6 @@ class Login extends Component {
 
   render() {
     const { textStyle, signUpLinkStyle } = styles;
-    //console.log(SCREEN_HEIGHT, SCREEN_WIDTH)
     return (
       <View style={{ flex: 1, backgroundColor: 'white'}}>
         <Text style={styles.header} >Log In</Text>

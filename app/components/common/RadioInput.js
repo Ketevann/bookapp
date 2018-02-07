@@ -11,24 +11,23 @@ class RadioInput extends React.Component {
        }
   }
     componentWillReceiveProps(newProps){
-        let index=null; 
+        let index=null;
         if (newProps.preferenceType==='title'){
             index=0;
-        } 
+        }
         else if (newProps.preferenceType==='author'){
             index=1;
         }
         this.setState({
-            selectedIndex:index, 
+            selectedIndex:index,
             label:newProps.preferenceType
         })
     }
 
   changeActiveRadioButton(index, label){
     this.setState({ selectedIndex:index, label:label}, ()=>{
-        console.log(this.state, "state", label);
         this.props.onChangeSelection(label);
-    }); 
+    });
     }
 
   render() {
