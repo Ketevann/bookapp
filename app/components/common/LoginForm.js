@@ -39,7 +39,8 @@ class LoginForm extends Component {
     const { forgotpassowrdStyle, errorViewStyle, errorTextStyle } = styles;
     const { email } = this.props.auth
       return (
-                <View style={{ flex: 1 }}>
+
+        <View style={{ flex: 1, alignItems:'center'}}>
           {
             this.props.auth.error ?
             <View style={errorViewStyle}>
@@ -76,12 +77,14 @@ class LoginForm extends Component {
       color: '#4A4A4A',
       marginTop: verticalScale(10),
       letterSpacing: 0.4,
-      marginLeft: scale(140),
+      width: (width / 1.5),
+      textAlign:'right'
     },
     errorViewStyle: {
       backgroundColor: '#F38D8D',
-      height: verticalScale(59),
+      width:width,
       marginTop: verticalScale(25)
+
     },
     errorTextStyle: {
       color: '#FFFFFF',

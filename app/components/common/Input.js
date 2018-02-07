@@ -30,7 +30,7 @@ const Input = ({ label, value, onChangeText, placeholder, secureTextEntry }) => 
 
 const styles = {
   viewStyle: {
-    marginLeft: scale(50) ,
+    //marginLeft: scale(50) ,
     backgroundColor: 'white'
   },
   labelStyle: {
