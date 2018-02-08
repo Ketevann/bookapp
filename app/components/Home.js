@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, Modal, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, Modal, Dimensions, Image } from 'react-native';
 import firebase from 'firebase';
 import { connect } from 'react-redux';
 import { Spinner } from './common';
@@ -44,7 +44,13 @@ class Home extends Component {
     const userId = this.props.auth.userId;
     if (this.props.book && similarbooks) {
       if (similarbooks.length === 0)
-        return <Text style={[ {marginTop: verticalScale(10)}, styles.errorTextStyle ]} >Your search returned no results </Text>
+        return (<View style={styles.errContainer}>
+                <Text style={[ {marginTop: verticalScale(10)}, styles.errorTextStyle ]}>Your search returned no results</Text>
+                <Image
+                  style={styles.image}
+                  source={{ uri: 'https://vignette.wikia.nocookie.net/youtubepoop/images/3/37/Ice_bear.png/revision/latest?cb=20160108184102' }}
+                />
+              </View>)
       return (<Book data={similarbooks} loading={loading} error={error} />)
     }
   }
@@ -94,6 +100,20 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     //padding: 10,
     fontFamily: 'Avenir-Book'
+  },
+  image:{
+    flex: 1,
+    opacity: 0.5,
+    width: scale(300),
+    height: verticalScale(300),
+    resizeMode: 'contain'
+  },
+   errContainer:{
+    flex:1,
+    padding: scale(20),
+    flexDirection:'column-reverse',
+    justifyContent: 'center',
+    alignItems: 'center'
   }
 });
 
