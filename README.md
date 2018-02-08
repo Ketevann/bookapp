@@ -1,10 +1,14 @@
 # BookApp
+A Tinder-style interface with book information cards that allows users to swipe right to 'like' or left to 'dislike'.
+
 
 **BookApp will**
 - allow the user to search for book recommendations based on similar titles or books by the same author
+- allow the user to save/delete a book on their profile
 - allow the user to mark a book as
   - 'want be read'
   - 'already read'
+
 
 ## Technologies
 **Stack**
