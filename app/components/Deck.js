@@ -185,7 +185,7 @@ class Deck extends Component {
             style={{
               width: width - scale(40),
               height: SCREEN_HEIGHT - verticalScale(290),
-              borderRadius: 22,
+              borderRadius: 10,
               
               marginTop: verticalScale(10)
             }}
