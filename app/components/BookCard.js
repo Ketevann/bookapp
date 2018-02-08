@@ -132,7 +132,7 @@ class BookCard extends Component {
               }}>
                 <Animated.Image
                   source={{ uri: modifiedLink }}
-                  style={[this.frontCardStyle(), styles.cardStyle]}
+                  style={[{  borderRadius: 10 },this.frontCardStyle(), styles.cardStyle]}
                   onLoadStart={(e) => this.setState({ loadingImage: true })}
                   onLoad={() => this.setState({ loadingImage: false, error: false })}
                 />
