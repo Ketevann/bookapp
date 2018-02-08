@@ -186,7 +186,6 @@ class Deck extends Component {
               width: width - scale(40),
               height: SCREEN_HEIGHT - verticalScale(290),
               borderRadius: 10,
-              
               marginTop: verticalScale(10)
             }}
             onLoadStart={(e) => this.setState({ loadingImage: true })}
