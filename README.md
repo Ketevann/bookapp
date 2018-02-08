@@ -1,7 +1,7 @@
-<img width="317" alt="screen shot 2018-02-08 at 4 10 53 pm" src="https://user-images.githubusercontent.com/26210288/36000526-3a4c49d4-0cf1-11e8-809e-ad9ebc951c9a.png"> <img width="319" alt="screen shot 2018-02-08 at 4 59 25 pm" src="https://user-images.githubusercontent.com/26210288/36000603-7d9125d4-0cf1-11e8-9917-8cac15e3508a.png">
 
-<img width="321" alt="screen shot 2018-02-08 at 4 13 59 pm" src="https://user-images.githubusercontent.com/26210288/36000534-41db96a0-0cf1-11e8-8e2f-55dc11505efc.png"><img width="318" alt="screen shot 2018-02-08 at 4 14 16 pm" src="https://user-images.githubusercontent.com/26210288/36000541-45f2df5a-0cf1-11e8-87e7-419c93a3b99f.png">
+<img width="321" alt="screen shot 2018-02-08 at 5 44 22 pm" src="https://user-images.githubusercontent.com/26210288/36002482-513d6e28-0cf8-11e8-9a4d-6c0389e1d891.png"><img width="319" alt="screen shot 2018-02-08 at 5 44 35 pm" src="https://user-images.githubusercontent.com/26210288/36002487-554b260e-0cf8-11e8-9cd2-13cf74887387.png">
 
-<img width="319" alt="screen shot 2018-02-08 at 4 07 59 pm" src="https://user-images.githubusercontent.com/26210288/36000544-4853c26e-0cf1-11e8-8a76-0f638e5c32c9.png"><img width="316" alt="screen shot 2018-02-08 at 5 02 29 pm" src="https://user-images.githubusercontent.com/26210288/36000749-f5598fd4-0cf1-11e8-935e-b3bb1d116978.png">
-<img width="321" alt="screen shot 2018-02-08 at 5 02 08 pm" src="https://user-images.githubusercontent.com/26210288/36000757-f8f93770-0cf1-11e8-829e-30d8aab94dfe.png">
+<img width="319" alt="screen shot 2018-02-08 at 5 45 06 pm" src="https://user-images.githubusercontent.com/26210288/36002452-3b7381fe-0cf8-11e8-903f-00e301283e6c.png"><img width="318" alt="screen shot 2018-02-08 at 5 47 05 pm" src="https://user-images.githubusercontent.com/26210288/36002458-407f4ca0-0cf8-11e8-8364-2e8a581ee5ec.png">
+
+<img width="321" alt="screen shot 2018-02-08 at 5 45 47 pm" src="https://user-images.githubusercontent.com/26210288/36002465-46186b2e-0cf8-11e8-8445-082d052d443a.png"><img width="319" alt="screen shot 2018-02-08 at 5 46 02 pm" src="https://user-images.githubusercontent.com/26210288/36002470-47ee83d4-0cf8-11e8-8dbe-f6a1a8f3e57a.png">
 
