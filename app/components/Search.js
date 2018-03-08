@@ -88,10 +88,12 @@ class SearchComponent extends Component {
                 onPress={() => this.setState({ search: !this.state.search })}//deletes a "disliked book from users suggestions"
               />
             </View>
-            {this.props.auth.userId ?
+            {this.props.auth.loggedIn ?
              <Text style={[headerTextStyle, {marginLeft: scale(30)}]} onPress={() => {
+               Actions.popTo('home')
                firebase.auth().signOut()
-               Actions.home()
+                {/*Actions.home()*/}
+               
             }}>Log Out</Text>
             :null}
           </View>
