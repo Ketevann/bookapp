@@ -48,7 +48,8 @@ class SignUp extends Component {
     const { email, password, passwordConfirm } = this.props.auth;
     this.props.signUpUser(email, password, passwordConfirm);
     if (this.props.auth.userId) {
-      Actions.home();
+      //  Actions.home();
+        Actions.popTo('home')
     }
   }
 
@@ -61,7 +62,7 @@ class SignUp extends Component {
           <Text style={styles.header} >Sign Up</Text>
           <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: verticalScale(8) }}>
             <Text style={textStyle} > Already have an account? login </Text>
-            <Text onPress={() => Actions.login()} style={[textStyle, signUpLinkStyle]} > here</Text>
+            <Text onPress={() =>  Actions.pop()} style={[textStyle, signUpLinkStyle]} > here</Text>
           </View>
 
           {
