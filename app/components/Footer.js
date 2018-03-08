@@ -28,7 +28,8 @@ class Footer extends Component {
               color='#fff'
               underlayColor='#3B509A' // set the underlayColor of the view used behind the icon
               size={scale(24)}
-              onPress={() => Actions.home()} />
+              disabled={Actions.currentScene ==='home' || this.props.auth.loggedIn==false ? true:false}
+              onPress={() => Actions.pop()} />
               <Text style={ styles.text }>Home</Text>
           </TouchableOpacity>
           <TouchableOpacity style={ styles.icon }>
@@ -37,6 +38,7 @@ class Footer extends Component {
               color='#fff'
               underlayColor='#3B509A' //  set the underlayColor of the view used behind the icon
               size={scale(24)}
+              disabled={Actions.currentScene ==='profile' || this.props.auth.loggedIn==false ? true:false}
               onPress={() => this.getBooks()} />
                 <Text style={ styles.text }>Favorites</Text>
           </TouchableOpacity>
