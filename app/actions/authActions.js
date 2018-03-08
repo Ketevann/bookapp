@@ -8,6 +8,7 @@ import {
 } from './action-types'
 
 import firebase from 'firebase';
+import { Actions } from 'react-native-router-flux';
 
 export const loginUser = (email, password) => {
   return (dispatch) => {
@@ -28,6 +29,7 @@ export const signUpUser = (email, password, confirm) => dispatch => {
     firebase.auth().createUserWithEmailAndPassword(email, password)
       .then(user => {
         firebase.database().ref(`users/${user.uid}`).set({ email });
+         Actions.popTo('home')
          return loginUserSuccess(dispatch, user);
       })
       .catch((error) => {
@@ -112,14 +114,12 @@ export const passwordDispatch = (text) =>
 
 
 export const loginDispatch = (userId) =>
-  dispatch =>
-    firebase.database().ref(`users/${userId}/avatar`).once('value', snapshot => {
-      let image;
-      if(snapshot.val() !== false)
-        image = (snapshot.val());
-      else image = false;
+  dispatch =>{
+    if (userId!==undefined){
       dispatch({ type: LOGGEDIN, payload: userId });
-    });
+    }
+  }
+
 export const loginDispatchFalse = () =>
   dispatch =>
     dispatch({ type: NOTLOGGEDIN });
